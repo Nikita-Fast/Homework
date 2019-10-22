@@ -31,18 +31,20 @@ int sign(int x) {
 }
 
 int getByte(int x, int n) {
-    x >> (n << 3);
+    x = x >> (n << 3);
     x = x & 255;
     return x;
 }
 
 int logicalShift(int x, int n) {
-    int mask = (1 << (33 + ~n)) + (~0);
-    int result = (x >> n) & mask;
-    return result;
+    int shift = 33 + ~n;
+    int p = !(k ^ 32);
+    int mask = (1 << shift) + ~(p + 1) + 1;
+    x = (x >> n) & mask;
+    return x;
 }
 
-int addOk(int x, int y) {
+int addOK(int x, int y) {
     int result = !((((x | y) ^ (x + y)) & (~(x ^ y))) >> 31);
     return result;
 }
