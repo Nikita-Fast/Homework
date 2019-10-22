@@ -38,7 +38,7 @@ int getByte(int x, int n) {
 
 int logicalShift(int x, int n) {
     int shift = 33 + ~n;
-    int p = !(k ^ 32);
+    int p = !(shift ^ 32);
     int mask = (1 << shift) + ~(p + 1) + 1;
     x = (x >> n) & mask;
     return x;
@@ -63,6 +63,7 @@ int isPower2(int x) {
     int result = !(x & (x + ~0)) & (~(x >> 31)) & (!!x);
     return result;
 }
+
 
 
 
