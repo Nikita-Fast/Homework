@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h >
 
-int fibbonachi_number(int n) {
+int fibbonachiNumber(int n) {
     int result = 1;
     int x = 1;
     int y = 1;
@@ -87,5 +87,7 @@ void numbers_order(void) {
         p++;
     }
 }
+
+
 
 
