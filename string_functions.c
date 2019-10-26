@@ -14,6 +14,7 @@ void strcpy(char* dst, char* src) {
         dst++;
         src++;
     }
+    *dst = '\0';
 }
 
 void strcat(char* dst, char* src) {
@@ -25,6 +26,7 @@ void strcat(char* dst, char* src) {
         dst++;
         src++;
     }
+    *dst = '\0';
 }
 
 int strcmp(char* s1, char* s2) {
@@ -40,5 +42,6 @@ int strcmp(char* s1, char* s2) {
         return 1;
     }
 }
+
 
 
