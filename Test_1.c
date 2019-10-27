@@ -15,45 +15,55 @@ int fibbonachiNumber(int n) {
 }
 
 int stringToNumber(char string[]) {
-    int check = 0;
+    size_t length = strlen(string);
+    size_t symbolError = 0;
+    size_t spaceError = 0;
+    size_t spaceFlag = 0;
+    size_t numberFlag = 0;
+    size_t firstDigitFlag = 0;
+    size_t overflowFlag = 0;
     int result = 0;
-    size_t len = strlen(string);
-    for (size_t i = 0; i < len; i ++) {
-
-        switch (string[i]) {
-            case '0': result +=0;
-                break;
-            case '1': result +=1;
-                break;
-            case '2': result +=2;
-                break;
-            case '3': result +=3;
-                break;
-            case '4': result +=4;
-                break;
-            case '5': result +=5;
-                break;
-            case '6': result +=6;
-                break;
-            case '7': result +=7;
-                break;
-            case '8': result +=8;
-                break;
-            case '9': result +=9;
-                break;
-            case ' ': result /= 10;
-                break;
-            default: check = 1; result /= 10;
-                break;
-        }
-        if (check) {
-            printf("the string contains a non-digit character, the answer is not complete\n");
-            break;
-        } else if (i != len-1) {
+    for (size_t i = 0; i < length; i++) {
+        if (string[i] >= '0' && string[i] <= '9') {
+            if (result > 214748364 || \
+                result == 214748364 && (string[i] == '8' || string[i] == '9')) {
+                overflowFlag = 1;
+            }
+            if (firstDigitFlag) {
                 result *= 10;
+            }
+            result += string[i] - '0';
+            firstDigitFlag = 1;
+            numberFlag = 1;
+        }
+        if ((numberFlag == 1) && (string[i] == 32)) {
+            spaceFlag = 1;
+            numberFlag = 0;
+        }
+        if (numberFlag == 1 && spaceFlag == 1) {
+            spaceError = 1;
+        }
+        if (string[i] != 32 && (string[i] > '9' || string[i] < '0')) {
+            symbolError = 1;
         }
     }
-    return result;
+    if (!length) {
+        printf("Error: string must contain at least 1 symbol\n");
+    }
+    if (spaceError) {
+        printf("Error: string has spaces between numbers\n");
+    }
+    if (symbolError) {
+        printf("Error: string contain banned symbols\n");
+    }
+    if (overflowFlag) {
+        printf("Error: integer overflow detected\n");
+    }
+    if (length && !spaceError && !symbolError && !overflowFlag) {
+        return result;
+    } else {
+        return -1;
+      }
 }
 
 void numbers_order(void) {
@@ -88,6 +98,10 @@ void numbers_order(void) {
     }
 }
 
-
-
+/*
+int main() {
+    char m[50] = "564833";
+    printf("%i", stringToNumber(m));
+}
+*/
 
