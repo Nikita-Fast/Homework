@@ -130,6 +130,72 @@ void numbersOrder(void) {
     free(p);
 }
 
+void base64(char string[]) {
+    int bufer = 0;
+    size_t index = 0;
+    size_t length = strlen(string);
+    char *result = malloc(2 * length * sizeof(char));
+    if (result == NULL) {
+        printf("allocation memory error");
+    } else {
+            for (size_t i = 0; i < length; i += 3) {
+                bufer =  ((int) string[i]);
+                bufer = bufer << 8;
+                bufer += ((int) string[i+1]);
+                bufer = bufer << 8;
+                bufer +=  (int) string[i+2];
+                for (size_t j = 4; j > 0; j--) {
+                    int buf = (bufer & ((1 << 6*j) - (1 << 6*(j-1)))) >> 6*(j-1);
+                    if (-1 < buf && buf < 26) {
+                    result[index] = (char) (buf + 65);
+                    index++;
+                    }
+                    if (25 < buf && buf < 52) {
+                        result[index] = (char) (buf + 71);
+                        index++;
+                    }
+                    if (51 < buf && buf < 62) {
+                        result[index] = (char) (buf - 4);
+                        index++;
+                    }
+                    if (buf == 62) {
+                        result[index] = (char) (43);
+                        index++;
+                    }
+                    if (buf == 63) {
+                        result[index] = (char) (47);
+                        index++;
+                    }
+                }
+            }
+            size_t i = 0;
+            while (i < index) {
+                printf("%c", result[i]);
+                i++;
+            }
+      }
+      free(result);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
