@@ -91,42 +91,46 @@ int stringToNumber(char string[]) {
       }
 }
 
-void numbers_order(void) {
+void numbersOrder(void) {
     printf("enter the number\n");
     int n = 0;
+    size_t memoryError = 0;
     scanf("%i", &n);
-    printf("enter the numbers in range 0 to 255\n");
     int *p = malloc(n * sizeof(int));
-
-    for (size_t i = 0; i < n; i++) {
-        p[i] = -1;
+    if (p == NULL) {
+        printf("failed to allocate memory\n");
+        memoryError = 1;
     }
-    int a = 0;
-    size_t j = 0;
-    int check = 0;
-    for (size_t i=0; i < n; i++) {
-        scanf("%i", &a);
-        for(size_t k=0; k < j; k++) {
-            if (p[k] == a) {
-                check = 1;
+    if (!memoryError) {
+        for (size_t i = 0; i < n; i++) {
+            p[i] = -1;
+        }
+        int number = 0;
+        size_t j = 0;
+        int check = 0;
+        printf("enter the numbers in range 0 to 255\n");
+        for (size_t i = 0; i < n; i++) {
+            scanf("%i", &number);
+            for(size_t k = 0; k < j; k++) {
+                if (p[k] == number) {
+                    check = 1;
+                }
             }
+            if (!check) {
+                p[j] = number;
+                j++;
+            }
+            check = 0;
         }
-        if (!check) {
-            p[j] = a;
-            j++;
+        while (*p != -1) {
+            printf("%i ", *p);
+            p++;
         }
-        check = 0;
     }
-    while (*p != -1) {
-        printf("%i ", *p);
-        p++;
-    }
+    free(p);
 }
 
-/*
-int main() {
-    char m[50] = "-   123 ";
-    printf("%i", stringToNumber(m));
-}
-*/
+
+
+
 
