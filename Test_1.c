@@ -135,9 +135,13 @@ void base64(char string[]) {
     size_t index = 0;
     size_t length = strlen(string);
     char *result = malloc(2 * length * sizeof(char));
+    int workMod = -1;
     if (result == NULL) {
         printf("allocation memory error");
     } else {
+        printf("Please write 0 if you want to encode and 1 if you want to decode\n");
+        scanf("%i", &workMod);
+        if (workMod == 0) {
             for (size_t i = 0; i < length; i += 3) {
                 bufer =  ((int) string[i]);
                 bufer = bufer << 8;
@@ -168,15 +172,51 @@ void base64(char string[]) {
                     }
                 }
             }
-            size_t i = 0;
-            while (i < index) {
-                printf("%c", result[i]);
-                i++;
+            if (length % 3 == 1) {
+                result[index - 2] = '=';
+                result[index - 1] = '=';
             }
+            if (length % 3 == 2) {
+                result[index - 1] = '=';
+            }
+        } else if (workMod == 1) {
+                for (size_t j = 0; j < length; j += 4) {
+                    bufer = 0;
+                    for (size_t i = j; i < j+4; i++) {
+                        if (string[i] >= 65 && string[i] <= 90) {
+                            bufer += string[i] - 65;
+                        }
+                        if (string[i] >= 97 && string[i] <= 122) {
+                            bufer += string[i] - 71;
+                        }
+                        if (string[i] >= 48 && string[i] <= 57) {
+                            bufer += string[i] + 4;
+                        }
+                        if (string[i] == 43) {
+                            bufer += string[i] + 19;
+                        }
+                        if (string[i] == 47) {
+                            bufer += string[i] + 16;
+                        }
+                        if (i != j+3) {
+                            bufer = bufer << 6;
+                        }
+                    }
+                    for (size_t i = 0; i < 3; i++) {
+                        int mask = (1 << (24 - 8 * i)) - (1 << (16 - 8 * i));
+                        result[index] = (char) ((bufer & mask) >> (16 - 8 * i));
+                        index++;
+                    }
+                }
+         }
+         size_t i = 0;
+         while (i < index) {
+            printf("%c", result[i]);
+            i++;
+         }
       }
       free(result);
 }
-
 
 
 
