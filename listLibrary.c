@@ -1,19 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 struct Node {
 	int val;
-	Node* next;
+	char data[30];
+	char* key;
+	struct Node* next;
 };
 
 struct List {
-	Node* head;
-	Node* end;
+	struct Node* head;
+	struct Node* end;
 	size_t length;
 };
 
-Node* createNode(int value) {
-	Node* node = (Node*)malloc(sizeof(Node));
+struct Node* createNode(int value) {
+	struct Node* node = (struct Node*)malloc(sizeof(struct Node));
 	if (node == NULL) {
 		return NULL;
 	}
@@ -22,15 +26,15 @@ Node* createNode(int value) {
 	return node;
 }
 
-List createList() {
-	List list;
+struct List createList() {
+	struct List list;
 	list.head = NULL;
 	list.end = NULL;
 	list.length = 0;
 	return list;
 }
 
-void insertToBegin(List* listPtr, Node* nodePtr) {
+void insertToBegin(struct List* listPtr, struct Node* nodePtr) {
 	if (listPtr->length == 0) {
 		listPtr->head = nodePtr;
 		listPtr->end = nodePtr;
@@ -43,7 +47,7 @@ void insertToBegin(List* listPtr, Node* nodePtr) {
 	}
 }
 
-void insertToEnd(List* listPtr, Node* nodePtr) {
+void insertToEnd(struct List* listPtr, struct Node* nodePtr) {
 	if (listPtr->length == 0) {
 		listPtr->head = nodePtr;
 		listPtr->end = nodePtr;
@@ -56,7 +60,7 @@ void insertToEnd(List* listPtr, Node* nodePtr) {
 	}
 }
 
-void insertAfterElement(List* listPtr, Node* newNodePtr, Node* baseNode) {
+void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, struct Node* baseNode) {
 	newNodePtr->next = baseNode->next;
 	baseNode->next = newNodePtr;
 	listPtr->length++;
@@ -66,14 +70,14 @@ void insertAfterElement(List* listPtr, Node* newNodePtr, Node* baseNode) {
 	}
 }
 
-void deleteNode(List* listPtr, Node* delNodePtr) {
+void deleteNode(struct List* listPtr, struct Node* delNodePtr) {
 	if (listPtr->head == delNodePtr) {
 		listPtr->head = listPtr->head->next;
 		free(delNodePtr);
 		listPtr->length--;
 		return;
 	}
-	Node* currNodePtr = listPtr->head;
+	struct Node* currNodePtr = listPtr->head;
 	while (currNodePtr) {
 		if (currNodePtr->next == delNodePtr) {
 			currNodePtr->next = currNodePtr->next->next;
@@ -85,8 +89,8 @@ void deleteNode(List* listPtr, Node* delNodePtr) {
 	}
 }
 
-void printList(List* listPtr) {
-	Node* currNodePtr = listPtr->head;
+void printList(struct List* listPtr) {
+	struct Node* currNodePtr = listPtr->head;
 	while (currNodePtr) {
 		printf("%i ", currNodePtr->val);
 		currNodePtr = currNodePtr->next;
@@ -94,18 +98,18 @@ void printList(List* listPtr) {
 	printf("\n");
 }
 
-void clearList(List* listPtr) {
-	Node* cur = listPtr->head;
-	while (cur) {
+void clearList(struct List* listPtr) {
+	struct Node* cur = listPtr->head;
+	while (cur != NULL) {
 		cur = listPtr->head->next;
 		free(listPtr->head);
 		listPtr->head = cur;
 	}
 }
 
-bool isCycled(List* listPtr) {
-	Node* fast = listPtr->head->next;
-	Node* slow = listPtr->head;
+bool isCycled(struct List* listPtr) {
+	struct Node* fast = listPtr->head->next;
+	struct Node* slow = listPtr->head;
 	bool moveSlow = false;
 	while (true) {
 		if (fast == NULL) {

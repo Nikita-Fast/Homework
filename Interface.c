@@ -1,7 +1,7 @@
-﻿#include <stdlib.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <Windows.h>
-#include "myListFunctions.h"
+#include "listLibrary.h"
 
 int chooseTheOperation() {
 	printf("choose the operation and insert it's number\n");
@@ -27,110 +27,110 @@ void colorOutput(HANDLE hConsole, int textColor) {
 
 int main() {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	int blue = 11; 
+	int blue = 11;
 	int white = 15;
 	int numberOfOperation = 0;
 	numberOfOperation = chooseTheOperation();
 	while (numberOfOperation != 10) {
 		switch (numberOfOperation) {
 			int value;
-			Node* myNode;
-			Node* nodePtr;
-			Node* baseNodePtr;
-			Node* delNodePtr;
-			List myList;
-			List* listPtr;
-			case 1:
-				printf("what value should be stored in the node?\n");
-				printf("I want to store ");
-				scanf("%i", &value);
-				myNode = createNode(value);
-				if (myNode == NULL) {
-					printf("An error was occured, failed to create node\n");
-					return 1;
-				}
-				colorOutput(hConsole, blue);
-				printf("Node was successfully created, his address is %p\n", myNode);
-				colorOutput(hConsole, white);
-				break;
-			case 2:
-				myList = createList();
-				colorOutput(hConsole, blue);
-				printf("List was successfully created, his address is %p\n", &myList);
-				colorOutput(hConsole, white);
-				break;
-			case 3:
-				listPtr = NULL;
-				nodePtr = NULL;
-				printf("Enter the address of element and the address of the list\n");
-				scanf("%p %p", &nodePtr, &listPtr);
-				insertToBegin(listPtr, nodePtr);
-				colorOutput(hConsole, blue);
-				printf("Element was successfully inserted into the list\n");
-				colorOutput(hConsole, white);
-				break;
-			case 4:
-				listPtr = NULL;
-				nodePtr = NULL;
-				printf("Enter the address of element and the address of the list\n");
-				scanf("%p %p", &nodePtr, &listPtr);
-				insertToEnd(listPtr, nodePtr);
-				colorOutput(hConsole, blue);
-				printf("Element was successfully inserted into the list\n");
-				colorOutput(hConsole, white);
-				break;
-			case 5:
-				listPtr = NULL;
-				nodePtr = NULL;
-				baseNodePtr = NULL;
-				printf("Enter the address of new node, address of base node and the address of the list\n");
-				scanf("%p %p %p", &nodePtr, &baseNodePtr, &listPtr);
-				insertAfterElement(listPtr, nodePtr, baseNodePtr);
-				colorOutput(hConsole, blue);
-				printf("Element was successfully inserted into the list\n");
-				colorOutput(hConsole, white);
-				break;
-			case 6:
-				listPtr = NULL;
-				delNodePtr = NULL;
-				printf("Enter the address of element which will be delet and the address of the list\n");
-				scanf("%p %p", &delNodePtr, &listPtr);
-				deleteNode(listPtr, delNodePtr);
-				colorOutput(hConsole, blue);
-				printf("Element was successfully deleted from the list\n");
-				colorOutput(hConsole, white);
-				break;
-			case 7:
-				listPtr = NULL;
-				printf("Enter the address of the list\n");
-				scanf("%p", &listPtr);
-				colorOutput(hConsole, blue);
-				printList(listPtr);
-				printf("All elements were successfully printed\n");
-				colorOutput(hConsole, white);
-				break;
-			case 8:
-				listPtr = NULL;
-				printf("Enter the address of the list\n");
-				scanf("%p", &listPtr);
-				clearList(listPtr);
-				colorOutput(hConsole, blue);
-				printf("List was successfully cleared\n");
-				colorOutput(hConsole, white);
-				break;
-			case 9:
-				listPtr = NULL;
-				printf("Enter the address of the list\n");
-				scanf("%p", &listPtr);
-				colorOutput(hConsole, blue);
-				if (isCycled(listPtr)) {
-					printf("The cycle was detected\n");
-				}
-				else {
-					printf("List doesn't contains cycle");
-				}
-				colorOutput(hConsole, white);
-				break;
+			struct Node* myNode;
+			struct Node* nodePtr;
+			struct Node* baseNodePtr;
+			struct Node* delNodePtr;
+			struct List myList;
+			struct List* listPtr;
+		case 1:
+			printf("what value should be stored in the node?\n");
+			printf("enter the integer value ");
+			scanf("%i", &value);
+			myNode = createNode(value);
+			if (myNode == NULL) {
+				printf("An error was occured, failed to create node\n");
+				return 1;
+			}
+			colorOutput(hConsole, blue);
+			printf("Node was successfully created, his address is %p\n", myNode);
+			colorOutput(hConsole, white);
+			break;
+		case 2:
+			myList = createList();
+			colorOutput(hConsole, blue);
+			printf("List was successfully created, his address is %p\n", &myList);
+			colorOutput(hConsole, white);
+			break;
+		case 3:
+			listPtr = NULL;
+			nodePtr = NULL;
+			printf("Enter the address of element and the address of the list\n");
+			scanf("%p %p", &nodePtr, &listPtr);
+			insertToBegin(listPtr, nodePtr);
+			colorOutput(hConsole, blue);
+			printf("Element was successfully inserted into the list\n");
+			colorOutput(hConsole, white);
+			break;
+		case 4:
+			listPtr = NULL;
+			nodePtr = NULL;
+			printf("Enter the address of element and the address of the list\n");
+			scanf("%p %p", &nodePtr, &listPtr);
+			insertToEnd(listPtr, nodePtr);
+			colorOutput(hConsole, blue);
+			printf("Element was successfully inserted into the list\n");
+			colorOutput(hConsole, white);
+			break;
+		case 5:
+			listPtr = NULL;
+			nodePtr = NULL;
+			baseNodePtr = NULL;
+			printf("Enter the address of new node, address of base node and the address of the list\n");
+			scanf("%p %p %p", &nodePtr, &baseNodePtr, &listPtr);
+			insertAfterElement(listPtr, nodePtr, baseNodePtr);
+			colorOutput(hConsole, blue);
+			printf("Element was successfully inserted into the list\n");
+			colorOutput(hConsole, white);
+			break;
+		case 6:
+			listPtr = NULL;
+			delNodePtr = NULL;
+			printf("Enter the address of element which will be delet and the address of the list\n");
+			scanf("%p %p", &delNodePtr, &listPtr);
+			deleteNode(listPtr, delNodePtr);
+			colorOutput(hConsole, blue);
+			printf("Element was successfully deleted from the list\n");
+			colorOutput(hConsole, white);
+			break;
+		case 7:
+			listPtr = NULL;
+			printf("Enter the address of the list\n");
+			scanf("%p", &listPtr);
+			colorOutput(hConsole, blue);
+			printList(listPtr);
+			printf("All elements were successfully printed\n");
+			colorOutput(hConsole, white);
+			break;
+		case 8:
+			listPtr = NULL;
+			printf("Enter the address of the list\n");
+			scanf("%p", &listPtr);
+			clearList(listPtr);
+			colorOutput(hConsole, blue);
+			printf("List was successfully cleared\n");
+			colorOutput(hConsole, white);
+			break;
+		case 9:
+			listPtr = NULL;
+			printf("Enter the address of the list\n");
+			scanf("%p", &listPtr);
+			colorOutput(hConsole, blue);
+			if (isCycled(listPtr)) {
+				printf("The cycle was detected\n");
+			}
+			else {
+				printf("List doesn't contains cycle");
+			}
+			colorOutput(hConsole, white);
+			break;
 		}
 		numberOfOperation = chooseTheOperation();
 	}
@@ -138,4 +138,3 @@ int main() {
 	printf("Exit from interface\n");
 	colorOutput(hConsole, white);
 }
-
