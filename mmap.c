@@ -2,62 +2,27 @@
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
-#include <sys\types.h>
 #include <sys\stat.h>
 #include "mman.h"
 #include <string.h>
 
-int strCmp(char* str1, char* str2) {
-	while (*str1 == *str2 && *str1 != '\n') {
-		str1++;
-		str2++;
+int comparator(const void* a1, const void* a2) {
+	char* str1 = *(char**)a1;
+	char* str2 = *(char**)a2;
+	size_t i = 0;
+	while (str1[i] == str2[i] && str1[i] != '\n') {
+		i++;
 	}
-	if (*str1 == *str2) {
-		return 0;
-	}
-	else {
-		if (*str1 != '\n' && *str1 != '\n') {
-			return *str1 - *str2;
-		}
-		else {
-			if (*str1 == '\n' && *str2 != '\n') {
-				return -1;
-			}
-			if (*str1 != '\n' && *str2 == '\n') {
-				return 1;
-			}
-		}
-	}
-}
-
-void qStringSort(char** pointers, size_t low, size_t high)
-{
-	size_t l = low, r = high;
-	char* pivot = pointers[(l + r) / 2];
-	while (l <= r)
-	{
-		while (strCmp(pointers[l], pivot) < 0) {
-			l++;
-		}
-		while (strCmp(pointers[r], pivot) > 0) {
-			r--;
-		}
-		if (l <= r) {
-			char* copy = pointers[l];
-			pointers[l++] = pointers[r];
-			pointers[r--] = copy;
-		}
-	}
-	if (low < r)
-		qStringSort(pointers, low, r);
-	if (high > l)
-		qStringSort(pointers, l, high);
+	return str1[i] - str2[i];
 }
 
 int main() {
-	const char* inFileName = "C:\\Users\\Nick Fast\\Desktop\\garbage\\prokaryote_type_strain_report.txt";
+	const char* inFileName = "C:\\Users\\Nick Fast\\Desktop\\garbage\\forWhomTheBellTolls.txt";
 	int inFileDes = _open(inFileName, _O_RDONLY, _S_IREAD);
-	
+	if (inFileDes == -1) {
+		printf("failed to open input file\n");
+		return 1;
+	}
 	struct stat properties;
 	fstat(inFileDes, &properties);
 	size_t length = properties.st_size;
@@ -74,7 +39,7 @@ int main() {
 	size_t maxStrLength = 0;
 	size_t strLength = 0;
 	while (*mapPtrCopy != '\0') {
-		if (*mapPtrCopy == '\n') { //попробовать заменить символ новой строки на теринальный ноль
+		if (*mapPtrCopy == '\n') { 
 			strCounter++;
 			if (strLength > maxStrLength) {
 				maxStrLength = strLength;
@@ -86,30 +51,39 @@ int main() {
 		}
 		mapPtrCopy++;
 	}
-	//strCounter++;             //the last string with '\0'
-	
+
 	char** pointers = (char**)malloc(strCounter * sizeof(char*));
-	if (pointers != NULL) {
-		for (size_t i = 0; i < strCounter; i++) {
-			pointers[i] = mapPtr;
-			while (*mapPtr != '\n') {
-				mapPtr++;
-			}
+	if (pointers == NULL) {
+		printf("failed to allocate memory\n");
+		return 1;
+	}
+	for (size_t i = 0; i < strCounter; i++) {
+		pointers[i] = mapPtr;
+		while (*mapPtr != '\n') {
 			mapPtr++;
 		}
-		qStringSort(pointers, 0, strCounter - 1);
-	
-		FILE* file;
-		char fileName[] = "C:\\Users\\Nick Fast\\Desktop\\garbage\\output.txt";
-		file = fopen(fileName, "w");
-		for (size_t i = 0; i < strCounter; i++) {
-			while (*pointers[i] != '\n') { //*pointers[i] != '\n' &&
-				fputc(*pointers[i]++, file);
-			}
-			fputc(*pointers[i], file);
-		}
-		fclose(file);
-		free(pointers);
+		mapPtr++;
 	}
+	qsort(pointers, strCounter, sizeof(pointers[0]), comparator);
+	
+	FILE* file;
+	char fileName[] = "C:\\Users\\Nick Fast\\Desktop\\garbage\\bestOutputEver.txt";
+	file = fopen(fileName, "w");
+	if (file == NULL) {
+		printf("failed to open output file\n");
+		return 1;
+	}
+	for (size_t i = 0; i < strCounter; i++) {
+		while (*pointers[i] != '\n') { 
+			fputc(*pointers[i]++, file);
+		}
+		fputc(*pointers[i], file);
+	}
+	fclose(file);
+	_close(inFileDes);
+	free(pointers);
 	munmap(mapptr, length);
 }
+
+
+
