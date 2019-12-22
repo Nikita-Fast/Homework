@@ -60,7 +60,7 @@ struct HashTable createHashTable(size_t size, size_t(*hashFunctionPtr)(char*, si
 		exit(1);
 	}
 	for (size_t i = 0; i < size; i++) {
-		myHashTable.arrayOfLists[i] = createList();
+		myHashTable.arrayOfLists[i] = *createList();   //is it good idea?
 	}
 	myHashTable.hashFunction = hashFunctionPtr;
 	myHashTable.size = size;
@@ -75,49 +75,45 @@ void freeHashTable(struct HashTable* myHashTable) {
 	free(myHashTable->arrayOfLists);
 }
 
-void insertElement(struct HashTable* myHashTable, char* key, char* data, int value) {
+void insertElement(struct HashTable* myHashTable, char* key, int value) {
 	size_t index = myHashTable->hashFunction(key, myHashTable->size);
-	insertToEnd(&(myHashTable->arrayOfLists[index]), createNode(value, data, key));
+	insertToEnd(&(myHashTable->arrayOfLists[index]), createNode(value, key));
 }
 
-struct Node* findNode(struct List* list, char* data) {  //применять только в листах ненулевой длины
-	struct Node* nodePtr = list->head;
-	while (nodePtr != NULL) {
-		if (strcmp(nodePtr->data, data) == 0) {
-			return nodePtr;
-		}
-		nodePtr = nodePtr->next;
-	}
-	return NULL;
-}
-
-void insertElementExtended(struct HashTable* myHashTable, char* key, char* data, int value) {
-	size_t index = myHashTable->hashFunction(key, myHashTable->size);
-	struct List list = myHashTable->arrayOfLists[index];
-	if (list.length == 0) {
-		insertToEnd(&(myHashTable->arrayOfLists[index]), createNode(value, data, key));
+struct Node* findNode(struct HashTable* table, char* key) { 
+	size_t index = table->hashFunction(key, table->size);
+	if (table->arrayOfLists[index].length == 0) {
+		return NULL;
 	}
 	else {
-		struct Node* nodePtr = NULL;
-		nodePtr = findNode(&list, data);
-		if (nodePtr == NULL) { //не нашли узел с такими данными
-			insertToEnd(&(myHashTable->arrayOfLists[index]), createNode(value, data, key));
+		struct List* list = &(table->arrayOfLists[index]);
+		struct Node* node = list->head;
+		while (node != NULL) {
+			if (strcmp(node->key, key) == 0) {
+				return node;
+			}
+			node = node->next;
 		}
-		else { //нашли узел с такими же данными
-			nodePtr->val++;
-		}
+		return NULL;
 	}
 }
 
-void deleteElement(struct HashTable* myHashTable, char* key) {
-	size_t index = myHashTable->hashFunction(key, myHashTable->size);
-	struct List* listPtr = &(myHashTable->arrayOfLists[index]);
-	struct Node* delNodePtr = listPtr->head;
-	struct Node* next = NULL;
-	while (delNodePtr != NULL) {
-		next = delNodePtr->next;
-		deleteNode(listPtr, delNodePtr);
-		delNodePtr = next;
+void insertElementExtended(struct HashTable* table, char* key, int value) { //for the job about counting words in the text
+	size_t index = table->hashFunction(key, table->size);
+	struct Node* node = findNode(table, key);
+	if (node == NULL) {
+		insertElement(table, key, value);
+	}
+	else {
+		node->val++;
+	}
+}
+
+void deleteElement(struct HashTable* table, char* key) {
+	struct Node* node = findNode(table, key);
+	if (node != NULL) {
+		size_t index = table->hashFunction(key, table->size);
+		removeNode(&(table->arrayOfLists[index]), node);
 	}
 }
 
@@ -125,7 +121,7 @@ void printHashTable(struct HashTable* myHashTable) {
 	size_t size = myHashTable->size;
 	struct Node* currentNode = NULL;
 	for (size_t i = 0; i < size; i++) {
-		if ((&myHashTable->arrayOfLists[i].length) > 0) {
+		if (myHashTable->arrayOfLists[i].length > 0) {
 			printList(&myHashTable->arrayOfLists[i]);
 		}
 	}
