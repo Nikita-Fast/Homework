@@ -5,8 +5,6 @@
 
 struct Node {
 	int val;
-	char data[30];
-	char* key;
 	struct Node* next;
 };
 
@@ -26,12 +24,25 @@ struct Node* createNode(int value) {
 	return node;
 }
 
-struct List createList() {
-	struct List list;
-	list.head = NULL;
-	list.end = NULL;
-	list.length = 0;
+struct List* createList() {
+	struct List* list = (struct List*)malloc(sizeof(struct List));
+	list->head = NULL;
+	list->end = NULL;
+	list->length = 0;
 	return list;
+}
+
+struct Node* getNode(size_t number, struct List* listPtr) {
+	if (listPtr->length <= number) { // нумерация с нуля
+		return NULL;
+	}
+	size_t counter = 0;
+	struct Node* currentNode = listPtr->head;
+	while (counter != number) {
+		currentNode = currentNode->next;
+		counter++;
+	}
+	return currentNode;
 }
 
 void insertToBegin(struct List* listPtr, struct Node* nodePtr) {
@@ -60,32 +71,46 @@ void insertToEnd(struct List* listPtr, struct Node* nodePtr) {
 	}
 }
 
-void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, struct Node* baseNode) {
-	newNodePtr->next = baseNode->next;
-	baseNode->next = newNodePtr;
-	listPtr->length++;
-	if (listPtr->length == 2) {
-		listPtr->end = newNodePtr;
-		newNodePtr->next = NULL;
+void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, size_t position) {
+	if (position == 0) {
+		newNodePtr->next = listPtr->head;
+		listPtr->head = newNodePtr;
+		listPtr->length++;
+	}
+	else {
+		if (listPtr->length > position) {
+			struct Node* prevNode = getNode(position - 1, listPtr);
+			newNodePtr->next = prevNode->next;
+			prevNode->next = newNodePtr;
+			listPtr->length++;
+		}
+		else {
+			insertToEnd(listPtr, newNodePtr);
+			listPtr->length++;
+		}
 	}
 }
 
-void deleteNode(struct List* listPtr, struct Node* delNodePtr) {
-	if (listPtr->head == delNodePtr) {
-		listPtr->head = listPtr->head->next;
-		free(delNodePtr);
-		listPtr->length--;
-		return;
-	}
-	struct Node* currNodePtr = listPtr->head;
-	while (currNodePtr) {
-		if (currNodePtr->next == delNodePtr) {
-			currNodePtr->next = currNodePtr->next->next;
-			free(delNodePtr);
+void deleteNode(struct List* listPtr, size_t number) {
+	if (listPtr->length > number) {
+		struct Node* node = listPtr->head;
+		struct Node* delNode = NULL;
+		if (number == 0) {
+			listPtr->head = listPtr->head->next;
+			free(node);
 			listPtr->length--;
-			return;
 		}
-		currNodePtr = currNodePtr->next;
+		else {
+			size_t counter = 0;
+			while (counter != number - 1) {
+				node = node->next;
+				counter++;
+			}
+			delNode = node->next;
+			node->next = node->next->next;
+			free(delNode);
+			listPtr->length--;
+		}
 	}
 }
 
@@ -105,9 +130,13 @@ void clearList(struct List* listPtr) {
 		free(listPtr->head);
 		listPtr->head = cur;
 	}
+	listPtr->length = 0;
 }
 
 bool isCycled(struct List* listPtr) {
+	if (listPtr->length == 0) {
+		return 0;
+	}
 	struct Node* fast = listPtr->head->next;
 	struct Node* slow = listPtr->head;
 	bool moveSlow = false;

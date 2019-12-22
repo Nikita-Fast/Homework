@@ -4,8 +4,6 @@
 
 struct Node {
 	int val;
-	char data[30];
-	char* key;
 	struct Node* next;
 };
 
@@ -16,11 +14,12 @@ struct List {
 };
 
 struct Node* createNode(int value);
-struct List createList();
+struct List* createList();
+struct Node* getNode(size_t number, struct List* listPtr);
 void insertToBegin(struct List* listPtr, struct Node* nodePtr);
 void insertToEnd(struct List* listPtr, struct Node* nodePtr);
-void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, struct Node* baseNode);
-void deleteNode(struct List* listPtr, struct Node* delNodePtr);
+void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, size_t position);
+void deleteNode(struct List* listPtr, size_t number);
 void printList(struct List* listPtr);
 void clearList(struct List* listPtr);
 bool isCycled(struct List* listPtr);
