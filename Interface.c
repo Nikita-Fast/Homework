@@ -61,8 +61,10 @@ int main() {
 			struct List* list;
 		case CREATE_LIST_OP:
 			list = createList();
-			node = createNode((int)list);
-			insertToEnd(listOfAddresses, node);
+			if (list != NULL) {
+				node = createNode((int)list);
+				insertToEnd(listOfAddresses, node);
+			}
 			colorOutput(hConsole, blue);
 			printf("List was successfully created, its address is %p\n", list);
 			colorOutput(hConsole, white);
