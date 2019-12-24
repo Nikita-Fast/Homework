@@ -1,22 +1,11 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include "listLibrary.h"
+#include <stdlib.h>
+#include <malloc.h>
 #include <string.h>
 #include <limits.h>
-
-struct HashTable {
-	struct List* arrayOfLists;
-	size_t size;
-	size_t(*hashFunction)(char*, size_t);
-};
-
-struct Information {
-	size_t numberOfElements;
-	size_t numberOfChains;
-	size_t minChainLength;
-	size_t maxChainLength;
-	size_t averageChainLength;
-};
+#include <time.h>
+#include "listLibrary.h"
+#include "hashTableLibrary.h"
 
 size_t compressionMap(long long int hash, size_t size) {
 	size_t index = 0;
@@ -53,129 +42,118 @@ size_t symbolSumHash(char* key, size_t size) {
 	compressionMap(hash, size);
 }
 
-struct HashTable createHashTable(size_t size, size_t(*hashFunctionPtr)(char*, size_t)) {
-	struct HashTable myHashTable;
-	myHashTable.arrayOfLists = (struct List*)malloc(size * sizeof(struct List));
-	if (myHashTable.arrayOfLists == NULL) {
+struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key)) {
+	struct HashTable* table = (struct HashTable*)malloc(sizeof(struct HashTable));
+	if (table == NULL) {
+		printf("failed to create hash table\n");
 		exit(1);
 	}
-	for (size_t i = 0; i < size; i++) {
-		myHashTable.arrayOfLists[i] = *createList();   //is it good idea?
+	table->strings = (struct List*)malloc(size * sizeof(struct List*));
+	for (size_t i = 0; i < size; i++)
+	{
+		table->strings[i] = createList();
 	}
-	myHashTable.hashFunction = hashFunctionPtr;
-	myHashTable.size = size;
-	return myHashTable;
+	table->size = size;
+	table->hashFunction = hashFunction;
+	return table;
 }
 
-void freeHashTable(struct HashTable* myHashTable) {
-	size_t length = myHashTable->size;
-	for (size_t i = 0; i < length; i++) {
-		clearList(&(myHashTable->arrayOfLists[i]));
+void freeHashTable(struct HashTable* table) {
+	for (size_t i = 0; i < table->size; i++) {
+		freeList(table->strings[i]);
 	}
-	free(myHashTable->arrayOfLists);
+	free(table->strings);
+	free(table);
 }
 
-void insertElement(struct HashTable* myHashTable, char* key, int value) {
-	size_t index = myHashTable->hashFunction(key, myHashTable->size);
-	insertToEnd(&(myHashTable->arrayOfLists[index]), createNode(value, key));
-}
-
-struct Node* findNode(struct HashTable* table, char* key) { 
+void insertElementToTable(struct HashTable* table, char* key) {
 	size_t index = table->hashFunction(key, table->size);
-	if (table->arrayOfLists[index].length == 0) {
-		return NULL;
-	}
-	else {
-		struct List* list = &(table->arrayOfLists[index]);
-		struct Node* node = list->head;
-		while (node != NULL) {
-			if (strcmp(node->key, key) == 0) {
-				return node;
-			}
-			node = node->next;
-		}
-		return NULL;
-	}
+	insertToEnd(table->strings[index], 1, key);
 }
 
-void insertElementExtended(struct HashTable* table, char* key, int value) { //for the job about counting words in the text
+struct Node* findElement(struct HashTable* table, char* key) {
 	size_t index = table->hashFunction(key, table->size);
-	struct Node* node = findNode(table, key);
-	if (node == NULL) {
-		insertElement(table, key, value);
-	}
-	else {
-		node->val++;
-	}
+	return findNode(table->strings[index], key);
 }
 
-void deleteElement(struct HashTable* table, char* key) {
-	struct Node* node = findNode(table, key);
+void deleteElementFromTable(struct HashTable* table, char* key) {
+	struct Node* node = findElement(table, key);
 	if (node != NULL) {
 		size_t index = table->hashFunction(key, table->size);
-		removeNode(&(table->arrayOfLists[index]), node);
+		deleteNode(table->strings[index], key);
 	}
 }
 
-void printHashTable(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
-	struct Node* currentNode = NULL;
-	for (size_t i = 0; i < size; i++) {
-		if (myHashTable->arrayOfLists[i].length > 0) {
-			printList(&myHashTable->arrayOfLists[i]);
-		}
+int getValue(struct HashTable* table, char* key) {
+	struct Node* node = findElement(table, key);
+	if (node != NULL) {
+		return node->value;
+	}
+	else {
+		return 0;
 	}
 }
 
-int numberOfChains(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
+void set(struct HashTable* table, char* key, int value) {//передать value который на 1 больше 
+	struct Node* node = findElement(table, key);
+	if (node != NULL) {
+		node->value = value;
+	}
+	else {
+		size_t index = table->hashFunction(key, table->size);
+		insertToBegin(table->strings[index], value, key);
+	}
+}
+
+size_t numberOfChains(struct HashTable* table) {
+	size_t size = table->size;
 	size_t count = 0;
 	for (size_t i = 0; i < size; i++) {
-		if (myHashTable->arrayOfLists[i].length > 0) {
+		if (table->strings[i]->length > 0) {
 			count++;
 		}
 	}
 	return count;
 }
 
-int numberOfElemnts(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
+size_t numberOfElemnts(struct HashTable* table) {
+	size_t size = table->size;
 	size_t number = 0;
 	for (size_t i = 0; i < size; i++) {
-		number += myHashTable->arrayOfLists[i].length;
+		number += table->strings[i]->length;
 	}
 	return number;
 }
 
-int minChainLength(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
+size_t minChainLength(struct HashTable* table) {
+	size_t size = table->size;
 	size_t min = _UI32_MAX;
 	for (size_t i = 0; i < size; i++) {
-		if (myHashTable->arrayOfLists[i].length < min && myHashTable->arrayOfLists[i].length > 0) {
-			min = myHashTable->arrayOfLists[i].length;
+		if (table->strings[i]->length < min && table->strings[i]->length > 0) {
+			min = table->strings[i]->length;
 		}
 	}
 	return min;
 }
 
-int maxChainLength(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
-	size_t max = myHashTable->arrayOfLists->length;
+size_t maxChainLength(struct HashTable* table) {
+	size_t size = table->size;
+	size_t max = table->strings[0]->length;
 	for (size_t i = 0; i < size; i++) {
-		if (myHashTable->arrayOfLists[i].length > max) {
-			max = myHashTable->arrayOfLists[i].length;
+		if (table->strings[i]->length > max) {
+			max = table->strings[i]->length;
 		}
 	}
 	return max;
 }
 
-int averageChainLength(struct HashTable* myHashTable) {
-	size_t size = myHashTable->size;
+size_t averageChainLength(struct HashTable* table) {
+	size_t size = table->size;
 	size_t sumLength = 0;
 	size_t numberOfChains = 0;
 	for (size_t i = 0; i < size; i++) {
-		if (myHashTable->arrayOfLists[i].length > 0) {
-			sumLength += myHashTable->arrayOfLists[i].length;
+		if (table->strings[i]->length > 0) {
+			sumLength += table->strings[i]->length;
 			numberOfChains++;
 		}
 	}
@@ -189,4 +167,3 @@ void getInformation(struct HashTable* myHashTable, struct Information* myInf) {
 	myInf->maxChainLength = maxChainLength(myHashTable);
 	myInf->averageChainLength = averageChainLength(myHashTable);
 }
-

@@ -1,12 +1,10 @@
-#include <stdlib.h>
-#include "listLibrary.h"
-#ifndef HASH_TABLE_LIBRARY INCLUDED
-#define HASH_TABLE_LIBRARY INCLUDED
+#ifndef HASHTABLE_LIBRARY_INCLUDED
+#define HASHTABLE_LIBRARY_INCLUDED
 
 struct HashTable {
-	struct List* arrayOfLists;
+	struct List** strings;
+	size_t(*hashFunction)(char* key, size_t size);
 	size_t size;
-	size_t(*hashFunction)(char*, size_t);
 };
 
 struct Information {
@@ -17,23 +15,22 @@ struct Information {
 	size_t averageChainLength;
 };
 
-size_t constantHash(char* key, size_t size);
-size_t symbolSumHash(char* key, size_t size);
 size_t compressionMap(long long int hash, size_t size);
 size_t polynomialHash(char* key, size_t size);
-struct HashTable createHashTable(size_t size, size_t(*hashFunctionPtr)(char*, size_t));
-void freeHashTable(struct HashTable* myHashTable);
-void insertElement(struct HashTable* myHashTable, char* key, int value);
-struct Node* findNode(struct HashTable* table, char* key);
-void insertElementExtended(struct HashTable* table, char* key, int value);
-void deleteElement(struct HashTable* myHashTable, char* key);
-void printHashTable(struct HashTable* myHashTable);
-int numberOfChains(struct HashTable* myHashTable);
-int numberOfElemnts(struct HashTable* myHashTable);
-int minChainLength(struct HashTable* myHashTable);
-int maxChainLength(struct HashTable* myHashTable);
-int averageChainLength(struct HashTable* myHashTable);
+size_t constantHash(char* key, size_t size);
+size_t symbolSumHash(char* key, size_t size);
+struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key));
+void freeHashTable(struct HashTable* table);
+void insertElementToTable(struct HashTable* table, char* word);
+void deleteElementFromTable(struct HashTable* table, char* key);
+struct Node* findElement(struct HashTable* table, char* key);
+int getValue(struct HashTable* table, char* key);
+void set(struct HashTable* table, char* key, int value);
+size_t numberOfChains(struct HashTable* table);
+size_t numberOfElemnts(struct HashTable* table);
+size_t minChainLength(struct HashTable* table);
+size_t maxChainLength(struct HashTable* table);
+size_t averageChainLength(struct HashTable* table);
 void getInformation(struct HashTable* myHashTable, struct Information* myInf);
 
-#endif HASH_TABLE_LIBRARY INCLUDED
-
+#endif HASHTABLE_LIBRARY_INCLUDED
