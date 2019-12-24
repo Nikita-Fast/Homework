@@ -2,6 +2,16 @@
 #include <stdio.h>
 #include <Windows.h>
 #include "listLibrary.h"
+#include <crtdbg.h>
+
+#ifdef _CRTDBG_MAP_ALLOC
+inline void* __cdecl operator new(unsigned int s)
+{
+	return ::operator new(s, _NORMAL_BLOCK, __FILE__, __LINE__);
+}
+#endif
+#define new new( _NORMAL_BLOCK, __FILE__, __LINE__)
+
 #define CREATE_LIST_OP 1
 #define INSERT_ELEMENT_OP 2
 #define DELETE_ELEMENT_OP 3
@@ -32,10 +42,13 @@ void colorOutput(HANDLE hConsole, int textColor) {
 }
 
 int main() {
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	int blue = BLUE_COLOR;
 	int white = WHITE_COLOR;
 	colorOutput(hConsole, white);
+	struct List* listOfAddresses = createList();
 	int operation = 0;
 	operation = chooseTheOperation();
 	while (operation != EXIT_OP) {
@@ -48,8 +61,10 @@ int main() {
 			struct List* list;
 		case CREATE_LIST_OP:
 			list = createList();
+			node = createNode((int)list);
+			insertToEnd(listOfAddresses, node);
 			colorOutput(hConsole, blue);
-			printf("List was successfully created, his address is %p\n", list);
+			printf("List was successfully created, its address is %p\n", list);
 			colorOutput(hConsole, white);
 			break;
 		case INSERT_ELEMENT_OP:
@@ -110,7 +125,16 @@ int main() {
 		}
 		operation = chooseTheOperation();
 	}
+	size_t length = listOfAddresses->length;
+	struct Node* currNode = listOfAddresses->head;
+	while (currNode != NULL) { 
+		struct Node* toFree = currNode;
+		freeList((struct List*)toFree->val);
+		currNode = currNode->next;
+	}
+	freeList(listOfAddresses);
 	colorOutput(hConsole, blue);
 	printf("Exit from interface\n");
 	colorOutput(hConsole, white);
+	_CrtDumpMemoryLeaks();
 }

@@ -26,6 +26,9 @@ struct Node* createNode(int value) {
 
 struct List* createList() {
 	struct List* list = (struct List*)malloc(sizeof(struct List));
+	if (list == NULL) {
+		return NULL;
+	}
 	list->head = NULL;
 	list->end = NULL;
 	list->length = 0;
@@ -131,6 +134,11 @@ void clearList(struct List* listPtr) {
 		listPtr->head = cur;
 	}
 	listPtr->length = 0;
+}
+
+void freeList(struct List* list) {
+	clearList(list);
+	free(list);
 }
 
 bool isCycled(struct List* listPtr) {

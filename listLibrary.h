@@ -22,6 +22,7 @@ void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, size_t po
 void deleteNode(struct List* listPtr, size_t number);
 void printList(struct List* listPtr);
 void clearList(struct List* listPtr);
+void freeList(struct List* list);
 bool isCycled(struct List* listPtr);
  
 #endif LIST_LIBRARY_INCLUDED
