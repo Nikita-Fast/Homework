@@ -3,19 +3,41 @@
 #include <stdint.h>
 #include <string.h>
 #include "hashTableLibrary.h"
-#define MEMORY_SIZE 1024 //need to be increased  think about malloc
-#define MAX_STACK_SIZE 1024
-//#define MAX_ADDR MEMORY_SIZE / sizeof(int32_t)
+#define MEMORY_SIZE 1024 * 1024 
+#define MAX_STACK_SIZE 256 * 256
+#define MAX_ADDR MEMORY_SIZE / sizeof(int32_t) 
 #define MAX_LINES 200
+#define STACK_OVERFLOW 888
+#define STACK_UNDERFLOW 777
+#define STACK_IS_EMPTY 111
+#define MEMORY_ALLOCATION_FAILED 222
+#define INCORRECT_ADDRESS 333
+#define LABELS_NUMBER 100
+#define MAX_STR_LEN 100
 
 struct Stack {
-	int data[MAX_STACK_SIZE];
+	int* data;
 	size_t size;
 };
 
+struct Stack* createStack() {
+	struct Stack* stack = NULL;
+	stack = malloc(sizeof(struct Stack));
+	if (stack == NULL) {
+		exit(STACK_OVERFLOW);
+	}
+	stack->size = 0;
+	stack->data = malloc(MAX_STACK_SIZE * sizeof(int));
+	if (stack->data == NULL) {
+		free(stack);
+		exit(STACK_OVERFLOW);
+	}
+	return stack;
+}
+
 void push(struct Stack* stack, int value) {
 	if (stack->size >= MAX_STACK_SIZE) {
-		exit(777);
+		exit(STACK_UNDERFLOW);
 	}
 	stack->data[stack->size] = value;
 	stack->size++;
@@ -23,7 +45,7 @@ void push(struct Stack* stack, int value) {
 
 int pop(struct Stack* stack) {
 	if (stack->size == 0) {
-		exit(-777);
+		exit(STACK_UNDERFLOW);
 	}
 	stack->size--;
 	return stack->data[stack->size];
@@ -31,7 +53,7 @@ int pop(struct Stack* stack) {
 
 int get(struct Stack* stack) {
 	if (stack->size == 0) {
-		exit(111);
+		exit(STACK_IS_EMPTY);
 	}
 	return stack->data[stack->size - 1];
 }
@@ -76,10 +98,19 @@ void cmpOnStack(struct Stack* stack) {
 }
 
 struct State {
-	struct Stack stack;
-	int memory[MEMORY_SIZE];
+	struct Stack* stack;
+	int* memory;
 	size_t ip;
 };
+
+int* allocateMemory() {
+	int* memory = NULL;
+	memory = (int*)malloc(MEMORY_SIZE);
+	if (memory == NULL) {
+		exit(MEMORY_ALLOCATION_FAILED);
+	}
+	return memory;
+}
 
 struct CMD {  
 	int opCode;  
@@ -88,17 +119,13 @@ struct CMD {
 
 struct Program {
 	struct CMD operations[MAX_LINES];
-	struct HashTable lableToLine;
+	struct HashTable* lableToLine;
 };
 
 struct Interpreter {
 	struct Program p;
 	struct State s;
 };
-
-
-
-
 
 void printHashTable(struct HashTable* table) {
 	size_t size = table->size;
@@ -120,7 +147,7 @@ enum Opcodes {
 };
 
 int generateByteCode(char* str) {
-	if (strstr(str, "ld") != NULL && strstr(str, "ldc") == NULL) { //shit, ldc consist of ld!!!!!
+	if (strstr(str, "ld") != NULL && strstr(str, "ldc") == NULL) { 
 		return ld;
 	}
 	if (strstr(str, "st") != NULL) {
@@ -149,82 +176,71 @@ int generateByteCode(char* str) {
 	}
 }
 
+void addLabel(struct Interpreter* myInterpreter, char* str, size_t strNum) {
+	size_t labelLength = strcspn(str, ":");
+	char label[30];
+	strncpy(label, str, labelLength);
+	label[labelLength] = '\0';
+	set(myInterpreter->p.lableToLine, label, strNum);
+}
+
 int main() {
-	struct Interpreter myInterpreter;
-	myInterpreter.s.stack.size = 0;
-	myInterpreter.p.lableToLine = *createHashTable(100, polynomialHash);
-	//struct Program newProgram;
-	char currentString[50];
+	struct Interpreter myInterpreter;   
+	myInterpreter.s.memory = allocateMemory(); 
+	myInterpreter.s.stack = createStack();
+	myInterpreter.s.ip = 0;   
+	myInterpreter.p.lableToLine = createHashTable(LABELS_NUMBER, polynomialHash);   
 	FILE* labelsInfo;
 	char name[] = "C:\\Users\\Nick Fast\\Desktop\\test.txt";
 	labelsInfo = fopen(name, "r");
+	char currentString[MAX_STR_LEN];
 	size_t i = 0;  //gives info about the number of current instruction that we will compare with label
-	while (fgets(currentString, 50, labelsInfo) != NULL) {
-		//printf("%s\n", currentString);
+	while (fgets(currentString, MAX_STR_LEN, labelsInfo) != NULL) {
 		if (strchr(currentString, ':') != NULL) {
-			size_t labelLength = strcspn(currentString, ":");
-			char label[30];
-			strncpy(label, currentString, labelLength);
-			label[labelLength] = '\0';
-			set(&myInterpreter.p.lableToLine, label, i);
+			addLabel(&myInterpreter, currentString, i);
 		}
 		i++;
 	}
 	fclose(labelsInfo);
-	printHashTable(&myInterpreter.p.lableToLine);
-	//collection info about labels is ended
+	//printHashTable(myInterpreter.p.lableToLine); //collection info about labels is ended
 	FILE* byteCodeGeneration;
 	byteCodeGeneration = fopen(name, "r");
 	i = 0;  
-	while (fgets(currentString, 50, labelsInfo) != NULL) {
-		if (strchr(currentString, ':') != NULL) {
-			size_t labelLength = strcspn(currentString, ":");
-			memset(currentString, '-', labelLength + 1); //clear string from "<labelName>:"
-
-			size_t num = 0;
-			num = strcspn(currentString, "lsacjbr"); //first letters in commands
-			memset(currentString, '-', num);
-
+	while (fgets(currentString, MAX_STR_LEN, labelsInfo) != NULL) {
+		char symbols[] = "ldstcaubmpjre";  //gives the opportunity to have empty strings in program and 
+		if (strpbrk(currentString, symbols) != NULL) {  //add some markup to the program code
+			if (strchr(currentString, ':') != NULL) {  // convert the string to a convenient form
+				size_t labelLength = strcspn(currentString, ":");
+				memset(currentString, '-', labelLength + 1); //clear string from "<labelName>:"
+				size_t num = 0;
+				num = strcspn(currentString, "lsacjbr"); //first letters in commands ld, st, ldc ...
+				memset(currentString, '-', num);
+			}
+			myInterpreter.p.operations[i].opCode = generateByteCode(currentString); //determine operation opCode
+			int opCode = myInterpreter.p.operations[i].opCode; //use shorter name
+			if (opCode == jmp || opCode == br) {  //consider cases when argument is labels name and thus it's string
+				char label[30];
+				sscanf(currentString, "%*s %s", label);
+				myInterpreter.p.operations[i].arg = getValue(myInterpreter.p.lableToLine, label);
+			}
+			if (opCode == ld || opCode == st || opCode == ldc) {
+				sscanf(currentString, "%*s %i", &myInterpreter.p.operations[i].arg);
+				if (opCode == ld || opCode == st) {   // check that ld and st use correct addresses
+					if (myInterpreter.p.operations[i].arg < 0 || myInterpreter.p.operations[i].arg >= MAX_ADDR) {
+						exit(INCORRECT_ADDRESS);
+					}
+				}
+			}
 		}
-		myInterpreter.p.operations[i].opCode = generateByteCode(currentString); //determine operation opCode
-		int opCode = myInterpreter.p.operations[i].opCode; //use shorter name
-		//consider cases when argument is labels name and thus it's string
-		if (opCode == 6) {
-			/*memset(currentString + strcspn(currentString, "jmp"), '-', 3);
-			char label[30];
-			sscanf(currentString, "%s", label);  //terminating null at the end?
-			myInterpreter.p.operations[i].arg = getValue(&myInterpreter.p.lableToLine, label);*/
-			
-			size_t distance = strcspn(currentString, "jmp");
-			memset(currentString + distance, '-', 3);
-			char label[30];
-			sscanf(currentString, "%*s %s", label);  //terminating null at the end?
-			myInterpreter.p.operations[i].arg = getValue(&myInterpreter.p.lableToLine, label);
-		}	
-		if (opCode == 7) {
-			size_t distance = strcspn(currentString, "br");
-			memset(currentString + distance, '-', 2);
-			char label[30];
-			sscanf(currentString, "%*s %s", label);  //terminating null at the end?
-			myInterpreter.p.operations[i].arg = getValue(&myInterpreter.p.lableToLine, label);
-		}
-		
-		if (opCode == 0 || opCode == 1 || opCode == 2) {
-			sscanf(currentString, "%*s %i", &myInterpreter.p.operations[i].arg); 
-		} 
 		i++;
 	}
 	fclose(byteCodeGeneration);
-	/*
-	for (size_t j = 0; j < i; j++) {
-		printf("opcode:%i arg:%i\n", myInterpreter.p.operations[j].opCode, myInterpreter.p.operations[j].arg);
-	}*/
 	i = 0;
 	//start interpreter byte code
-	while (i < MAX_LINES && myInterpreter.p.operations[i].opCode != 8) { //until read the comand "ret"
-		int opCode = myInterpreter.p.operations[i].opCode;
-		struct Stack* stack = &myInterpreter.s.stack;
+	while (i < MAX_LINES && myInterpreter.p.operations[i].opCode != ret) { //until read the comand "ret"
+		struct Stack* stack = myInterpreter.s.stack;
 		int* memory = myInterpreter.s.memory;
+		int opCode = myInterpreter.p.operations[i].opCode;
 		int arg = myInterpreter.p.operations[i].arg;
 		switch (opCode) {
 			case ld: 
@@ -255,6 +271,10 @@ int main() {
 				break;
 		}
 		i++;
+		myInterpreter.s.ip = i;
 	}
-	printf("value on top of stack is %i\n", get(&myInterpreter.s.stack));
+	printf("value on top of stack is %i\n", get(myInterpreter.s.stack));
+	freeHashTable(myInterpreter.p.lableToLine);
+	free(myInterpreter.s.memory);
+	free(myInterpreter.s.stack);
 }

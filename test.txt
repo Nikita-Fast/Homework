@@ -1,0 +1,74 @@
+ldc 100   this is N and max fib Num
+st 5   
+-------- 
+ldc 0 
+st 3   sum = 0
+-------- 
+ldc 1  in cell 4 i keep value of the second fib num
+st 4   
+--------   
+ldc 1 
+st 0    here i store the first fib num
+-------- 
+ld 0
+st 1    this cell keeps mod (in the beginning y and at the end y % 2)
+--------
+ldc 2453  load garbage value in order
+----------------
+loop: st 2  this memory cell used like place for garbage
+--------
+ld 1      decrease the mod by 2
+ldc -2
+add
+st 1
+--------
+ldc 0    cycle willn't break until
+ld 1	 value in mod >= 0
+cmp	 we will get -1 or -2
+ldc 1
+add
+br loop
+----------------
+st 2     remove garbage from stack
+--------
+ld 1
+ldc 2
+add
+st 1 
+ldc 0
+ld 1
+cmp
+br l   executes if y % 2 == 1
+jmp j
+----------------
+l: st 2  remove garbage from stack
+--------
+ld 0
+ld 3	
+add
+st 3    sum += y
+ldc 777
+--------
+j: st 2  remove garbage from stack
+--------
+ld 0    similarly to copy = y
+ld 0	y = y + x
+ld 4	x = copy
+add	
+st 0	but i use stack instead variable copy which represents like memory cell
+st 4
+--------    
+ld 0  	update mod value to use its new value
+st 1	in new step of cycle
+--------  
+ld 0	compare y with max and determine will we make another cycle iteration or not
+ld 5
+cmp
+ldc 1
+add    
+br loop
+----------------
+st 2  	remove garbage from stack
+--------
+ld 3   put sum of fib numbers on top of stack
+ret
