@@ -73,7 +73,8 @@ void insertElementToTable(struct HashTable* table, char* key) {
 
 struct Node* findElement(struct HashTable* table, char* key) {
 	size_t index = table->hashFunction(key, table->size);
-	return findNode(table->strings[index], key);
+	struct Node* node = findNode(table->strings[index], key);
+	return node;
 }
 
 void deleteElementFromTable(struct HashTable* table, char* key) {

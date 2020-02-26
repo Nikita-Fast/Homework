@@ -4,7 +4,7 @@
 #include <string.h>
 #include "hashTableLibrary.h"
 #define MEMORY_SIZE 1024 * 1024 
-#define MAX_STACK_SIZE 256 * 256
+#define MAX_STACK_SIZE 1 * 3
 #define MAX_ADDR MEMORY_SIZE / sizeof(int32_t) 
 #define MAX_LINES 200
 #define STACK_OVERFLOW 888
@@ -14,6 +14,7 @@
 #define INCORRECT_ADDRESS 333
 #define LABELS_NUMBER 100
 #define MAX_STR_LEN 100
+#define FAILED_TO_FIND_NODE 1337
 
 struct Stack {
 	int* data;
@@ -99,13 +100,13 @@ void cmpOnStack(struct Stack* stack) {
 
 struct State {
 	struct Stack* stack;
-	int* memory;
+	int32_t* memory;
 	size_t ip;
 };
 
 int* allocateMemory() {
 	int* memory = NULL;
-	memory = (int*)malloc(MEMORY_SIZE);
+	memory = (int32_t*)malloc(MEMORY_SIZE);
 	if (memory == NULL) {
 		exit(MEMORY_ALLOCATION_FAILED);
 	}
@@ -210,17 +211,20 @@ int main() {
 		char symbols[] = "ldstcaubmpjre";  //gives the opportunity to have empty strings in program and 
 		if (strpbrk(currentString, symbols) != NULL) {  //add some markup to the program code
 			if (strchr(currentString, ':') != NULL) {  // convert the string to a convenient form
-				size_t labelLength = strcspn(currentString, ":");
-				memset(currentString, '-', labelLength + 1); //clear string from "<labelName>:"
-				size_t num = 0;
-				num = strcspn(currentString, "lsacjbr"); //first letters in commands ld, st, ldc ...
-				memset(currentString, '-', num);
+				size_t len = strcspn(currentString, ":");
+				memset(currentString, ' ', len + 1); //remove "<label>:"
 			}
-			myInterpreter.p.operations[i].opCode = generateByteCode(currentString); //determine operation opCode
-			int opCode = myInterpreter.p.operations[i].opCode; //use shorter name
-			if (opCode == jmp || opCode == br) {  //consider cases when argument is labels name and thus it's string
-				char label[30];
+			char comand[MAX_STR_LEN]; 
+			sscanf(currentString, "%s", comand);
+			myInterpreter.p.operations[i].opCode = generateByteCode(comand);
+			int opCode = myInterpreter.p.operations[i].opCode;
+			if (opCode == jmp || opCode == br) {
+				char label[MAX_STR_LEN];
+				memset(label, '\0', MAX_STR_LEN);
 				sscanf(currentString, "%*s %s", label);
+				if (findElement(myInterpreter.p.lableToLine, label) == NULL) {
+					exit(FAILED_TO_FIND_NODE);
+				}
 				myInterpreter.p.operations[i].arg = getValue(myInterpreter.p.lableToLine, label);
 			}
 			if (opCode == ld || opCode == st || opCode == ldc) {
