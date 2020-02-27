@@ -17,7 +17,7 @@
 #define FAILED_TO_FIND_NODE 1337
 
 struct Stack {
-	int* data;
+	int32_t* data;
 	size_t size;
 };
 
@@ -28,7 +28,7 @@ struct Stack* createStack() {
 		exit(STACK_OVERFLOW);
 	}
 	stack->size = 0;
-	stack->data = malloc(MAX_STACK_SIZE * sizeof(int));
+	stack->data = malloc(MAX_STACK_SIZE * sizeof(int32_t));
 	if (stack->data == NULL) {
 		free(stack);
 		exit(STACK_OVERFLOW);
@@ -179,7 +179,7 @@ int generateByteCode(char* str) {
 
 void addLabel(struct Interpreter* myInterpreter, char* str, size_t strNum) {
 	size_t labelLength = strcspn(str, ":");
-	char label[30];
+	char label[MAX_STR_LEN];
 	strncpy(label, str, labelLength);
 	label[labelLength] = '\0';
 	set(myInterpreter->p.lableToLine, label, strNum);
