@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="badc4511-ee98-4798-b17a-48bd34bd4a43" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Homework2" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="JUnit5 Test Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1a7RSZcZyX2en0qpENSNsI7Iyqz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/com/company" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.company.cars" />
+      <recent name="com.company.basic" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.All in Homework2">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="com.company.Main" />
+      <module name="ClassesHierarchy" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Homework2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ClassesHierarchy" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CarTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ClassesHierarchy" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.company.basic.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.company.basic" />
+      <option name="MAIN_CLASS_NAME" value="com.company.basic.CarTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FerrariTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ClassesHierarchy" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.company.cars.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.company.cars" />
+      <option name="MAIN_CLASS_NAME" value="com.company.cars.FerrariTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JaguarTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ClassesHierarchy" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.company.cars.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.company.cars" />
+      <option name="MAIN_CLASS_NAME" value="com.company.cars.JaguarTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.CarTest" />
+      <item itemvalue="JUnit.FerrariTest" />
+      <item itemvalue="JUnit.All in Homework2" />
+      <item itemvalue="JUnit.JaguarTest" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in Homework2" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.JaguarTest" />
+        <item itemvalue="JUnit.FerrariTest" />
+        <item itemvalue="JUnit.CarTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="badc4511-ee98-4798-b17a-48bd34bd4a43" name="Default Changelist" comment="" />
+      <created>1586084646341</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586084646341</updated>
+      <workItem from="1586084650644" duration="16523000" />
+      <workItem from="1586119623348" duration="50000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="330" y="94" key="#Project_Structure" timestamp="1586099576258">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="330" y="94" key="#Project_Structure/0.0.1474.864@0.0.1474.864" timestamp="1586099576258" />
+    <state x="93" y="93" width="1288" height="678" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog" timestamp="1586117755789">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="93" y="93" width="1288" height="678" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1474.864@0.0.1474.864" timestamp="1586117755789" />
+    <state x="508" y="242" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1586084931010">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="508" y="242" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1474.864@0.0.1474.864" timestamp="1586084931010" />
+    <state width="1431" height="159" key="GridCell.Tab.0.bottom" timestamp="1586119672936">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="159" key="GridCell.Tab.0.bottom/0.0.1474.864@0.0.1474.864" timestamp="1586119672936" />
+    <state width="1431" height="159" key="GridCell.Tab.0.center" timestamp="1586119672936">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="159" key="GridCell.Tab.0.center/0.0.1474.864@0.0.1474.864" timestamp="1586119672936" />
+    <state width="1431" height="159" key="GridCell.Tab.0.left" timestamp="1586119672936">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="159" key="GridCell.Tab.0.left/0.0.1474.864@0.0.1474.864" timestamp="1586119672936" />
+    <state width="1431" height="159" key="GridCell.Tab.0.right" timestamp="1586119672936">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="159" key="GridCell.Tab.0.right/0.0.1474.864@0.0.1474.864" timestamp="1586119672936" />
+    <state x="553" y="213" key="chooseDestDirectoryDialog" timestamp="1586119163239">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="553" y="213" key="chooseDestDirectoryDialog/0.0.1474.864@0.0.1474.864" timestamp="1586119163239" />
+    <state x="446" y="260" key="com.intellij.ide.util.TipDialog" timestamp="1586119625739">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="446" y="260" key="com.intellij.ide.util.TipDialog/0.0.1474.864@0.0.1474.864" timestamp="1586119625739" />
+    <state x="467" y="333" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1586099464617">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="467" y="333" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1474.864@0.0.1474.864" timestamp="1586099464617" />
+    <state x="745" y="177" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1586117587015">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="745" y="177" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1474.864@0.0.1474.864" timestamp="1586117587015" />
+    <state x="400" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1586101422708">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="400" y="181" width="672" height="678" key="search.everywhere.popup/0.0.1474.864@0.0.1474.864" timestamp="1586101422708" />
+  </component>
+</project>
