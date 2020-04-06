@@ -42,13 +42,13 @@ size_t symbolSumHash(char* key, size_t size) {
 	compressionMap(hash, size);
 }
 
-struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key)) {
+struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key, size_t size)) {
 	struct HashTable* table = (struct HashTable*)malloc(sizeof(struct HashTable));
 	if (table == NULL) {
 		printf("failed to create hash table\n");
 		exit(1);
 	}
-	table->strings = (struct List*)malloc(size * sizeof(struct List*));
+	table->strings = (struct List**)malloc(size * sizeof(struct List*));  //table->strings = (struct List*)malloc(size * sizeof(struct List*));
 	for (size_t i = 0; i < size; i++)
 	{
 		table->strings[i] = createList();

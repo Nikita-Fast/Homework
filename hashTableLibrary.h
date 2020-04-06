@@ -3,7 +3,7 @@
 
 struct HashTable {
 	struct List** strings;
-	size_t(*hashFunction)(char* key, size_t size);
+	size_t (*hashFunction)(char* key, size_t size);
 	size_t size;
 };
 
@@ -19,7 +19,7 @@ size_t compressionMap(long long int hash, size_t size);
 size_t polynomialHash(char* key, size_t size);
 size_t constantHash(char* key, size_t size);
 size_t symbolSumHash(char* key, size_t size);
-struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key));
+struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key, size_t size));
 void freeHashTable(struct HashTable* table);
 void insertElementToTable(struct HashTable* table, char* word);
 void deleteElementFromTable(struct HashTable* table, char* key);
@@ -33,4 +33,5 @@ size_t maxChainLength(struct HashTable* table);
 size_t averageChainLength(struct HashTable* table);
 void getInformation(struct HashTable* myHashTable, struct Information* myInf);
 
-#endif HASHTABLE_LIBRARY_INCLUDED
+#endif //HASHTABLE_LIBRARY_INCLUDED
+

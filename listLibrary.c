@@ -137,7 +137,7 @@ void freeList(struct List* list) {
 	free(list);
 }
 
-printList(struct List* list) {
+void printList(struct List* list) {
 	struct Node* node = list->head;
 	while (node) {
 		printf("[%s %i] ", node->key, node->value);

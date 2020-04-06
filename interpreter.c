@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "hashTableLibrary.h"
+#include "listLibrary.h"
 #define MEMORY_SIZE 1024 * 1024 
 #define MAX_STACK_SIZE 1 * 3
 #define MAX_ADDR MEMORY_SIZE / sizeof(int32_t) 
@@ -12,9 +13,13 @@
 #define STACK_IS_EMPTY 111
 #define MEMORY_ALLOCATION_FAILED 222
 #define INCORRECT_ADDRESS 333
-#define LABELS_NUMBER 100
+#define MAX_LABELS_NUMBER 100
 #define MAX_STR_LEN 100
 #define FAILED_TO_FIND_NODE 1337
+#define FAILED_TO_OPEN_FILE_TO_COLLECT_LABELS_INFO 1999
+#define FAILED_TO_OPEN_FILE_TO_GENERATE_BYTE_CODE 2000
+#define TRUE 1;
+#define FALSE 0;
 
 struct Stack {
 	int32_t* data;
@@ -23,12 +28,12 @@ struct Stack {
 
 struct Stack* createStack() {
 	struct Stack* stack = NULL;
-	stack = malloc(sizeof(struct Stack));
+	stack = (struct Stack*)malloc(sizeof(struct Stack));
 	if (stack == NULL) {
 		exit(STACK_OVERFLOW);
 	}
 	stack->size = 0;
-	stack->data = malloc(MAX_STACK_SIZE * sizeof(int32_t));
+	stack->data = (int32_t*)malloc(MAX_STACK_SIZE * sizeof(int32_t));
 	if (stack->data == NULL) {
 		free(stack);
 		exit(STACK_OVERFLOW);
@@ -185,52 +190,68 @@ void addLabel(struct Interpreter* myInterpreter, char* str, size_t strNum) {
 	set(myInterpreter->p.lableToLine, label, strNum);
 }
 
-int main() {
-	struct Interpreter myInterpreter;   
-	myInterpreter.s.memory = allocateMemory(); 
-	myInterpreter.s.stack = createStack();
-	myInterpreter.s.ip = 0;   
-	myInterpreter.p.lableToLine = createHashTable(LABELS_NUMBER, polynomialHash);   
-	FILE* labelsInfo;
-	char name[] = "C:\\Users\\Nick Fast\\Desktop\\test.txt";
-	labelsInfo = fopen(name, "r");
+int stringHasLabel(char* string) {
+	if (strchr(string, ':') != NULL) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
+void processString(char* string, struct Interpreter* myInterpreter, size_t strNumber) {
+	if (stringHasLabel(string)) {
+		addLabel(myInterpreter, string, strNumber);
+	}
+}
+
+void collectLabelsInf(char* fileName, struct Interpreter* myInterpreter) {
+	FILE* file;
+	//char name[] = "test.txt";
+	file = fopen(fileName, "r");
+	if (file == NULL) {
+		exit(FAILED_TO_OPEN_FILE_TO_COLLECT_LABELS_INFO);
+	}
 	char currentString[MAX_STR_LEN];
-	size_t i = 0;  //gives info about the number of current instruction that we will compare with label
-	while (fgets(currentString, MAX_STR_LEN, labelsInfo) != NULL) {
-		if (strchr(currentString, ':') != NULL) {
-			addLabel(&myInterpreter, currentString, i);
-		}
+	size_t i = 0;
+	while (fgets(currentString, MAX_STR_LEN, file) != NULL) {
+		processString(currentString, myInterpreter, i);
 		i++;
 	}
-	fclose(labelsInfo);
-	//printHashTable(myInterpreter.p.lableToLine); //collection info about labels is ended
+	fclose(file);
+}
+
+void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 	FILE* byteCodeGeneration;
-	byteCodeGeneration = fopen(name, "r");
-	i = 0;  
-	while (fgets(currentString, MAX_STR_LEN, labelsInfo) != NULL) {
+	byteCodeGeneration = fopen(fileName, "r");
+	if (byteCodeGeneration == NULL) {
+		exit(FAILED_TO_OPEN_FILE_TO_GENERATE_BYTE_CODE);
+	}
+	char currentString[MAX_STR_LEN];
+	size_t i = 0;
+	while (fgets(currentString, MAX_STR_LEN, byteCodeGeneration) != NULL) { //here was written  fgets(currentString, MAX_STR_LEN, labelsInfo) why labelsInfo ???
 		char symbols[] = "ldstcaubmpjre";  //gives the opportunity to have empty strings in program and 
 		if (strpbrk(currentString, symbols) != NULL) {  //add some markup to the program code
 			if (strchr(currentString, ':') != NULL) {  // convert the string to a convenient form
 				size_t len = strcspn(currentString, ":");
 				memset(currentString, ' ', len + 1); //remove "<label>:"
 			}
-			char comand[MAX_STR_LEN]; 
+			char comand[MAX_STR_LEN];
 			sscanf(currentString, "%s", comand);
-			myInterpreter.p.operations[i].opCode = generateByteCode(comand);
-			int opCode = myInterpreter.p.operations[i].opCode;
+			//myInterpreter.p.operations[i].opCode = generateByteCode(comand);
+			myInterpreter->p.operations[i].opCode = generateByteCode(comand);
+			int opCode = myInterpreter->p.operations[i].opCode;
 			if (opCode == jmp || opCode == br) {
 				char label[MAX_STR_LEN];
 				memset(label, '\0', MAX_STR_LEN);
 				sscanf(currentString, "%*s %s", label);
-				if (findElement(myInterpreter.p.lableToLine, label) == NULL) {
+				if (findElement(myInterpreter->p.lableToLine, label) == NULL) {
 					exit(FAILED_TO_FIND_NODE);
 				}
-				myInterpreter.p.operations[i].arg = getValue(myInterpreter.p.lableToLine, label);
+				myInterpreter->p.operations[i].arg = getValue(myInterpreter->p.lableToLine, label);
 			}
 			if (opCode == ld || opCode == st || opCode == ldc) {
-				sscanf(currentString, "%*s %i", &myInterpreter.p.operations[i].arg);
+				sscanf(currentString, "%*s %i", &myInterpreter->p.operations[i].arg);
 				if (opCode == ld || opCode == st) {   // check that ld and st use correct addresses
-					if (myInterpreter.p.operations[i].arg < 0 || myInterpreter.p.operations[i].arg >= MAX_ADDR) {
+					if (myInterpreter->p.operations[i].arg < 0 || myInterpreter->p.operations[i].arg >= MAX_ADDR) {
 						exit(INCORRECT_ADDRESS);
 					}
 				}
@@ -239,44 +260,60 @@ int main() {
 		i++;
 	}
 	fclose(byteCodeGeneration);
-	i = 0;
-	//start interpreter byte code
-	while (i < MAX_LINES && myInterpreter.p.operations[i].opCode != ret) { //until read the comand "ret"
-		struct Stack* stack = myInterpreter.s.stack;
-		int* memory = myInterpreter.s.memory;
-		int opCode = myInterpreter.p.operations[i].opCode;
-		int arg = myInterpreter.p.operations[i].arg;
+}
+
+void interpreterByteCode(struct Interpreter* myInterpreter) {
+	size_t i = 0;
+	while (i < MAX_LINES && myInterpreter->p.operations[i].opCode != ret) { //until read the comand "ret"
+		struct Stack* stack = myInterpreter->s.stack;
+		int* memory = myInterpreter->s.memory;
+		int opCode = myInterpreter->p.operations[i].opCode;
+		int arg = myInterpreter->p.operations[i].arg;
 		switch (opCode) {
-			case ld: 
-				loadFromMemory(stack, memory, arg);
-				break;
-			case st:
-				uploadFromStack(stack, memory, arg);
-				break;
-			case ldc:
-				loadConst(stack, arg);
-				break;
-			case add:
-				addOnStack(stack);
-				break;
-			case sub:
-				subOnStack(stack);
-				break;
-			case cmp:
-				cmpOnStack(stack);
-				break;
-			case jmp:
+		case ld:
+			loadFromMemory(stack, memory, arg);
+			break;
+		case st:
+			uploadFromStack(stack, memory, arg);
+			break;
+		case ldc:
+			loadConst(stack, arg);
+			break;
+		case add:
+			addOnStack(stack);
+			break;
+		case sub:
+			subOnStack(stack);
+			break;
+		case cmp:
+			cmpOnStack(stack);
+			break;
+		case jmp:
+			i = arg - 1;
+			break;
+		case br:
+			if (get(stack) != 0) {
 				i = arg - 1;
-				break;
-			case br:
-				if (get(stack) != 0) {
-					i = arg - 1;
-				}
-				break;
+			}
+			break;
 		}
 		i++;
-		myInterpreter.s.ip = i;
+		myInterpreter->s.ip = i;
 	}
+}
+
+int main() {
+	struct Interpreter myInterpreter;   
+	myInterpreter.s.memory = allocateMemory(); 
+	myInterpreter.s.stack = createStack();
+	myInterpreter.s.ip = 0;   
+	myInterpreter.p.lableToLine = createHashTable(MAX_LABELS_NUMBER, polynomialHash);   
+	char fileName[] = "test.txt";
+
+	collectLabelsInf(fileName, &myInterpreter); 
+	createByteCode(fileName, &myInterpreter);
+	interpreterByteCode(&myInterpreter);
+
 	printf("value on top of stack is %i\n", get(myInterpreter.s.stack));
 	freeHashTable(myInterpreter.p.lableToLine);
 	free(myInterpreter.s.memory);
