@@ -171,51 +171,47 @@ struct Boundaries* createBoundaries(struct Interpreter* myInterpreter) {
 	size_t processingBrNumber = 0;
 	for (size_t op = 0; op < MAX_LINES; op++) {
 		int opCode = myInterpreter->p.operations[op].opCode;
-		if (opCode == br) {
+		if (opCode == br || opCode == jmp) {
 			int argument = myInterpreter->p.operations[op].arg;
-			if (argument > op) {  //means that br jumps forward
-				if (myInterpreter->p.operations[argument - 1].opCode == jmp) {
-					int end = myInterpreter->p.operations[argument - 1].arg; 
-					myBoundaries[processingBrNumber].start = op;
-					myBoundaries[processingBrNumber].end = end;
-					processingBrNumber++;
-				}
+			if (argument > op) {  //means that br or jmp jumps forward
+				int end = argument; 
+				myBoundaries[processingBrNumber].start = op;
+				myBoundaries[processingBrNumber].end = end;
+				processingBrNumber++;
 			}
 		}
 	}
 	return myBoundaries;
 }
 
-int checkRetCommand(struct Interpreter* myInterpreter, int whereRet) { 
-	struct Boundaries* myBoundaries = createBoundaries(myInterpreter);
+int checkRetCommand(struct Interpreter* myInterpreter, int whereRet, struct Boundaries* myBoundaries) {
 	int strNumWhereRet = whereRet;
 	for (size_t k = 0; k < 10; k++) {
-		struct Boundaries currBound = myBoundaries[k];
-		if (strNumWhereRet > currBound.start && strNumWhereRet < currBound.end) {
-			free(myBoundaries);
+		if (strNumWhereRet > myBoundaries[k].start && strNumWhereRet < myBoundaries[k].end) {
 			return TRUE;
 		}
 	}
-	free(myBoundaries);
 	return FALSE;
 }
 
-void retChecker(struct Interpreter* myInterpreter) { // also doesn't allow to put several ret commands successively
-	int finalRetNum = 0; //we don't check last ret since it can't be inside if-else block
+void retChecker(struct Interpreter* myInterpreter) {
+	int finalRetNum = 0; //we don't check last ret since it can't be inside if-else block or just if block
 	for (size_t i = 0; i < MAX_LINES; i++) {
 		if (myInterpreter->p.operations[i].opCode == ret) {
 			finalRetNum = i;
 		}
 	}
+	struct Boundaries* myBoundaries = createBoundaries(myInterpreter);
 	for (size_t i = 0; i < MAX_LINES; i++) {
 		if (myInterpreter->p.operations[i].opCode == ret && i < finalRetNum) {
-			if (checkRetCommand(myInterpreter, i) == FAILED_CHECK) {
+			if (checkRetCommand(myInterpreter, i, myBoundaries) == FAILED_CHECK) {
 				//printf("you placed ret in invalid place\n");
 				exit(INVALID_RET_LOCATION);
 			}
 			//printf("ret placed normally\n");
 		}
 	}
+	free(myBoundaries);
 }
 
 int generateByteCode(char* str) {
@@ -338,7 +334,7 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 	if (existInstrAfterLatestRet == TRUE) {
 		exit(LAST_COMMAND_IN_PROGRAM_IS_NOT_RET);
 	}
-	retChecker(myInterpreter);  //check that ret commands in middle of program placed inside if-else blocks
+	retChecker(myInterpreter);  //check that ret commands in middle of program placed inside if-else or just if blocks 
 }
 
 void interpreterByteCode(struct Interpreter* myInterpreter) {

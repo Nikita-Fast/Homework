@@ -1,4 +1,4 @@
-ldc 13 N
+ldc 21 N
 st 5
 ldc 1
 ldc 1
@@ -8,7 +8,12 @@ ldc 0	sum
 st 3    
 ldc 1   //this check value is intended not to add even fibonacci numbers, 
 st 2	//which are every third number in the sequence
---------
+-------- 
+jmp tw
+ret      //now we could place ret inside if block
+tw: ldc 5
+st 4
+---------
         
 ldc 1  //this part shows that ret could be placed inside if-else block. put 0 to use ret
 br else
