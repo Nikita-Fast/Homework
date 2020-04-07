@@ -1,16 +1,26 @@
-ldc 20 N
+ldc 13 N
 st 5
 ldc 1
 ldc 1
 st 0	x
 st 1	y
 ldc 0	sum
-st 3   
-ldc 1   this check value is intended not to add even fibonacci numbers, 
-st 2	which are every third number in the sequence
-ldc 555
+st 3    
+ldc 1   //this check value is intended not to add even fibonacci numbers, 
+st 2	//which are every third number in the sequence
 --------
-b:	st 4
+        
+ldc 1  //this part shows that ret could be placed inside if-else block. put 0 to use ret
+br else
+	ret
+jmp endif
+else:   st 4
+endif:  ldc 54
+st 4             //also this part doesn't affect on calculation of sum of fib nums
+
+--------
+ldc 555
+b:	st 4    //remove garbage from stack
 ld 2
 ldc 2
 cmp
@@ -22,13 +32,13 @@ add
 st 2	i use 3 instead 2 because i add 1 every time during loop
 --------
 jmp l
-j:	st 4
+j:	st 4    //remove garbage from stack
 ld 3
 ld 1
 add 
 st 3
 ldc 555
-l:	st 4
+l:	st 4	//remove garbage from stack
 ---------
 ld 1
 ld 1
@@ -48,6 +58,7 @@ cmp
 ldc 1
 add
 br b
-st 4
+st 4     //remove garbage from stack
 ld 3
 ret
+

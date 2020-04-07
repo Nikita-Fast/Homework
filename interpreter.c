@@ -18,8 +18,13 @@
 #define FAILED_TO_FIND_NODE 1337
 #define FAILED_TO_OPEN_FILE_TO_COLLECT_LABELS_INFO 1999
 #define FAILED_TO_OPEN_FILE_TO_GENERATE_BYTE_CODE 2000
-#define TRUE 1;
-#define FALSE 0;
+#define TRUE 1
+#define FALSE 0
+#define NO_RET_COMMAND_IN_PROGRAM 3000
+#define LAST_COMMAND_IN_PROGRAM_IS_NOT_RET 3005
+#define MAX_BR_NUMBER 20
+#define INVALID_RET_LOCATION 4000
+#define FAILED_CHECK 0
 
 struct Stack {
 	int32_t* data;
@@ -152,6 +157,61 @@ enum Opcodes {
 	ret
 };
 
+struct Boundaries {
+	int start;
+	int end;
+};
+
+struct Boundaries* createBoundaries(struct Interpreter* myInterpreter) {
+	struct Boundaries myBoundaries[MAX_BR_NUMBER];
+	size_t processingBrNumber = 0;
+	for (size_t op = 0; op < MAX_LINES; op++) {
+		int opCode = myInterpreter->p.operations[op].opCode;
+		if (opCode == br) {
+			int argument = myInterpreter->p.operations[op].arg;
+			if (argument > op) {  //means that br jumps forward
+				if (myInterpreter->p.operations[argument - 1].opCode == jmp) {
+					int end = myInterpreter->p.operations[argument - 1].arg; 
+					myBoundaries[processingBrNumber].start = op;
+					myBoundaries[processingBrNumber].end = end;
+					processingBrNumber++;
+				}
+			}
+		}
+	}
+	return myBoundaries;
+}
+
+int checkRetCommand(struct Interpreter* myInterpreter, int whereRet) { 
+	struct Boundaries* myBoundaries = createBoundaries(myInterpreter);
+	int strNumWhereRet = whereRet;
+	for (size_t k = 0; k < 10; k++) {
+		struct Boundaries currBound = myBoundaries[k];
+		if (strNumWhereRet > currBound.start && strNumWhereRet < currBound.end) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+void retChecker(struct Interpreter* myInterpreter) { // also doesn't allow to put several ret commands successively
+	int finalRetNum = 0; //we don't check last ret since it can't be inside if-else block
+	for (size_t i = 0; i < MAX_LINES; i++) {
+		if (myInterpreter->p.operations[i].opCode == ret) {
+			finalRetNum = i;
+		}
+	}
+	for (size_t i = 0; i < MAX_LINES; i++) {
+		if (myInterpreter->p.operations[i].opCode == ret && i < finalRetNum) {
+			if (checkRetCommand(myInterpreter, i) == FAILED_CHECK) {
+				//printf("ha-ha you are stupid since you placed ret in invalid place\n");
+				exit(INVALID_RET_LOCATION);
+			}
+			//printf("ret placed normally, but you are heck\n");
+		}
+	}
+}
+
 int generateByteCode(char* str) {
 	if (strstr(str, "ld") != NULL && strstr(str, "ldc") == NULL) { 
 		return ld;
@@ -198,7 +258,7 @@ int stringHasLabel(char* string) {
 }
 
 void processString(char* string, struct Interpreter* myInterpreter, size_t strNumber) {
-	if (stringHasLabel(string)) {
+	if (stringHasLabel(string) == TRUE) {
 		addLabel(myInterpreter, string, strNumber);
 	}
 }
@@ -227,6 +287,8 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 	}
 	char currentString[MAX_STR_LEN];
 	size_t i = 0;
+	size_t hasRetCommand = FALSE;
+	size_t existInstrAfterLatestRet = FALSE;
 	while (fgets(currentString, MAX_STR_LEN, byteCodeGeneration) != NULL) { //here was written  fgets(currentString, MAX_STR_LEN, labelsInfo) why labelsInfo ???
 		char symbols[] = "ldstcaubmpjre";  //gives the opportunity to have empty strings in program and 
 		if (strpbrk(currentString, symbols) != NULL) {  //add some markup to the program code
@@ -234,11 +296,15 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 				size_t len = strcspn(currentString, ":");
 				memset(currentString, ' ', len + 1); //remove "<label>:"
 			}
-			char comand[MAX_STR_LEN];
-			sscanf(currentString, "%s", comand);
-			//myInterpreter.p.operations[i].opCode = generateByteCode(comand);
-			myInterpreter->p.operations[i].opCode = generateByteCode(comand);
+			char command[MAX_STR_LEN];
+			sscanf(currentString, "%s", command);
+			myInterpreter->p.operations[i].opCode = generateByteCode(command);
+			existInstrAfterLatestRet = TRUE;                                     //new, important to check!
 			int opCode = myInterpreter->p.operations[i].opCode;
+			if (opCode == ret) {
+				hasRetCommand = TRUE;
+				existInstrAfterLatestRet = FALSE;
+			}
 			if (opCode == jmp || opCode == br) {
 				char label[MAX_STR_LEN];
 				memset(label, '\0', MAX_STR_LEN);
@@ -260,11 +326,18 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 		i++;
 	}
 	fclose(byteCodeGeneration);
+	if (hasRetCommand == FALSE) {
+		exit(NO_RET_COMMAND_IN_PROGRAM);
+	}
+	if (existInstrAfterLatestRet == TRUE) {
+		exit(LAST_COMMAND_IN_PROGRAM_IS_NOT_RET);
+	}
+	retChecker(myInterpreter);  //check that ret commands in middle of program placed inside if-else blocks
 }
 
 void interpreterByteCode(struct Interpreter* myInterpreter) {
 	size_t i = 0;
-	while (i < MAX_LINES && myInterpreter->p.operations[i].opCode != ret) { //until read the comand "ret"
+	while (i < MAX_LINES) { 
 		struct Stack* stack = myInterpreter->s.stack;
 		int* memory = myInterpreter->s.memory;
 		int opCode = myInterpreter->p.operations[i].opCode;
@@ -296,10 +369,14 @@ void interpreterByteCode(struct Interpreter* myInterpreter) {
 				i = arg - 1;
 			}
 			break;
+		case ret:
+			i = MAX_LINES;
+			break;
 		}
 		i++;
 		myInterpreter->s.ip = i;
 	}
+	printf("program finished successfully\n");
 }
 
 int main() {
@@ -310,11 +387,11 @@ int main() {
 	myInterpreter.p.lableToLine = createHashTable(MAX_LABELS_NUMBER, polynomialHash);   
 	char fileName[] = "test.txt";
 
-	collectLabelsInf(fileName, &myInterpreter); 
+	collectLabelsInf(fileName, &myInterpreter);
 	createByteCode(fileName, &myInterpreter);
 	interpreterByteCode(&myInterpreter);
-
 	printf("value on top of stack is %i\n", get(myInterpreter.s.stack));
+
 	freeHashTable(myInterpreter.p.lableToLine);
 	free(myInterpreter.s.memory);
 	free(myInterpreter.s.stack);
