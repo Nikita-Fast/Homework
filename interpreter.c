@@ -25,6 +25,7 @@
 #define MAX_BR_NUMBER 20
 #define INVALID_RET_LOCATION 4000
 #define FAILED_CHECK 0
+#define FAILED_TO_ALLOCATE_MEMORY 4001
 
 struct Stack {
 	int32_t* data;
@@ -163,7 +164,10 @@ struct Boundaries {
 };
 
 struct Boundaries* createBoundaries(struct Interpreter* myInterpreter) {
-	struct Boundaries myBoundaries[MAX_BR_NUMBER];
+	struct Boundaries* myBoundaries = (struct Boundaries*)malloc(sizeof(struct Boundaries) * MAX_BR_NUMBER);
+	if (myBoundaries == NULL) {
+		exit(FAILED_TO_ALLOCATE_MEMORY);
+	}
 	size_t processingBrNumber = 0;
 	for (size_t op = 0; op < MAX_LINES; op++) {
 		int opCode = myInterpreter->p.operations[op].opCode;
@@ -188,9 +192,11 @@ int checkRetCommand(struct Interpreter* myInterpreter, int whereRet) {
 	for (size_t k = 0; k < 10; k++) {
 		struct Boundaries currBound = myBoundaries[k];
 		if (strNumWhereRet > currBound.start && strNumWhereRet < currBound.end) {
+			free(myBoundaries);
 			return TRUE;
 		}
 	}
+	free(myBoundaries);
 	return FALSE;
 }
 
@@ -204,10 +210,10 @@ void retChecker(struct Interpreter* myInterpreter) { // also doesn't allow to pu
 	for (size_t i = 0; i < MAX_LINES; i++) {
 		if (myInterpreter->p.operations[i].opCode == ret && i < finalRetNum) {
 			if (checkRetCommand(myInterpreter, i) == FAILED_CHECK) {
-				//printf("ha-ha you are stupid since you placed ret in invalid place\n");
+				//printf("you placed ret in invalid place\n");
 				exit(INVALID_RET_LOCATION);
 			}
-			//printf("ret placed normally, but you are heck\n");
+			//printf("ret placed normally\n");
 		}
 	}
 }
