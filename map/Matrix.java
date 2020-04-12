@@ -32,12 +32,12 @@ public class Matrix {
 	public void drawMap() {
 		System.out.println(owner + "'s map");
 		System.out.print("  ");
-		for (int i = 0; i < SIZE; i++) {
+		for (int i = 1; i <= SIZE; i++) {
 			System.out.print(i + " ");
 		}
 		System.out.println();
 		for (int i = 0; i < matrix.length; i++) {
-			System.out.print(i + "|");
+			System.out.print((char)('A' + i) + "|");
 			for (int j = 0; j < matrix[i].length; j++) {
 				Cell cell = matrix[i][j];
 				if (cell.getIsOpenedState() == false) {
@@ -60,19 +60,30 @@ public class Matrix {
 	public void drawOpenedMap() {
 		System.out.println(owner + "'s map");
 		System.out.print("  ");
-		for (int i = 0; i < SIZE; i++) {
+		for (int i = 1; i <= SIZE; i++) {
 			System.out.print(i + " ");
 		}
 		System.out.println();
 		for (int i = 0; i < matrix.length; i++) {
-			System.out.print(i + "|");
+			System.out.print((char)('A' + i) + "|");
 			for (int j = 0; j < matrix[i].length; j++) {
 				Cell cell = matrix[i][j];
-				if (cell.getState() == State.empty) {
-					System.out.print(".|");
+				if (cell.getIsOpenedState() == false) {
+					
+					if (cell.getState() == State.empty) {
+						System.out.print(" |");
+					}
+					else if (cell.getState() == State.hasShip){
+						System.out.print("+|");
+					}
 				}
-				else if (cell.getState() == State.hasShip){
-					System.out.print("x|");			
+				else {
+					if (cell.getState() == State.empty) {
+						System.out.print(".|");
+					}
+					else if (cell.getState() == State.hasShip){
+						System.out.print("x|");
+					}
 				}
 			}
 			System.out.println();

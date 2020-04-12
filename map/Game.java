@@ -23,11 +23,13 @@ public class Game {
 			makeNextMove(myMap, enemyMap);
 			if (enemyMap.areAllShipsDestroyed()) {
 				winnerName = myMap.getOwner();
+				myMap.drawOpenedMap();
 				break;
 			}
 			makeNextMove(enemyMap, myMap);
 			if (myMap.areAllShipsDestroyed()) {
 				winnerName = enemyMap.getOwner();
+				enemyMap.drawOpenedMap();
 				break;
 			}
 		}
@@ -35,10 +37,11 @@ public class Game {
 	}
 	
 	public Ship[] createFleet() {
-		Ship[] fleet = new Ship[10];
+		Ship[] fleet = new Ship[2];
 	
 		fleet[0] = new Ship(4);
 		fleet[1] = new Ship(3);
+		/*
 		fleet[2] = new Ship(3);
 		fleet[3] = new Ship(2);
 		fleet[4] = new Ship(2);
@@ -46,7 +49,7 @@ public class Game {
 		fleet[6] = new Ship(1); 
 		fleet[7] = new Ship(1);
 		fleet[8] = new Ship(1);
-		fleet[9] = new Ship(1); 
+		fleet[9] = new Ship(1); */
 		return fleet;
 	}
 	
@@ -63,8 +66,38 @@ public class Game {
 		System.out.println("------> Move goes to another player");
 	}
 	
+	private Coord readNewCoordFirst(Matrix map) {
+		map.drawMap();
+		int line = -1;
+		int column = -1;
+		Coord coord = new Coord(line, column);
+		Scanner in = new Scanner(System.in);
+		do {
+			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
+			line = in.nextInt();  
+			column = in.nextInt();
+			coord = new Coord(line, column);
+		} while (!map.coordinatesChoseCorrectlyWithMessage(coord));
+		//in.close();
+		return coord;
+	}
+	
 	private Coord readNewCoord(Matrix map) {
 		map.drawMap();
+		int line = -1;
+		int column = -1;
+		Coord coord = new Coord(line, column);
+		Scanner in = new Scanner(System.in);
+		do {
+			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
+			String input = in.nextLine();
+			coord = getNewCoord(input);
+		} while (!map.coordinatesChoseCorrectlyWithMessage(coord));
+		//in.close();
+		return coord;
+	}
+	
+	private Coord readNewCoordAndDoNotDrawMapFirst(Matrix map) {
 		int line = -1;
 		int column = -1;
 		Coord coord = new Coord(line, column);
@@ -86,11 +119,52 @@ public class Game {
 		Scanner in = new Scanner(System.in);
 		do {
 			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
-			line = in.nextInt();  
-			column = in.nextInt();
-			coord = new Coord(line, column);
+			String input = in.nextLine();
+			coord = getNewCoord(input);
 		} while (!map.coordinatesChoseCorrectlyWithMessage(coord));
 		//in.close();
 		return coord;
+	}
+	
+	public static int getLineNumber(String in) {
+		char[] letters = "abcdefghij".toCharArray();
+		char[] input = in.toLowerCase().toCharArray();
+		for (int i = 0; i < input.length; i++) {
+			for (int j = 0; j < letters.length; j++) {
+				if (input[i] == letters[j]) {
+					return j;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public static int getPositionOfNumber(String in) {
+		char[] numbers = "123456789".toCharArray();
+		char[] input = in.toLowerCase().toCharArray();
+		for (int i = 0; i < input.length; i++) {
+			for (int j = 0; j < numbers.length; j++) {
+				if (input[i] == numbers[j]) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public static Coord getNewCoord(String in) {
+		int line = getLineNumber(in);
+		int column = getColumn(in);
+		return new Coord(line, column);
+	}
+	
+	public static int getColumn(String in) {
+		int position = getPositionOfNumber(in);
+		if (in.length() < position + 2) {
+			char c = in.charAt(position);
+			return Integer.parseInt(Character.toString(c)) - 1;
+		}
+		String str = in.substring(position, position + 2);
+		return Integer.parseInt(str) - 1;
 	}
 }
