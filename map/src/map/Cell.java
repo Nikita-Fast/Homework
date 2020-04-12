@@ -4,6 +4,7 @@ public class Cell {
 	private char state;
 	private int lineCoord;
 	private int columnCoord;
+	private Ship ship;
 	
 	public void setCell(char state, int line, int column) {
 		setState(state);
@@ -21,5 +22,13 @@ public class Cell {
 	
 	public char getState() {
 		return state;
+	}
+	
+	public void setShip(Ship ship) {
+		this.ship = ship;
+	}
+	
+	public Ship getShip() {
+		return ship;
 	}
 }

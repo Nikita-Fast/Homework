@@ -6,10 +6,12 @@ import java.util.Random;
 public class Matrix {
 	private Cell[][] matrix;
 	private String owner;
+	private Ship[] fleet;
 	
-	public Matrix(String owner) {
+	public Matrix(String owner, Ship[] fleet) {
 		matrix = new Cell[10][10];
 		this.owner = owner;
+		this.fleet = fleet;
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				matrix[i][j] = new Cell();
@@ -18,35 +20,50 @@ public class Matrix {
 		}
 	}
 	
+	public String getOwner() {
+		return owner;
+	}
+	
+	public Ship[] getFleet() {
+		return fleet;
+	}
+	
 	public void drawMap() {
-		System.out.println(owner);
+		System.out.println(owner + "'s map");
+		System.out.println("  0 1 2 3 4 5 6 7 8 9");
 		for (int i = 0; i < matrix.length; i++) {
+			System.out.print(i + "|");
 			for (int j = 0; j < matrix[i].length; j++) {
-				System.out.print(matrix[i][j].getState());
-				System.out.print(' ');
+				Cell cell = matrix[i][j];
+				if (cell.getState() == '.' || cell.getState() == 'x') {
+					System.out.print(' ');
+					System.out.print('|');
+				}
+				else if (cell.getState() == 'o'){
+					System.out.print('.');
+					System.out.print('|');
+				} else if (cell.getState() == '+') {
+					System.out.print('x');
+					System.out.print('|');
+				}
 			}
 			System.out.println();
+			//System.out.println("  ----------------------------");
 		}
 		System.out.println();
 	}
 	
-	public void setShips() {
-		setShip(4);
-		setShip(3);
-		setShip(3);
-		setShip(2);
-		setShip(2);
-		setShip(2);
-		setShip(1);
-		setShip(1);
-		setShip(1);
-		setShip(1);
+	public void setFleet(Ship[] fleet) {
+		for (Ship ship : fleet) {
+			setShip(ship);
+		}
 	}
 	
-	private void setShip(int length) {
+	public void setShip(Ship ship) {
 		boolean isVertical;
 		int line;   //line and column are coordinates of top of ship, good idea is to create a class ship and add a special field called topOfShip 
 		int column;
+		int length = ship.getLength();
 		Random rnd = new Random();
 		
 		do {
@@ -61,6 +78,21 @@ public class Matrix {
 		} */
 		
 		drawShip(line, column, length, isVertical);
+		addShipToAllHisCells(line, column, length, isVertical, ship);
+		ship.setTopCoordsAndOrientation(line, column, isVertical);
+	}
+	
+	private void addShipToAllHisCells(int line, int column, int length, boolean isVertical, Ship ship) {
+		if (isVertical == true) {
+			for (int i = 0; i < length; i++) {
+				matrix[line + i][column].setShip(ship);
+			}
+		}
+		else {
+			for (int i = 0; i < length; i++) {
+				matrix[line][column + i].setShip(ship);
+			}
+		}
 	}
 	
 	private void drawShip(int line, int column, int length, boolean isVertical) {
@@ -130,5 +162,85 @@ public class Matrix {
 		}
 		return spaceIsFree;
 	}
+
 	
+	public Cell getCell(int line, int column) {
+		return matrix[line][column];
+	}
+	
+	private ArrayList<Cell> getCellsAroundShipWithoutShip(Ship ship) { //без клеточек, которые занимает сам корабль
+		ArrayList<Cell> cellsAround = new ArrayList<Cell>();
+		boolean isVertical = ship.isVertical();
+		int line = ship.getTopLine();
+		int column = ship.getTopColumn();
+		int length = ship.getLength();
+		
+		if (isVertical) {
+			for (int i = line - 1; i <= line + length; i++) { 
+				for (int j = column - 1 ; j <= column + 1; j++) {
+					if (0 <= i && i <= 9 && 0 <= j && j <= 9) {
+						if (matrix[i][j].getShip() != ship) {
+							cellsAround.add(matrix[i][j]);
+						}
+					}
+				}
+			}
+		}
+		else {
+			for (int i = line - 1; i <= line + 1; i++) { 
+				for (int j = column - 1 ; j <= column + length; j++) {
+					if (0 <= i && i <= 9 && 0 <= j && j <= 9) {
+						if (matrix[i][j].getShip() != ship) {
+							cellsAround.add(matrix[i][j]);
+						}
+					}
+				}
+			}
+		}
+		
+		return cellsAround;
+	}
+	
+	private void destroyShip(Ship ship) {
+		ArrayList<Cell> cellsAround = getCellsAroundShipWithoutShip(ship);
+		for (Cell cell : cellsAround) {
+			cell.setState('o');
+		}
+		System.out.println("SHIP WAS KILLED!");
+	}
+	
+	public void makeShoot(int line, int column) {
+		Cell cell = getCell(line, column);
+		if (cell.getState() == '.') {
+			cell.setState('o');
+		}
+		else {
+			cell.setState('+');
+			cell.getShip().decreaseHealth();
+			if (cell.getShip().getHealth() == 0) {
+				destroyShip(cell.getShip());
+			}
+		}
+	}
+	
+	public boolean isHit(int line, int column) {
+		if (matrix[line][column].getState() == 'x') {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean isAllShipsDestroyed() {
+		//System.out.println("check for does all ship destroyed");
+		for (Ship singleShip : fleet) {
+			if (singleShip.getHealth() > 0) {
+				//System.out.println("No");
+				return false;
+			}
+		}
+		//System.out.println("Yes");
+		return true;
+	}
 }
