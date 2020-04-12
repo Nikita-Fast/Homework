@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Game {
 	Matrix myMap;
 	Matrix enemyMap;
-	boolean isEnd = false;
+	final boolean isEnd = false;
 	
 	public Game() {
 		myMap = new Matrix("Nikita", createFleet());
@@ -17,16 +17,21 @@ public class Game {
 	    enemyMap.setFleet(enemyMap.getFleet());
 	    myMap.drawOpenedMap();    //подумай о методе рисующем обе карты в один ряд(горизонтальный)
 		enemyMap.drawOpenedMap();
-		/*
+		
+		
 		while (!isEnd) {
-			isEnd = makeMove(myMap, enemyMap);
-			if (isEnd) {
+			makeNextMove(myMap, enemyMap);
+			if (enemyMap.areAllShipsDestroyed()) {
 				winnerName = myMap.getOwner();
 				break;
 			}
-			isEnd = makeMove(enemyMap, myMap);
+			makeNextMove(enemyMap, myMap);
+			if (myMap.areAllShipsDestroyed()) {
+				winnerName = enemyMap.getOwner();
+				break;
+			}
 		}
-		System.out.println("Game over! Winner is " + winnerName); */
+		System.out.println("Game over! Winner is " + winnerName); 
 	}
 	
 	public Ship[] createFleet() {
@@ -44,45 +49,48 @@ public class Game {
 		fleet[9] = new Ship(1); 
 		return fleet;
 	}
-	/*
-	private boolean makeMove(Matrix yourMatrix, Matrix enemyMatrix) {
-		boolean allShipsDestroyed = false;
-		enemyMatrix.drawMap();
-		System.out.println(yourMatrix.getOwner() + ", it's time to make move!");
-		System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
-		Scanner in = new Scanner(System.in);
-		int line = in.nextInt();  
-		int column = in.nextInt();
-		
-		while (enemyMatrix.isHit(line, column)) {
-			enemyMatrix.makeShoot(line, column);
-			System.out.println(yourMatrix.getOwner() + " made his move!");
-			enemyMatrix.drawMap();
-			if (enemyMatrix.isAllShipsDestroyed()) {
-				System.out.println("-------------------------------------");
-				allShipsDestroyed = true;
-				break;
-			}
-			System.out.println(yourMatrix.getOwner() + ", it's time to make move!");
-			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
-			line = in.nextInt();  //обработать дерьмовый ввод (неправильный)
-			column = in.nextInt();
+	
+	private void makeNextMove(Matrix attackerMap, Matrix attackedMap) {
+		System.out.println(attackerMap.getOwner() + ", it's time to make a move!");
+		Coord coord = readNewCoord(attackedMap);
+		attackedMap.makeShot(coord);
+		if (attackedMap.isHitTheShip(coord) && !attackedMap.areAllShipsDestroyed()) {
+			do {
+				coord = readNewCoordAndDoNotDrawMap(attackedMap);
+				attackedMap.makeShot(coord);
+			} while (attackedMap.isHitTheShip(coord) && !attackedMap.areAllShipsDestroyed());
 		}
-		if (!allShipsDestroyed) {
-			enemyMatrix.makeShoot(line, column);
-			System.out.println(yourMatrix.getOwner() + " made his move!");
-			enemyMatrix.drawMap();
-			System.out.println("----> Move goes to another player!");
-		}
-		return allShipsDestroyed;
+		System.out.println("------> Move goes to another player");
 	}
 	
-	private void printShipsHealth(Matrix matrix) {
-		Ship[] fleet = matrix.getFleet();
-		System.out.println("Ships health: ");
-		for (Ship ship : fleet) {
-			System.out.print(ship.getHealth() + " ");
-		}
-		System.out.println();
-	}  */
+	private Coord readNewCoord(Matrix map) {
+		map.drawMap();
+		int line = -1;
+		int column = -1;
+		Coord coord = new Coord(line, column);
+		Scanner in = new Scanner(System.in);
+		do {
+			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
+			line = in.nextInt();  
+			column = in.nextInt();
+			coord = new Coord(line, column);
+		} while (!map.coordinatesChoseCorrectlyWithMessage(coord));
+		//in.close();
+		return coord;
+	}
+	
+	private Coord readNewCoordAndDoNotDrawMap(Matrix map) {
+		int line = -1;
+		int column = -1;
+		Coord coord = new Coord(line, column);
+		Scanner in = new Scanner(System.in);
+		do {
+			System.out.println("choose coordinates: firstly line, then column (from 0 to 9)");
+			line = in.nextInt();  
+			column = in.nextInt();
+			coord = new Coord(line, column);
+		} while (!map.coordinatesChoseCorrectlyWithMessage(coord));
+		//in.close();
+		return coord;
+	}
 }

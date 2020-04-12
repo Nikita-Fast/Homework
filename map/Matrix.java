@@ -80,7 +80,6 @@ public class Matrix {
 		System.out.println();
 	}
 	
-	
 	public void setFleet(Ship[] fleet) {
 		for (Ship ship : fleet) {
 			setShip(ship);
@@ -98,7 +97,7 @@ public class Matrix {
 			isVertical = rnd.nextBoolean();
 			line = rnd.nextInt(SIZE);
 			column = rnd.nextInt(SIZE);
-		} while(positionIsGood(line, column, isVertical, length) != true); 
+		} while (positionIsGood(line, column, isVertical, length) != true); 
 		
 		Coord top = new Coord(line, column);
 		ship.setTopAndOrientation(top, isVertical); 
@@ -191,23 +190,17 @@ public class Matrix {
 		return spaceIsFree;
 	}
 
-	
-	
-	
-	
-	/*
-	public Cell getCell(int line, int column) {
-		return matrix[line][column];
-	}
+	public Cell getCell(Coord coord) {
+		return matrix[coord.line][coord.column];
+	} 
 	
 	private ArrayList<Cell> getCellsAroundShipWithoutShip(Ship ship) { //без клеточек, которые занимает сам корабль
 		ArrayList<Cell> cellsAround = new ArrayList<Cell>();
-		boolean isVertical = ship.isVertical();
-		int line = ship.getTopLine();
-		int column = ship.getTopColumn();
+		int line = ship.getTop().line;
+		int column = ship.getTop().column;
 		int length = ship.getLength();
 		
-		if (isVertical) {
+		if (ship.getIsVertical()) {
 			for (int i = line - 1; i <= line + length; i++) { 
 				for (int j = column - 1 ; j <= column + 1; j++) {
 					if (0 <= i && i <= 9 && 0 <= j && j <= 9) {
@@ -236,27 +229,30 @@ public class Matrix {
 	private void destroyShip(Ship ship) {
 		ArrayList<Cell> cellsAround = getCellsAroundShipWithoutShip(ship);
 		for (Cell cell : cellsAround) {
-			cell.setState('o');
+			cell.setIsOpenedState(true);  //открыть все эти клетки
 		}
-		System.out.println("SHIP WAS KILLED!");
+		System.out.println("The attacker KILLED " + owner + "'s ship!");
 	}
 	
-	public void makeShoot(int line, int column) {
-		Cell cell = getCell(line, column);
-		if (cell.getState() == '.') {
-			cell.setState('o');
+	public void makeShot(Coord coord) { //проверить что координаты подходят по диапозону и что это не открытая ячейка
+		Cell cell = getCell(coord);
+		if (cell.getState() == State.empty) {
+			cell.setIsOpenedState(true);
+			System.out.println("The attacker didn't hit " + owner + "'s ships!");
 		}
 		else {
-			cell.setState('+');
+			cell.setIsOpenedState(true);
 			cell.getShip().decreaseHealth();
+			System.out.println("The attacker hit " + owner + "'s ship!");
 			if (cell.getShip().getHealth() == 0) {
 				destroyShip(cell.getShip());
 			}
 		}
+		drawMap();
 	}
 	
-	public boolean isHit(int line, int column) {
-		if (matrix[line][column].getState() == 'x') {
+	public boolean isHitTheShip(Coord coord) {
+		if (matrix[coord.line][coord.column].getState() == State.hasShip) {
 			return true;
 		}
 		else {
@@ -264,15 +260,62 @@ public class Matrix {
 		}
 	}
 	
-	public boolean isAllShipsDestroyed() {
-		//System.out.println("check for does all ship destroyed");
+	public boolean areAllShipsDestroyed() {
 		for (Ship singleShip : fleet) {
 			if (singleShip.getHealth() > 0) {
-				//System.out.println("No");
 				return false;
 			}
 		}
-		//System.out.println("Yes");
 		return true;
-	} */
+	} 
+	
+	public boolean coordinatesChoseCorrectly(Coord coord) {
+		if (coordinatesAreInRange(coord)) {
+			return thisCellIsClosed(coord);
+		}
+		return false;
+	}
+	
+	public boolean coordinatesAreInRange(Coord coord) {
+		return 0 <= coord.line && coord.line <= SIZE - 1 && 
+				0 <=coord.column && coord.column <= SIZE - 1;
+	}
+	
+	public boolean thisCellIsClosed(Coord coord) {
+		return !getCell(coord).getIsOpenedState();
+	}
+	
+	public boolean coordinatesChoseCorrectlyWithMessage(Coord coord) {
+		if (!coordinatesChoseCorrectly(coord)) {
+			System.out.println("Specify the correct coordinates!");
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
