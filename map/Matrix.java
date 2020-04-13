@@ -57,6 +57,9 @@ public class Matrix {
 		System.out.println();
 	}
 	
+	
+	
+	
 	public void drawOpenedMap() {
 		System.out.println(owner + "'s map");
 		System.out.print("  ");
