@@ -26,6 +26,7 @@
 #define INVALID_RET_LOCATION 4000
 #define FAILED_CHECK 0
 #define FAILED_TO_ALLOCATE_MEMORY 4001
+#define INCORRECT_COMMAND 5000
 
 struct Stack {
 	int32_t* data;
@@ -155,7 +156,8 @@ enum Opcodes {
 	cmp,
 	jmp,
 	br,
-	ret
+	ret,
+	incorrectCommand
 };
 
 struct Boundaries {
@@ -169,11 +171,11 @@ struct Boundaries* createBoundaries(struct Interpreter* myInterpreter) {
 		exit(FAILED_TO_ALLOCATE_MEMORY);
 	}
 	size_t processingBrNumber = 0;
-	for (size_t op = 0; op < MAX_LINES; op++) {
+	for (size_t op = 0; op < MAX_LINES; op++) {     
 		int opCode = myInterpreter->p.operations[op].opCode;
 		if (opCode == br || opCode == jmp) {
 			int argument = myInterpreter->p.operations[op].arg;
-			if (argument > op) {  //means that br or jmp jumps forward
+			if ((size_t)argument > op) {  //means that br or jmp jumps forward
 				int end = argument; 
 				myBoundaries[processingBrNumber].start = op;
 				myBoundaries[processingBrNumber].end = end;
@@ -195,20 +197,22 @@ int checkRetCommand(struct Interpreter* myInterpreter, int whereRet, struct Boun
 }
 
 void retChecker(struct Interpreter* myInterpreter) {
-	int finalRetNum = 0; //we don't check last ret since it can't be inside if-else block or just if block
+	size_t finalRetNum = 0; //we don't check last ret since it can't be inside if-else block or just if block
 	for (size_t i = 0; i < MAX_LINES; i++) {
 		if (myInterpreter->p.operations[i].opCode == ret) {
 			finalRetNum = i;
+			printf("%i\n", finalRetNum);
 		}
 	}
 	struct Boundaries* myBoundaries = createBoundaries(myInterpreter);
 	for (size_t i = 0; i < MAX_LINES; i++) {
 		if (myInterpreter->p.operations[i].opCode == ret && i < finalRetNum) {
 			if (checkRetCommand(myInterpreter, i, myBoundaries) == FAILED_CHECK) {
-				//printf("you placed ret in invalid place\n");
+				printf("you placed ret in invalid place\n");
+				printf("number of string where this ret: %i\n", i);
 				exit(INVALID_RET_LOCATION);
 			}
-			//printf("ret placed normally\n");
+			printf("ret placed normally\n");
 		}
 	}
 	free(myBoundaries);
@@ -242,6 +246,7 @@ int generateByteCode(char* str) {
 	if (strstr(str, "ret") != NULL) {
 		return ret;
 	}
+	return incorrectCommand;
 }
 
 void addLabel(struct Interpreter* myInterpreter, char* str, size_t strNum) {
@@ -300,9 +305,15 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 			}
 			char command[MAX_STR_LEN];
 			sscanf(currentString, "%s", command);
-			myInterpreter->p.operations[i].opCode = generateByteCode(command);
+
+			int opCode = generateByteCode(command);
+			if (opCode == incorrectCommand) {
+				exit(INCORRECT_COMMAND);
+			}
+			myInterpreter->p.operations[i].opCode = opCode;
+
 			existInstrAfterLatestRet = TRUE;                                     //new, important to check!
-			int opCode = myInterpreter->p.operations[i].opCode;
+			opCode = myInterpreter->p.operations[i].opCode;
 			if (opCode == ret) {
 				hasRetCommand = TRUE;
 				existInstrAfterLatestRet = FALSE;
@@ -319,7 +330,7 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 			if (opCode == ld || opCode == st || opCode == ldc) {
 				sscanf(currentString, "%*s %i", &myInterpreter->p.operations[i].arg);
 				if (opCode == ld || opCode == st) {   // check that ld and st use correct addresses
-					if (myInterpreter->p.operations[i].arg < 0 || myInterpreter->p.operations[i].arg >= MAX_ADDR) {
+					if (myInterpreter->p.operations[i].arg < 0 || (size_t)myInterpreter->p.operations[i].arg >= MAX_ADDR) {
 						exit(INCORRECT_ADDRESS);
 					}
 				}
@@ -328,13 +339,16 @@ void createByteCode(char* fileName, struct Interpreter* myInterpreter) {
 		i++;
 	}
 	fclose(byteCodeGeneration);
+	
 	if (hasRetCommand == FALSE) {
 		exit(NO_RET_COMMAND_IN_PROGRAM);
 	}
 	if (existInstrAfterLatestRet == TRUE) {
 		exit(LAST_COMMAND_IN_PROGRAM_IS_NOT_RET);
-	}
+	} 
+	printf("%s", "before retChecker\n");
 	retChecker(myInterpreter);  //check that ret commands in middle of program placed inside if-else or just if blocks 
+	printf("%s", "after retChecker\n");
 }
 
 void interpreterByteCode(struct Interpreter* myInterpreter) {
@@ -387,9 +401,10 @@ int main() {
 	myInterpreter.s.stack = createStack();
 	myInterpreter.s.ip = 0;   
 	myInterpreter.p.lableToLine = createHashTable(MAX_LABELS_NUMBER, polynomialHash);   
-	char fileName[] = "test.txt";
+	char fileName[] = "testSimple.txt";
 
 	collectLabelsInf(fileName, &myInterpreter);
+	printf("%s", "label\n");
 	createByteCode(fileName, &myInterpreter);
 	interpreterByteCode(&myInterpreter);
 	printf("value on top of stack is %i\n", get(myInterpreter.s.stack));
