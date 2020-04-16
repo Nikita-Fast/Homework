@@ -39,7 +39,7 @@ size_t symbolSumHash(char* key, size_t size) {
 		hash += *key;
 		key++;
 	}
-	return compressionMap(hash, size);
+	compressionMap(hash, size);
 }
 
 struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key, size_t size)) {
