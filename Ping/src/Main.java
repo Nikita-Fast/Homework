@@ -24,14 +24,14 @@ public class Main {
 		for (int t : pingVKcom) {
 			sumVk += (averTimeVK - t) * (averTimeVK - t);
 		}
-		double deltaVK = 2 * Math.sqrt(sumVk / (pingVKcom.length * (pingVKcom.length - 1)));
+		double deltaVK = 2 * Math.sqrt(sumVk / (pingVKcom.length * (pingVKcom.length - 1))); //2 дельта с.о.с нужно для доверительного интервала с порогом доверия 95%
 		
 		double sumYA = 0;
 		
 		for (int t : pingYAru) {
 			sumYA += (averTimeYA - t) * (averTimeYA - t);
 		}
-		double deltaYA = 2 * Math.sqrt(sumYA / (pingYAru.length * (pingYAru.length - 1)));
+		double deltaYA = 2 * Math.sqrt(sumYA / (pingYAru.length * (pingYAru.length - 1))); //2 дельта с.о.с нужно для доверительного интервала с порогом доверия 95%
 		
 		
 		//double topBound = (averTimeYA - averTimeVK) + (Math.sqrt(deltaVK * deltaVK + deltaYA * deltaYA));
