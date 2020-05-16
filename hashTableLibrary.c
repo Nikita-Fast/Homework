@@ -128,7 +128,7 @@ size_t numberOfElemnts(struct HashTable* table) {
 
 size_t minChainLength(struct HashTable* table) {
 	size_t size = table->size;
-	size_t min = _UI32_MAX;
+	size_t min = ULONG_MAX; 
 	for (size_t i = 0; i < size; i++) {
 		if (table->strings[i]->length < min && table->strings[i]->length > 0) {
 			min = table->strings[i]->length;
