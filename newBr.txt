@@ -1,0 +1,38 @@
+if (x < y) {
+	A  
+}
+else {
+	B
+}
+
+ldc y
+ldc x
+cmp
+ldc 1
+add
+br else
+comand set A
+jmp endif
+else: comand set B
+endif: ret
+
+if (x <= y) {
+	A  
+}
+else {
+	B
+}
+
+ldc y
+ldc x
+cmp
+ldc -1
+add
+br true
+comand set B
+jmp endif
+true: comand set A
+endif: ret
+
+
+
