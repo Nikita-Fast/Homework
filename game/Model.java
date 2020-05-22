@@ -13,9 +13,9 @@ public class Model {
 		return this.gameMap;
 	}
 	
-	public void tryToPlaceShip(Point firstCoord, Point secondPoint, int length) {
+	public void tryToPlaceShip(Point firstCoord, Point secondPoint, Ship ship) {
 		if (firstCoord.isOnTheStraightLineWith(secondPoint)) {
-			this.gameMap.tryToPlaceShip(firstCoord, secondPoint, length);
+			this.gameMap.tryToPlaceShip(firstCoord, secondPoint, ship);
 		}
 	}
 	
@@ -26,5 +26,11 @@ public class Model {
 		return false;
 	}
 	
+	public Ship getShipOfLenght(int length) {
+		if (this.gameMap.thereIsShipOfSuchLength(length)) {
+			return this.gameMap.getShipOfSpecifiedLength(length);
+		}
+		return null;
+	}
 
 }

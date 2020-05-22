@@ -16,15 +16,32 @@ public class Matrix {
 		}
 	}
 	
-	public void tryToPlaceShip(Point p1, Point p2, int length) { 
-		ArrayList<Point> points = getPointsForShip(p1, p2, length);
-		if (positionForShipIsGood(points)) {
-			placeShip(points);
+	public void drawMatrix() {
+		for (int i = 0; i < this.matrix.length; i++) {
+			for (int j = 0; j < this.matrix[i].length; j++) {
+				if (this.matrix[i][j].getState() == State.empty) {
+					System.out.print(". ");
+				}
+				if (this.matrix[i][j].getState() == State.hasShip) {
+					System.out.print("+ ");
+				}
+			}
+			System.out.println();
 		}
 	}
 	
-	private void placeShip(ArrayList<Point> points) {
+	public void tryToPlaceShip(Point p1, Point p2, Ship ship) { 
+		ArrayList<Point> points = getPointsForShip(p1, p2, ship.getLength());
+		if (positionForShipIsGood(points)) {
+			placeShip(points, ship);
+		}
+	}
+	
+	private void placeShip(ArrayList<Point> points, Ship ship) {
 		changeStateOfCells(points);
+		for (Point point : points) {
+			getCell(point).setShip(ship);
+		}
 	}
 	
 	private boolean positionForShipIsGood(ArrayList<Point> points) {
@@ -99,6 +116,14 @@ public class Matrix {
 		return points;
 	}
 	
+	public void tryToPlaceSmallShip(Ship ship, Point coord) {
+		if (noShipsAroundPoint(coord)) {
+			ArrayList<Point> list = new ArrayList<Point>();
+			list.add(coord);
+			placeShip(list, ship);
+		}
+	}
+	
 	
 	public boolean noShipsAroundPoint(Point point) {
 		if (point.isInRange()) {
@@ -140,8 +165,47 @@ public class Matrix {
 		return matrix[p.y][p.x];  //check this method
 	}
 	
-	public Ship[] getFleet() {
-		return this.fleet;
+	public boolean thereIsShipOfSuchLength(int length) {
+		for (Ship ship : this.fleet) {
+			if (ship != null && ship.getLength() == length) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void returnShip(Ship ship) {
+		if (ship != null) {
+			for (int i = 0; i < this.fleet.length; i++) {
+				if (this.fleet[i] == null) {
+					this.fleet[i] = ship;
+				}
+			}
+		}
+	}
+	
+	public Ship getShipOfSpecifiedLength(int length) {
+		for (int i = 0; i < this.fleet.length; i++) {
+			if (this.fleet[i] != null) {
+				if (this.fleet[i].getLength() == length) {
+					Ship ship = this.fleet[i];
+					this.fleet[i] = null;
+					return ship;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void createFleet() {
+		int k = 0;
+		for (int length = 1; length <= 4; length++) {
+			for (int amount = 5 - length; amount > 0; amount--) {
+				this.fleet[k] = new Ship(length);
+				k++;
+			}
+		}
+		System.out.println("final value: " + k);
 	}
 	
 	public boolean fleetIsEmpty() {

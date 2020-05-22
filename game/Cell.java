@@ -3,6 +3,7 @@ package game;
 public class Cell {
 	private boolean isOpen;
 	private State state;
+	private Ship ship;
 	
 	public Cell(boolean isOpen, State state) {
 		this.isOpen = isOpen;
@@ -23,5 +24,13 @@ public class Cell {
 	
 	public State getState() {
 		return this.state;
+	}
+	
+	public void setShip(Ship ship) {
+		this.ship = ship;
+	}
+	
+	public Ship getShip() {
+		return this.ship;
 	}
 }
