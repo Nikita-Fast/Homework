@@ -24,9 +24,9 @@ public class Controller implements ActionListener{
 	private boolean firstCoordWasChoose;
 	private Point firstCoord;
 	
-	private boolean lengthWasNotChoose;
+	//private boolean lengthWasNotChoose;
 
-	private int lengthOfShip;
+	//private int lengthOfShip;
 	private Ship currentShip;
 	
 	public Controller() {
@@ -44,29 +44,30 @@ public class Controller implements ActionListener{
             clearStartNewGameButton();
             addMouseClickListenerToView();
             addShipButtonsToView();
-            this.lengthWasNotChoose = true;
+            //this.lengthWasNotChoose = true;
             this.model.getAccessToGameMap().createFleet();
+            this.currentShip = null;
         }
-        if ( !firstCoordWasChoose) {
+        if (!firstCoordWasChoose) {
+        	if (currentShip != null) {
+        		System.out.println("link has something");
+        	}
         	if (e.getSource() == this.shipButtons[0]) {
         		shipButtonWasPressed(this.shipButtons[0]);
-        		this.lengthOfShip = 4;
-        		chooseShip(this.lengthOfShip);
+        		chooseShip(4);
         	}
         	if (e.getSource() == this.shipButtons[1]) {
         		shipButtonWasPressed(this.shipButtons[1]);
-        		this.lengthOfShip = 3;
-        		chooseShip(this.lengthOfShip);
+        		chooseShip(3);
         	}
         	if (e.getSource() == this.shipButtons[2]) {
         		shipButtonWasPressed(this.shipButtons[2]);
-        		this.lengthOfShip = 2;
-        		chooseShip(this.lengthOfShip);
+        		chooseShip(2);
         	}
         	if (e.getSource() == this.shipButtons[3]) {
         		shipButtonWasPressed(this.shipButtons[3]);
-        		this.lengthOfShip = 1;
-        		chooseShip(this.lengthOfShip);
+        		chooseShip(1);
+        		
         	}
         }  
 	}
@@ -74,6 +75,7 @@ public class Controller implements ActionListener{
 	private void shipButtonWasPressed(JButton button) {
 		changeColorOfButtonsToGray();
 		this.model.getAccessToGameMap().returnShip(this.currentShip);
+		this.currentShip = null;
 		changeColorOfButtonToCyan(button);
 	}
 	
@@ -90,11 +92,11 @@ public class Controller implements ActionListener{
 	private void chooseShip(int length) {
 		if (this.model.getAccessToGameMap().thereIsShipOfSuchLength(length)) {
 			this.currentShip = model.getAccessToGameMap().getShipOfSpecifiedLength(length);
-			this.lengthWasNotChoose = false;
 			System.out.println("ship was chose");
 		}
 		else {
 			System.out.println("choose another length!");
+			changeColorOfButtonsToGray();
 		}
 	}
 	
@@ -103,33 +105,41 @@ public class Controller implements ActionListener{
 			public void mouseClicked(MouseEvent e) {
 				int x = (e.getX() - 83) / 31;
 				int y = (e.getY() - 180) / 31;
-				if (lengthOfShip != 1) {
-					if (coordinatesAreInRange(x, y) && lengthOfShip != 0) {
-						if(e.getButton() == MouseEvent.BUTTON1 && firstCoordWasChoose == true) {
-							tryToDefineDirectionAndPlaceShip(x, y, firstCoord, currentShip);
-						}
-						else  {
-							if (e.getButton() == MouseEvent.BUTTON1 && firstCoordWasChoose == false && lengthWasNotChoose == false) {  
-								tryToChooseFirstCoord(x, y);
+				if (coordinatesAreInRange(x, y)) {
+					if (currentShip != null) {
+						if (currentShip.getLength() > 1) {
+							if (e.getButton() == MouseEvent.BUTTON1 && firstCoordWasChoose == true) {
+								tryToDefineDirectionAndPlaceShip(x, y, firstCoord, currentShip);
+								currentShip = null;
+								changeColorOfButtonsToGray();
+							}
+							else  {
+								if (e.getButton() == MouseEvent.BUTTON1 && firstCoordWasChoose == false) {  
+									tryToChooseFirstCoord(x, y);
+									
+								}
 							}
 						}
+						if (currentShip != null && currentShip.getLength() == 1) {
+							if (!model.getAccessToGameMap().noShipsAroundPoint(new Point(x, y))) {
+								model.getAccessToGameMap().returnShip(currentShip);
+							}
+							else {
+								model.getAccessToGameMap().tryToPlaceSmallShip(currentShip, new Point(x, y));
+							}
+							currentShip = null;
+							changeColorOfButtonsToGray();
+						}
 					}
+					if (e.getButton() == MouseEvent.BUTTON3 && !firstCoordWasChoose) {
+						changeColorOfButtonsToGray();
+						model.getAccessToGameMap().returnShip(currentShip);
+						currentShip = null;
+						model.getAccessToGameMap().removeShip(new Point(x, y));
+						
+					}
+					repaintMap();
 				}
-				if (lengthOfShip == 1) {
-					model.getAccessToGameMap().tryToPlaceSmallShip(currentShip, new Point(x, y));
-					
-					lengthOfShip = 0;
-					lengthWasNotChoose = true;
-					firstCoord = null;
-					firstCoordWasChoose = false;
-				}
-				if (e.getButton() == MouseEvent.BUTTON3) {
-					//model.clear
-					firstCoord = null;
-					firstCoordWasChoose = false;
-				}
-				model.getAccessToGameMap().drawMatrix();
-				repaintMap();
 			}
 		});
 	}
@@ -138,19 +148,21 @@ public class Controller implements ActionListener{
 		Point secondPoint = new Point(x, y);
 		if (secondPoint.isOnTheStraightLineWith(firstCoord) && !secondPoint.isEqualTo(firstCoord)) {
 			tryToPlaceShip(firstCoord, secondPoint, ship);
+			if (!this.model.shipWasPlacedSuccessfully(firstCoord)) {
+				this.model.getAccessToGameMap().returnShip(ship);
+				this.model.getAccessToGameMap().getCell(firstCoord).setState(State.empty);
+			}
 		}
-		this.lengthOfShip = 0;
-		this.lengthWasNotChoose = true;
+		else {
+			this.model.getAccessToGameMap().returnShip(ship);
+			this.model.getAccessToGameMap().getCell(firstCoord).setState(State.empty);
+		}
 		for (JButton button : this.shipButtons) {
 			button.setBackground(Color.gray);
 		}
-		firstCoord = null;
-		firstCoordWasChoose = false;
-		repaintMap();
-		
+		this.firstCoord = null;
+		this.firstCoordWasChoose = false;
 		this.currentShip = null;
-		
-		//this.model.getAccessToGameMap().drawMatrix();
 	}
 	
 	private void tryToPlaceShip(Point firstCoord, Point secondPoint, Ship ship) {

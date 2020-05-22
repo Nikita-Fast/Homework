@@ -35,7 +35,7 @@ public class View extends JFrame {
 	
 	private void initStartFrame() {
 		setVisible(true);
-		setBounds(300, 200, 1000, 700);
+		setBounds(200, 200, 1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 	}

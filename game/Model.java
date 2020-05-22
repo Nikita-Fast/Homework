@@ -9,8 +9,21 @@ public class Model {
 		this.gameMap = map;
 	}
 	
+	public boolean shipWasPlacedSuccessfully(Point point) {
+		if (this.gameMap.getCell(point).getState() == State.hasShip) {
+			return true;
+		}
+		return false;
+	}
+	
 	public Matrix getAccessToGameMap() {
 		return this.gameMap;
+	}
+	
+	public void removeShip(Point point) {
+		if (point.isInRange()) {
+			this.gameMap.removeShip(point);
+		}
 	}
 	
 	public void tryToPlaceShip(Point firstCoord, Point secondPoint, Ship ship) {
@@ -21,6 +34,7 @@ public class Model {
 	
 	public boolean pointIsAppropriateForFirstCoord(Point point) { 
 		if (point.isInRange() && this.gameMap.noShipsAroundPoint(point)) {
+			this.gameMap.getCell(point).setState(State.special);
 			return true;
 		}
 		return false;

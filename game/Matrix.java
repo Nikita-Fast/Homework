@@ -16,6 +16,27 @@ public class Matrix {
 		}
 	}
 	
+	public void describeFleet() {
+		int a = 0, b = 0, c = 0, d = 0;
+		for (Ship ship : fleet) {
+			if (ship != null) {
+				if (ship.getLength() == 1) {
+					a++;
+				}
+				if (ship.getLength() == 2) {
+					b++;
+				}
+				if (ship.getLength() == 3) {
+					c++;
+				}
+				if (ship.getLength() == 4) {
+					d++;
+				}
+			}
+		}
+		System.out.println("len 1: "+ a + "   len 2: " + b + "   len 3: " + c + "   len 4: " + d);
+	}
+	
 	public void drawMatrix() {
 		for (int i = 0; i < this.matrix.length; i++) {
 			for (int j = 0; j < this.matrix[i].length; j++) {
@@ -27,6 +48,24 @@ public class Matrix {
 				}
 			}
 			System.out.println();
+		}
+	}
+	
+	public void removeShip(Point point) {
+		if (point.isInRange()) {
+			Ship ship = getCell(point).getShip();
+			if (ship != null) {
+				changeStateOfCellsToEmpty(ship.getPointsOfShip());
+				returnShip(ship);
+			}
+		}
+	}
+	
+	private void changeStateOfCellsToEmpty(ArrayList<Point> points) {
+		if (!points.isEmpty()) {
+			for (Point p : points) {
+				getCell(p).setState(State.empty);
+			}
 		}
 	}
 	
@@ -42,6 +81,7 @@ public class Matrix {
 		for (Point point : points) {
 			getCell(point).setShip(ship);
 		}
+		ship.setPointsOfShip(points);
 	}
 	
 	private boolean positionForShipIsGood(ArrayList<Point> points) {
@@ -179,6 +219,7 @@ public class Matrix {
 			for (int i = 0; i < this.fleet.length; i++) {
 				if (this.fleet[i] == null) {
 					this.fleet[i] = ship;
+					i = this.fleet.length;  //stop cycle, this is just quick solution in order to prevent bug
 				}
 			}
 		}
