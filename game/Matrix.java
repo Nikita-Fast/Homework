@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class Matrix {
 	private Cell[][] matrix;
 	private Ship[] fleet;
+	private int numberOfDestroyedShips;
 	
 	public Matrix() {
 		matrix = new Cell[10][10];
 		fleet = new Ship[10];
+		numberOfDestroyedShips = 0;
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[i].length; j++) {
 				matrix[i][j] = new Cell(false, State.empty);
@@ -188,6 +190,14 @@ public class Matrix {
 		return cellsAround;
 	}
 	
+	private ArrayList<Cell> getCellsAroundShipWithShip(Ship ship) {
+		ArrayList<Cell> cellsAround = new ArrayList<Cell>();
+		for (Point point : ship.getPointsOfShip()) {
+			cellsAround.addAll(getCellsAroundPointIncludingPoint(point));
+		}
+		return cellsAround;
+	}
+	
 	private boolean allCellsInListAreEmpty(ArrayList<Cell> cellsAround) {
 		for (Cell cell : cellsAround) {     //лист не будет пустым так как в него будех входить центральна€ €чейка
 			if (cell.getState() == State.hasShip) {
@@ -257,5 +267,81 @@ public class Matrix {
 		}
 		return true;
 	}
+	
+	public boolean pointIsAppropriateForShot(Point coord) {
+		if (coord.isInRange()) {
+			if (!getCell(coord).getIsOpenState()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean madeSuccessfulShot(Point coord) {
+		if (pointIsAppropriateForShot(coord)) {
+			shootToSpecifiedPoint(coord);
+			return shipWasHited(coord);
+		}
+		return false;
+	}
+	
+	public void shootToSpecifiedPoint(Point point) {
+		getCell(point).setIsOpenState(true);
+		if (getCell(point).getState() == State.hasShip) {
+			getCell(point).getShip().decreaseHealth();
+			if (getCell(point).getShip().getHealth() == 0) {
+				destroyShip(getCell(point).getShip());
+			}
+		}
+	}
+	
+	public void destroyShip(Ship ship) {
+		for (Cell cell : getCellsAroundShipWithShip(ship)) {
+			cell.setIsOpenState(true);
+		}
+		this.numberOfDestroyedShips++;
+	}
+	
+	public boolean shipWasHited(Point coord) {
+		if (getCell(coord).getState() == State.hasShip) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean allShipsWereDestroyed() {
+		if (this.numberOfDestroyedShips == 10) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

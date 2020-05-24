@@ -14,6 +14,10 @@ public class Ship {
 		this.points = new ArrayList<Point>();
 	}
 	
+	public int getHealth() {
+		return this.health;
+	}
+	
 	public int getLength() {
 		return length;
 	}
@@ -24,5 +28,11 @@ public class Ship {
 	
 	public ArrayList<Point> getPointsOfShip() {
 		return this.points;
+	}
+	
+	public void decreaseHealth() {
+		if (this.health > 0) { 
+			this.health--;
+		}
 	}
 }
