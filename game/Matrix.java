@@ -18,27 +18,10 @@ public class Matrix {
 		}
 	}
 	
-	public void describeFleet() {
-		int a = 0, b = 0, c = 0, d = 0;
-		for (Ship ship : fleet) {
-			if (ship != null) {
-				if (ship.getLength() == 1) {
-					a++;
-				}
-				if (ship.getLength() == 2) {
-					b++;
-				}
-				if (ship.getLength() == 3) {
-					c++;
-				}
-				if (ship.getLength() == 4) {
-					d++;
-				}
-			}
-		}
-		System.out.println("len 1: "+ a + "   len 2: " + b + "   len 3: " + c + "   len 4: " + d);
+	public Ship[] getFleet() {
+		return this.fleet;
 	}
-	
+ 	
 	public void drawMatrix() {
 		for (int i = 0; i < this.matrix.length; i++) {
 			for (int j = 0; j < this.matrix[i].length; j++) {
@@ -58,8 +41,15 @@ public class Matrix {
 			Ship ship = getCell(point).getShip();
 			if (ship != null) {
 				changeStateOfCellsToEmpty(ship.getPointsOfShip());
+				removeShipFromCells(ship.getPointsOfShip());
 				returnShip(ship);
 			}
+		}
+	}
+	
+	private void removeShipFromCells(ArrayList<Point> pointsWhereShipPlaced) {
+		for (Point point : pointsWhereShipPlaced) {
+			getCell(point).setShip(null);
 		}
 	}
 	
@@ -117,26 +107,19 @@ public class Matrix {
 		}
 	}
 	
-	private void printCoordinatesOfPoints(ArrayList<Point> points) {
-		for (Point point : points) {
-			System.out.println("print method: " + point.x + "  " + point.y);
-		}
-		System.out.println("------------");
-	}
-	
 	private ArrayList<Point> getPointsForShip(Point p1, Point p2, int length) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		
 		if (p1.isInTheColumnWith(p2)) {
 			if (p1.y < p2.y) {
-				System.out.println("in the column");
+				//System.out.println("in the column");
 				for (int i = p1.y; i < p1.y + length; i++) {
 					points.add(new Point(p1.x, i));
 				}
 			}
 			else {
-				System.out.println("in the line");
-				System.out.println("anime");
+				//System.out.println("in the line");
+				//System.out.println("anime");
 				for (int i = p1.y; i > p1.y - length; i--) {
 					points.add(new Point(p1.x, i));
 				}
@@ -182,7 +165,7 @@ public class Matrix {
 			for (int j = point.x - 1; j <= point.x + 1; j++) {
 				Point newPoint = new Point(j, i);
 				if (newPoint.isInRange()) {
-					System.out.println(newPoint.x + "  " + newPoint.y);
+					//System.out.println(newPoint.x + "  " + newPoint.y);
 					cellsAround.add(this.matrix[i][j]);
 				}
 			}
@@ -235,6 +218,27 @@ public class Matrix {
 		}
 	}
 	
+	public void describeFleet() {
+		int a = 0, b = 0, c = 0, d = 0;
+		for (Ship ship : fleet) {
+			if (ship != null) {
+				if (ship.getLength() == 1) {
+					a++;
+				}
+				if (ship.getLength() == 2) {
+					b++;
+				}
+				if (ship.getLength() == 3) {
+					c++;
+				}
+				if (ship.getLength() == 4) {
+					d++;
+				}
+			}
+		}
+		System.out.println("len 1: "+ a + "   len 2: " + b + "   len 3: " + c + "   len 4: " + d);
+	}
+	
 	public Ship getShipOfSpecifiedLength(int length) {
 		for (int i = 0; i < this.fleet.length; i++) {
 			if (this.fleet[i] != null) {
@@ -256,7 +260,7 @@ public class Matrix {
 				k++;
 			}
 		}
-		System.out.println("final value: " + k);
+		//System.out.println("final value: " + k);
 	}
 	
 	public boolean fleetIsEmpty() {
