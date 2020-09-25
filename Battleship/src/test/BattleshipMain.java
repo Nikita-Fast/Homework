@@ -1,7 +1,6 @@
 package test;
 
 import java.util.Random;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,15 +15,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import test.Board.Cell;
 
-public class BattleshipMain extends Application {
-		
-	VBox gameModeButtons;
+public class BattleshipMain extends Application {		
+	//VBox gameModeButtons;
 	VBox gameButtons;
-	
-	//private boolean gameModeChose;
-	
 	private Difficulty gameDifficulty;
 	
 	private boolean twoPlayersMode;
@@ -49,14 +43,12 @@ public class BattleshipMain extends Application {
     private Label info = new Label("Use left click to place ship vertically "
 			                     + "and right click to place horizontally.\n"
 			                     + "Place where you click will be the top left corner of your ship.");
-
-    
     private int type = 4;
 
     private boolean enemyTurn = false;
 
     private Random random = new Random();
-    
+    /*
     private void createDecorationForChoosingGameDifficulty(BorderPane root) {
     	HBox hbox = new HBox(50);
     	hbox.getChildren().addAll(easyLevel, hardLevel);
@@ -67,53 +59,38 @@ public class BattleshipMain extends Application {
     	root.setTop(chooseDifficulty);
     	root.setCenter(hbox);   	
     }
-
+    
     private void createDecorationForGameWithBot(BorderPane root) {
-    	
     	showInfo.setText("Player, please place your ships!");
     	gameButtons = new VBox(30, randomLayout, clearBoard, startGame);
-    	
     	HBox hbox = new HBox(50);
     	hbox.getChildren().addAll(playerBoard, gameButtons);
-    	
-    	
     	VBox vbox = new VBox(30);
     	vbox.getChildren().addAll(showInfo, hbox, info);
     	vbox.setPadding(new Insets(200, 0, 0, 60));
-    	
     	root.setCenter(vbox);
-    }
+    } 
     
     private void createDecorationForGameWithAnotherPlayer(BorderPane root) {
     	showInfo.setText("Player 1, please place your ships!");
-    	
     	VBox buttonsVBox = new VBox(30, randomLayout, clearBoard, moveToSecondPlayer);
-    	
     	HBox hbox = new HBox(50);
     	hbox.getChildren().addAll(playerBoard, buttonsVBox);
-    	
-    	
     	VBox vbox = new VBox(30);
     	vbox.getChildren().addAll(showInfo, hbox, info);
     	vbox.setPadding(new Insets(200, 0, 0, 60));
-    	
     	root.setCenter(vbox);
     }
     
     private void createDecorationForGameWithAnotherPlayerStepTwo(BorderPane root) {
     	root.getChildren().removeAll(root.getChildren());
-    	
     	showInfo.setText("Player 2, please place your ships!");
-    	
     	VBox buttonsVBox = new VBox(30, randomLayout, clearBoard, startGame);
-    	
     	HBox hbox = new HBox(50);
-    	hbox.getChildren().addAll(enemyBoard, buttonsVBox);
-    	   	
+    	hbox.getChildren().addAll(enemyBoard, buttonsVBox); 	
     	VBox vbox = new VBox(30);
     	vbox.getChildren().addAll(showInfo, hbox, info);
     	vbox.setPadding(new Insets(200, 0, 0, 60)); 
-    	
     	root.setCenter(vbox); 
     }
     
@@ -138,62 +115,59 @@ public class BattleshipMain extends Application {
     	//info.setText("THE END!");
     	info.setAlignment(Pos.CENTER);
     	root.setCenter(info);
-    }
-   
-    
+    }*/
+    /*
     private void removeGameModeButtons(BorderPane root) {
     	if (root.getChildren().contains(gameModeButtons)) {
     		root.getChildren().remove(gameModeButtons);
     	}
-    }
+    }*/
     
     private Parent createContent() {   	
 	   BorderPane root = new BorderPane();
 	   root.setPrefSize(600, 800);
-	    
+	   /* 
 	   gameModeButtons = new VBox(30, gameWithBot, gameWithAnotherPlayer);
 	   gameModeButtons.setAlignment(Pos.CENTER);
-	   root.setCenter(gameModeButtons);
+	   root.setCenter(gameModeButtons);*/
 	   
-	   
-	   
-	   
-	   
+	   VBox btns = new VBox(30, gameWithBot, gameWithAnotherPlayer);
+	   btns.setAlignment(Pos.CENTER);
+	   root.setCenter(btns);
 	   
 	   easyLevel.setText("Easy");
 	   easyLevel.setOnAction(event -> {
 		   gameDifficulty = Difficulty.easy;
-		   root.getChildren().removeAll(root.getChildren());
-		   createDecorationForGameWithBot(root);
+		   //root.getChildren().removeAll(root.getChildren()); // check here
+		   //createDecorationForGameWithBot(root);
+		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 	   
 	   hardLevel.setText("Hard");
 	   hardLevel.setOnAction(event -> {
 		   gameDifficulty = Difficulty.hard;
-		   root.getChildren().removeAll(root.getChildren());
-		   createDecorationForGameWithBot(root);
+		   //root.getChildren().removeAll(root.getChildren());
+		   //createDecorationForGameWithBot(root);
+		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 
-	   
-	   
-	   
-	   
-	   
 	   gameWithAnotherPlayer.setText("Game With Another Player");
 	   gameWithAnotherPlayer.setOnAction(event -> {
 		   twoPlayersMode = true;
 		   //gameModeChose = true;
-		   removeGameModeButtons(root);
-		   createDecorationForGameWithAnotherPlayer(root);
+		   //removeGameModeButtons(root);
+		   //createDecorationForGameWithAnotherPlayer(root);
+		   Decorations.createDecorationForGameWithAnotherPlayer(root, randomLayout, clearBoard, moveToSecondPlayer, showInfo, playerBoard, info);
 	   });
        
        gameWithBot.setText("Game With Bot");
        gameWithBot.setOnAction(event -> {
     	   twoPlayersMode = false;
     	   //gameModeChose = true;
-    	   removeGameModeButtons(root);
+    	   //removeGameModeButtons(root);
     	   
-    	   createDecorationForChoosingGameDifficulty(root);
+    	   //createDecorationForChoosingGameDifficulty(root);  one line below I try to use function from Decorations class
+    	   Decorations.createDecorationForChoosingGameDifficulty(root, easyLevel, hardLevel, chooseDifficulty);
     	   //createDecorationForGameWithBot(root);	   
        });
        
@@ -202,7 +176,8 @@ public class BattleshipMain extends Application {
     	   if (playerBoard.shipsToPlace == 0) {
 	    	   nowIsSecondPlayer = true;
 	    	   type = 4;
-	    	   createDecorationForGameWithAnotherPlayerStepTwo(root);
+	    	   //createDecorationForGameWithAnotherPlayerStepTwo(root);
+	    	   Decorations.createDecorationForGameWithAnotherPlayerStepTwo(root, randomLayout, clearBoard, startGame, showInfo, enemyBoard, info);
     	   }
        });
        
@@ -250,23 +225,17 @@ public class BattleshipMain extends Application {
     		   }
        	   }
        });  
-       
-          
-	   enemyBoard = new Board(true, event -> {
-	        	
+         
+	   enemyBoard = new Board(true, event -> {	
 			if (!running) {
 				if (twoPlayersMode && nowIsSecondPlayer) {
 					if (enemyBoard.shipsToPlace <= 0) {
 		            	return;
-		            }
-		                
+		            }   
 		            Cell cell = (Cell) event.getSource();
-		            
-		            if (enemyBoard.placeShip(new Ship(type, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) { //переместить type в board чтобы не париться с его изменением до 4х
+		            if (enemyBoard.placeShip(new Ship(type, event.getButton() == MouseButton.PRIMARY), cell.getXCoord(), cell.getYCoord())) { //переместить type в board чтобы не париться с его изменением до 4х
 		            	System.out.println("placed!");
-		            	
 		            	System.out.println(enemyBoard.shipsToPlace);
-		            	
 		            	if (enemyBoard.shipsToPlace == 9 || enemyBoard.shipsToPlace == 7 || 
 		            			enemyBoard.shipsToPlace == 4 || enemyBoard.shipsToPlace == 0) {
 		            		type--;
@@ -274,19 +243,16 @@ public class BattleshipMain extends Application {
 		            }					
 				}				
 				return;
-			}
-						
+			}			
 			Cell cell = (Cell) event.getSource();
-			if (cell.wasShot || enemyTurn) {   // changed here!!!
+			if (cell.getWasShotState() || enemyTurn) {   // changed here!!!
 				return;
-			}
-			                
-			enemyTurn = !cell.shoot();
-			
+			}               
+			//enemyTurn = !cell.shoot();
+			enemyTurn = !enemyBoard.shoot(cell); //EXPIREMENT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			if (enemyTurn) {
 				info.setText("PLAYER'S 2 TURN!");
 			}
-			
 			if (enemyBoard.shipsSurvived == 0) {
 				if (!twoPlayersMode) {
 					//System.out.println("YOU WIN");
@@ -296,7 +262,8 @@ public class BattleshipMain extends Application {
 					//System.out.println("PLAYER 1 WIN");
 					info.setText("PLAYER 1 WIN");
 				}
-			    createDecorationForGameEnd(root);
+			    //createDecorationForGameEnd(root);
+				Decorations.createDecorationForGameEnd(root, info);
 		    }            
 			
 			if (enemyTurn && !twoPlayersMode) {
@@ -315,43 +282,36 @@ public class BattleshipMain extends Application {
             	
             	if (twoPlayersMode && enemyTurn) {
             		Cell cell = (Cell) event.getSource();
-        			if (cell.wasShot) {   
+        			if (cell.getWasShotState()) {   
         				return;
         			}
-        			
-        			enemyTurn = cell.shoot();
-        			
+        			//enemyTurn = cell.shoot();
+        			enemyTurn = playerBoard.shoot(cell);
         			if (!enemyTurn) {
         				info.setText("PLAYER'S 1 TURN!");
         			}
-        			
         			if (playerBoard.shipsSurvived == 0) {
         				//System.out.println("PLAYER 2 WIN");
         				info.setText("PLAYER 2 WIN");
-        			    createDecorationForGameEnd(root);
+        			    //createDecorationForGameEnd(root);
+        				Decorations.createDecorationForGameEnd(root, info);
         		    } 
             	}            	
             	return;
             }
-            
             if (playerBoard.shipsToPlace <= 0) {
             	return;
-            }
-                
+            }   
             Cell cell = (Cell) event.getSource();
-            
-            if (playerBoard.placeShip(new Ship(type, event.getButton() == MouseButton.PRIMARY), cell.x, cell.y)) {
+            if (playerBoard.placeShip(new Ship(type, event.getButton() == MouseButton.PRIMARY), cell.getXCoord(), cell.getYCoord())) {
             	System.out.println("placed!");
-            	
             	System.out.println(playerBoard.shipsToPlace);
-            	
             	if (playerBoard.shipsToPlace == 9 || playerBoard.shipsToPlace == 7 || 
             			playerBoard.shipsToPlace == 4 || playerBoard.shipsToPlace == 0) {
             		type--;
             	}
             }
-        });
-	                
+        });           
         return root;
     }
     
@@ -359,18 +319,17 @@ public class BattleshipMain extends Application {
     	while (enemyTurn) {
             int x = random.nextInt(10);
             int y = random.nextInt(10);
-
             Cell cell = playerBoard.getCell(x, y);
-            if (cell.wasShot) {
+            if (cell.getWasShotState()) {
                 continue;
             }
-
-            enemyTurn = cell.shoot();
-
+            //enemyTurn = cell.shoot();
+            enemyTurn = playerBoard.shoot(cell);
             if (playerBoard.shipsSurvived == 0) {
                 //System.out.println("BOT WIN");
             	info.setText("BOT WIN");
-                createDecorationForGameEnd(root);
+                //createDecorationForGameEnd(root);
+            	Decorations.createDecorationForGameEnd(root, info);
                 return;
             }
         }
@@ -379,27 +338,25 @@ public class BattleshipMain extends Application {
     private void enemyMoveHard(BorderPane root) {
     	while (enemyTurn) {
     		playerBoard.killDamagedShip();
-    		
-    		if (Math.random() < 0.29) {  
+    		if (Math.random() < 0.99) {  
     			playerBoard.almostKillSpecifiedShip(playerBoard.detectRandomShip());
-    		}
-    		            
+    		}           
     		playerBoard.makeShotToVoidIfPossible();
     		enemyTurn = false;
-
             if (playerBoard.shipsSurvived == 0) {
                 //System.out.println("BOT WIN");
             	info.setText("BOT WIN");
-                createDecorationForGameEnd(root);
+                //createDecorationForGameEnd(root);
+            	Decorations.createDecorationForGameEnd(root, info);
                 return;
             }
         }
     }
 
     private void startGame(BorderPane root) { 
-    	root.getChildren().removeAll(root.getChildren());
-    	createDecorationForGameStart(root);
-    	
+    	//cleanParentFromAllDecorations(root);
+    	//createDecorationForGameStart(root);
+    	Decorations.createDecorationForGameStart(root, twoPlayersMode, playerBoard, enemyBoard, showInfo, showInfo2, info);
     	if (!twoPlayersMode) {
     		enemyBoard.placeShipsRandomly();
     	}

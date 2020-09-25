@@ -14,33 +14,34 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Board extends Parent {
+	public static final int SIZE_OF_BOARD = 10;
+	public static final int MAX_NUMBER_OF_SHIPS = 10;
+	public static final int MAX_LENGTH_OF_SHIP = 4;
+	public static final int MAX_ATTEMPS_NUMBER = 1000;
     private VBox rows = new VBox();
     private boolean enemy = false;
-    public int shipsToPlace = 10;
-    public int shipsSurvived = 10;
+    public int shipsToPlace = MAX_NUMBER_OF_SHIPS;
+    public int shipsSurvived = MAX_NUMBER_OF_SHIPS;
 
-    public Board(boolean enemy, EventHandler<MouseEvent> handler) { //EventHandler<? super MouseEvent> handler
+    public Board(boolean enemy, EventHandler<MouseEvent> handler) {
         this.enemy = enemy;
-        for (int y = 0; y < 10; y++) {
+        for (int y = 0; y < SIZE_OF_BOARD; y++) {
             HBox row = new HBox();
-            for (int x = 0; x < 10; x++) {
-                Cell c = new Cell(x, y, this);
-                c.setOnMouseClicked(handler);
-                row.getChildren().add(c);
+            for (int x = 0; x < SIZE_OF_BOARD; x++) {
+                Cell cell = new Cell(x, y, this);
+                cell.setOnMouseClicked(handler);
+                row.getChildren().add(cell);
             }
-
-            rows.getChildren().add(row);
+            this.rows.getChildren().add(row);
         }
-
-        getChildren().add(rows);
+        getChildren().add(this.rows);
     }
     
     public void hideShipsFromEnemy() {
     	for (int y = 0; y < 10; y++) {
     		for (int x = 0; x < 10; x++) {
     			Cell cell = getCell(x, y);
-    			cell.setFill(Color.LIGHTGRAY);
-                cell.setStroke(Color.CYAN);
+    			cell.paintToLightgray();
     		}
     	}
     }
@@ -48,53 +49,56 @@ public class Board extends Parent {
     public void placeShipsRandomly() {
     	clearBoard();
     	Random random = new Random();
-    	int type = 4;
-    	while (type > 0) {
-    		int x = random.nextInt(10);
-            int y = random.nextInt(10);
-            
-            if (placeShip(new Ship(type, Math.random() < 0.5), x, y)) {
-            	if (shipsToPlace == 9 || shipsToPlace == 7 || shipsToPlace == 4 || shipsToPlace == 0) {
-            		type--;
+    	int shipLength = MAX_LENGTH_OF_SHIP;
+    	int timesToPlaceShipOfSuchLength = 1;
+    	while (shipLength > 0) {
+    		int x = random.nextInt(SIZE_OF_BOARD);
+            int y = random.nextInt(SIZE_OF_BOARD);            
+            if (placeShip(new Ship(shipLength, Math.random() < 0.5), x, y)) {
+            	timesToPlaceShipOfSuchLength--;
+            	if (timesToPlaceShipOfSuchLength == 0) {
+            		shipLength--;
+            		timesToPlaceShipOfSuchLength = MAX_LENGTH_OF_SHIP - shipLength + 1;
             	}
+            	/*
+            	if (shipsToPlace == 9 || shipsToPlace == 7 || shipsToPlace == 4 || shipsToPlace == 0) {
+            		shipLength--;
+            	}*/
             }
     	}
     }
     
     public void clearBoard() {
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
-    			cell.ship = null;
-    			cell.setFill(Color.LIGHTGRAY);
-                cell.setStroke(Color.CYAN);
+    			cell.setShip(null);
+    			cell.paintToLightgray();
     		}
     	}
-    	shipsToPlace = 10;
+    	shipsToPlace = MAX_NUMBER_OF_SHIPS;
     }
     
     public boolean placeShip(Ship ship, int x, int y) {
         if (canPlaceShip(ship, x, y)) {
-            int length = ship.type;
-
-            if (ship.vertical) {
+            int length = ship.getLength();
+            if (ship.isVertical()) {
                 for (int i = y; i < y + length; i++) {
                     Cell cell = getCell(x, i);
-                    cell.ship = ship;
-                    cell.setFill(Color.WHITE);
+                    cell.setShip(ship);
+                    cell.paintToWhite();
                 }
             }
             else {
                 for (int i = x; i < x + length; i++) {
                     Cell cell = getCell(i, y);
-                    cell.ship = ship;
-                    cell.setFill(Color.WHITE);
+                    cell.setShip(ship);
+                    cell.paintToWhite();
                 }
             }
-            shipsToPlace--;
+            this.shipsToPlace--;
             return true;
         }
-
         return false;
     }
 
@@ -108,57 +112,73 @@ public class Board extends Parent {
                 new Point2D(x - 1, y), new Point2D(x + 1, y),
                 new Point2D(x - 1, y - 1), new Point2D(x, y - 1), new Point2D(x + 1, y - 1)        
         };
-
         List<Cell> neighbors = new ArrayList<Cell>();
-
-        for (Point2D p : points) {
-            if (isValidPoint(p)) {
-                neighbors.add(getCell((int)p.getX(), (int)p.getY()));
+        for (Point2D point : points) {
+            if (isValidPoint(point)) {
+                neighbors.add(getCell((int)point.getX(), (int)point.getY()));
             }
         }
-
         return neighbors.toArray(new Cell[0]);
     }
 
     private boolean canPlaceShip(Ship ship, int x, int y) {
-        int length = ship.type;
-
-        if (ship.vertical) {
+        int length = ship.getLength();
+        if (ship.isVertical()) {
             for (int i = y; i < y + length; i++) {
+            	if (!pointIsAppropriateToPlaceShip(x, i)) {
+            		return false;
+            	}
+            	/*
                 if (!isValidPoint(x, i)) {
                 	return false;
                 }                   
-
                 Cell cell = getCell(x, i);
-                if (cell.ship != null) {
+                if (cell.getShip() != null) {
                     return false;
                 }
-
-                for (Cell neighbor : getNeighbors(x, i)) {
-                 
-                    if (neighbor.ship != null) {
+                for (Cell neighbor : getNeighbors(x, i)) {                
+                    if (neighbor.getShip() != null) {
                         return false;
                     }
-                }
-            }
+                }*/
+            } 
         }
         else {
             for (int i = x; i < x + length; i++) {
-                if (!isValidPoint(i, y))
-                    return false;
-
-                Cell cell = getCell(i, y);
-                if (cell.ship != null)
-                    return false;
-
-                for (Cell neighbor : getNeighbors(i, y)) {
-                    
-                    if (neighbor.ship != null)
-                        return false;
+            	if (!pointIsAppropriateToPlaceShip(i, y)) {
+            		return false;
+            	}
+            	/*
+                if (!isValidPoint(i, y)) {
+                	return false;
                 }
+                Cell cell = getCell(i, y);
+                if (cell.getShip() != null) {
+                	return false;
+                }
+                for (Cell neighbor : getNeighbors(i, y)) {                   
+                    if (neighbor.getShip() != null) {
+                    	return false;
+                    }                        
+                }*/
             }
         }
-
+        return true;
+    }
+    
+    private boolean pointIsAppropriateToPlaceShip(int x, int y) {
+    	if (!isValidPoint(x, y)) {
+        	return false;
+        }                   
+        Cell cell = getCell(x, y);
+        if (cell.getShip() != null) {
+            return false;
+        }
+        for (Cell neighbor : getNeighbors(x, y)) {                
+            if (neighbor.getShip() != null) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -167,9 +187,9 @@ public class Board extends Parent {
     }
 
     private boolean isValidPoint(double x, double y) {
-        return x >= 0 && x < 10 && y >= 0 && y < 10;
+        return x >= 0 && x < SIZE_OF_BOARD && y >= 0 && y < SIZE_OF_BOARD;
     }
-
+/*
     public class Cell extends Rectangle {
         public int x, y;
         public Ship ship = null;
@@ -215,20 +235,34 @@ public class Board extends Parent {
         }
         
     }
+*/  
+    public boolean shoot(Cell cell) {
+    	cell.setWasShotState(true);
+    	cell.paintToOrchid();
+    	Ship ship = cell.getShip();
+    	if (ship != null) {
+    		ship.hit();
+    		cell.paintToRed();
+    		if (!ship.isAlive()) {
+    			destroyShip(ship);
+    		}
+    		return true;
+    	}
+    	return false;
+    }
     
     public void almostKillSpecifiedShip(Ship ship) {
     	if (ship == null) {
     		return;
-    	}
-    	
-    	if (ship.type == 1) {
+    	}    	
+    	if (ship.getLength() == 1) {
     		killSpecifiedShip(ship);
     		return;
-    	}
-    	
+    	}   	
     	while (true) {
     		for (Cell cell : getHealthyCellsOfShip(ship)) {
-    			cell.shoot();
+    			//cell.shoot();
+    			shoot(cell);
     			if (ship.getHealth() == 1) {
     				return;
     			}
@@ -242,28 +276,30 @@ public class Board extends Parent {
     	while (!end) {
     		attempts++;
 	    	Random random = new Random();
-	    	int x = random.nextInt(10);
-	    	int y = random.nextInt(10);
+	    	int x = random.nextInt(SIZE_OF_BOARD);
+	    	int y = random.nextInt(SIZE_OF_BOARD);
 	    	Cell cell = getCell(x, y);
-	    	if (cell.ship == null && !cell.wasShot) {
-	    		cell.shoot();
+	    	if (cell.getShip() == null && !cell.getWasShotState()) {
+	    		//cell.shoot();
+	    		shoot(cell);
 	    		end = true;
 	    	}
-	    	if (attempts > 1000) {
+	    	if (attempts > MAX_ATTEMPS_NUMBER) {
 	    		cell = chooseCellForShot();
 	    		if (cell == null) {
 	    			return;
 	    		}
-	    		chooseCellForShot().shoot();	    		
+	    		//chooseCellForShot().shoot(); почему здесь просто не использовать cell.shoot();?
+	    		shoot(cell);  //а если передадут null?
 	    	}
     	}
     }
     
     public Cell chooseCellForShot() {
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
-    			if (!cell.wasShot) {
+    			if (!cell.getWasShotState()) {
     				return cell;
     			}
     		}
@@ -274,14 +310,15 @@ public class Board extends Parent {
     public boolean cellIsEmpty(int x, int y) {
     	Point2D point = new Point2D(x, y);
     	if (isValidPoint(point)) {
-    		return !getCell(x, y).wasShot ? true : false;
+    		return !getCell(x, y).getWasShotState() ? true : false;
     	}
     	return false;
     }
         
     public void killSpecifiedShip(Ship ship) {
     	for (Cell cell : getHealthyCellsOfShip(ship)) {
-    		cell.shoot();
+    		//cell.shoot();
+    		shoot(cell);
     	}
     }
     
@@ -292,45 +329,44 @@ public class Board extends Parent {
     	}
     }
     
-    public Ship detectDamagedShip() {
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
-    			Cell cell = getCell(x, y);
-    			if (cell.ship != null && cell.ship.getHealth() < cell.ship.type && cell.ship.getHealth() > 0) {
-    				return cell.ship;
+    public Ship detectDamagedShip() {    //что делать если вернули null?
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
+    			Ship ship = getCell(x, y).getShip();
+    			if (ship != null && ship.getHealth() < ship.getLength() && ship.getHealth() > 0) {
+    				return ship;
     			}
     		}
     	}
     	return null;
     }
     
-    public Ship detectRandomShip() {
+    public Ship detectRandomShip() {  //что делать если вернули null?
     	Random random = new Random();
     	int attempts = 0;
     	while (true) {
     		attempts++;
-	    	int x = random.nextInt(10);
-	        int y = random.nextInt(10);
-	        
-	        if (getCell(x, y).ship != null && !getCell(x, y).wasShot) {
-	        	//printCoordsOfShip(getCell(x, y).ship);
-	        	return getCell(x, y).ship;
-	        }
-	        
-	        if (attempts > 10_000) {
-	        	if (!boardStillHasShip()) {
-	        		System.out.println("Can'tfind ship");
+	    	int x = random.nextInt(SIZE_OF_BOARD);
+	        int y = random.nextInt(SIZE_OF_BOARD);
+	        Ship ship = getCell(x, y).getShip();
+	        if (ship != null && ship.isAlive()) { //if (getCell(x, y).getShip() != null && !getCell(x, y).getWasShotState())
+	        	return ship;
+	        }	        
+	        if (attempts > MAX_ATTEMPS_NUMBER) {
+	        	if (!boardStillHasAliveShip()) {
 	        		return null;
 	        	}
+	        	attempts = 0;
 	        }
     	}
     }
       
-    public boolean boardStillHasShip() {
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    public boolean boardStillHasAliveShip() {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
-    			if (cell.ship != null) {
+    			Ship ship = cell.getShip();
+    			if (ship != null && ship.isAlive()) {
     				return true;
     			}
     		}
@@ -341,10 +377,10 @@ public class Board extends Parent {
     
     public ArrayList<Cell> getHealthyCellsOfShip(Ship ship) {
     	ArrayList<Cell> cellsOfShip = new ArrayList<Cell>();
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
-    			if (!cell.wasShot && cell.ship == ship) {
+    			if (!cell.getWasShotState() && cell.getShip() == ship) {
     				cellsOfShip.add(cell);
     			}
     		}
@@ -355,7 +391,7 @@ public class Board extends Parent {
     public ArrayList<Cell> getCellsAroundShip(Ship ship) {
     	ArrayList<Cell> cellsAroundShip = new ArrayList<Cell>();
     	for (Cell cellOfShip : getCellsOfShip(ship)) {
-    		for (Cell cell : getNeighbors(cellOfShip.x, cellOfShip.y)) {
+    		for (Cell cell : getNeighbors(cellOfShip.getXCoord(), cellOfShip.getYCoord())) {
     			if (!cellsAroundShip.contains(cell)) {
     				cellsAroundShip.add(cell);
     			}
@@ -365,21 +401,22 @@ public class Board extends Parent {
     }
     
     public void destroyShip(Ship ship) {
+    	this.shipsSurvived--;
     	for (Cell cell : getCellsAroundShip(ship)) {
-    		cell.wasShot = true;
-    		cell.setFill(Color.ORCHID);
+    		cell.setWasShotState(true);
+    		cell.paintToOrchid();
     	}
     	for (Cell cell : getCellsOfShip(ship)) {
-    		cell.setFill(Color.RED);
+    		cell.paintToRed();
     	}
     }
     
     public ArrayList<Cell> getCellsOfShip(Ship ship) {
     	ArrayList<Cell> cellsOfShip = new ArrayList<Cell>();
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
-    			if (cell.ship == ship) {
+    			if (cell.getShip() == ship) {
     				cellsOfShip.add(cell);
     			}
     		}

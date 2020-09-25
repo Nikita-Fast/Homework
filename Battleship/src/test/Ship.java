@@ -3,26 +3,33 @@ package test;
 import javafx.scene.Parent;
 
 public class Ship extends Parent {
-    public int type;
-    public boolean vertical = true;
-
+    private int length;
+    private boolean vertical = true;
     private int health;
 
-    public Ship(int type, boolean vertical) {
-        this.type = type;
+    public Ship(int length, boolean vertical) {
+        this.length = length;
         this.vertical = vertical;
-        health = type;
+        this.health = length;
+    }
+    
+    public int getLength() {
+    	return this.length;
+    }
+    
+    public boolean isVertical() {
+    	return this.vertical;
     }
 
     public void hit() {
-        health--;
+        this.health--;
     }
 
     public boolean isAlive() {
-        return health > 0;
+        return this.health > 0;
     }
     
     public int getHealth() {
-    	return health;
+    	return this.health;
     }
 }
