@@ -8,13 +8,11 @@ public class Cell extends Rectangle {
 	private int y;
     private Ship ship = null;
     private boolean wasShot = false;
-    private Board board;
 
-    public Cell(int x, int y, Board board) {
+    public Cell(int x, int y) {
         super(30, 30);
         this.x = x;
         this.y = y;
-        this.board = board;
         paintToLightgray();
     }
     
@@ -58,24 +56,7 @@ public class Cell extends Rectangle {
     public int getYCoord() {
     	return y;
     }
-    /*
-    public boolean shoot() {
-        wasShot = true;
-        setFill(Color.ORCHID);
-
-        if (ship != null) {
-            ship.hit();
-            setFill(Color.RED);
-            if (!ship.isAlive()) {
-            	//destroyShip(ship);
-                board.shipsSurvived--;
-            }
-            return true;
-        }
-
-        return false;
-    }
-    */
+   
     public boolean hasThisShip(Ship ship) {
     	return this.ship == ship ? true : false;
     }

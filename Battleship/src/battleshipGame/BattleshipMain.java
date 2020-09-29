@@ -37,7 +37,7 @@ public class BattleshipMain extends Application {
     private Label showInfo2 = new Label();
     private Label showInfo = new Label();
     private Label info = new Label();
-    private static final double difficulty = 0.29; //set value from 0 to 1; the closer to 1, the harder game is
+    private static final double difficulty = 0.99; //set value from 0 to 1; the closer to 1, the harder game is
     
     private Parent createContent() {   	
 	   BorderPane root = new BorderPane();

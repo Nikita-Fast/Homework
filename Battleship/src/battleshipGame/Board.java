@@ -42,7 +42,7 @@ public class Board extends Parent {
         for (int y = 0; y < SIZE_OF_BOARD; y++) {
             HBox row = new HBox();
             for (int x = 0; x < SIZE_OF_BOARD; x++) {
-                Cell cell = new Cell(x, y, this);
+            	Cell cell = new Cell(x, y);
                 cell.setOnMouseClicked(handler);
                 row.getChildren().add(cell);
             }
