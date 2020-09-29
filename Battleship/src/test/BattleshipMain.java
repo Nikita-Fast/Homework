@@ -118,7 +118,7 @@ public class BattleshipMain extends Application {
        	   }
        });  
          
-	   enemyBoard = new Board(true, event -> {	
+	   enemyBoard = new Board(event -> {	
 			if (!running) {
 				if (twoPlayersMode && nowIsSecondPlayer) {
 					if (enemyBoard.getShipsToPlaceNumber() <= 0) {
@@ -157,7 +157,7 @@ public class BattleshipMain extends Application {
 		                
 		});            
 	
-        playerBoard = new Board(false, event -> {
+        playerBoard = new Board(event -> {
             if (running) {            	
             	if (twoPlayersMode && enemyTurn) {
             		Cell cell = (Cell) event.getSource();

@@ -25,7 +25,7 @@ public class Decorations {
 	}
 	
 	public static void createDecorationForChoosingGameDifficulty(BorderPane root, Button easyLevelBtn, Button hardLevelBtn, Label messageLbl) {
-		root.getChildren().removeAll(root.getChildren()); //  должно чистить от предыдущих элементов
+		root.getChildren().removeAll(root.getChildren()); 
 		HBox hbox = new HBox(50);
     	hbox.getChildren().addAll(easyLevelBtn, hardLevelBtn);
     	hbox.setPadding(new Insets(50, 0, 0, 210));

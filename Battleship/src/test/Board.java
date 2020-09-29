@@ -19,11 +19,12 @@ public class Board extends Parent {
 	public static final int MAX_NUMBER_OF_SHIPS = 10;
 	public static final int MAX_LENGTH_OF_SHIP = 4;
 	public static final int MAX_ATTEMPS_NUMBER = 1000;
+	public static final int TIMES_TO_PLACE_BIGGEST_SHIP = 1;
+	public static final double CHANCE_TO_BE_VERTICAL = 0.5;
 	private int shipsToPlace = MAX_NUMBER_OF_SHIPS;
     private int shipsSurvived = MAX_NUMBER_OF_SHIPS;
     private int currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     private VBox rows = new VBox();
-    private boolean enemy = false;
     
     public static boolean itIsTimeToKill(double key) {
     	return Math.random() < key ? true : false;
@@ -37,8 +38,7 @@ public class Board extends Parent {
     	return this.shipsToPlace;
     }
     
-    public Board(boolean enemy, EventHandler<MouseEvent> handler) {
-        this.enemy = enemy;
+    public Board(EventHandler<MouseEvent> handler) {
         for (int y = 0; y < SIZE_OF_BOARD; y++) {
             HBox row = new HBox();
             for (int x = 0; x < SIZE_OF_BOARD; x++) {
@@ -63,21 +63,26 @@ public class Board extends Parent {
     public void placeShipByMouseClickOnBoard(MouseEvent event) {
     	Cell cell = (Cell) event.getSource();
         if (placeShip(new Ship(this.currentLengthOfShip, event.getButton() == MouseButton.PRIMARY), cell.getXCoord(), cell.getYCoord())) {		            	
-        	if (shipsToPlace == 9 || shipsToPlace == 7 || shipsToPlace == 4 || shipsToPlace == 0) {
+        	if (shipsToPlace == MAX_NUMBER_OF_SHIPS - 1 || shipsToPlace == MAX_NUMBER_OF_SHIPS - 3 || 
+        			shipsToPlace == MAX_NUMBER_OF_SHIPS - 6 || shipsToPlace == 0) {
         		this.currentLengthOfShip--;
         	}
         }	
+    }
+    
+    private boolean isShipVertical() {
+    	return Math.random() < CHANCE_TO_BE_VERTICAL ? true : false;
     }
     
     public void placeShipsRandomly() {
     	clearBoard();
     	Random random = new Random();
     	int shipLength = MAX_LENGTH_OF_SHIP;
-    	int timesToPlaceShipOfSuchLength = 1;
+    	int timesToPlaceShipOfSuchLength = TIMES_TO_PLACE_BIGGEST_SHIP;
     	while (shipLength > 0) {
     		int x = random.nextInt(SIZE_OF_BOARD);
             int y = random.nextInt(SIZE_OF_BOARD);            
-            if (placeShip(new Ship(shipLength, Math.random() < 0.5), x, y)) {
+            if (placeShip(new Ship(shipLength, isShipVertical()), x, y)) {
             	timesToPlaceShipOfSuchLength--;
             	if (timesToPlaceShipOfSuchLength == 0) {
             		shipLength--;
