@@ -7,6 +7,7 @@ import java.util.Random;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,11 +19,24 @@ public class Board extends Parent {
 	public static final int MAX_NUMBER_OF_SHIPS = 10;
 	public static final int MAX_LENGTH_OF_SHIP = 4;
 	public static final int MAX_ATTEMPS_NUMBER = 1000;
+	private int shipsToPlace = MAX_NUMBER_OF_SHIPS;
+    private int shipsSurvived = MAX_NUMBER_OF_SHIPS;
+    private int currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     private VBox rows = new VBox();
     private boolean enemy = false;
-    public int shipsToPlace = MAX_NUMBER_OF_SHIPS;
-    public int shipsSurvived = MAX_NUMBER_OF_SHIPS;
-
+    
+    public static boolean itIsTimeToKill(double key) {
+    	return Math.random() < key ? true : false;
+    }
+    
+    public int getShipsSurvivedNumber() {
+    	return this.shipsSurvived;
+    }
+    
+    public int getShipsToPlaceNumber() {
+    	return this.shipsToPlace;
+    }
+    
     public Board(boolean enemy, EventHandler<MouseEvent> handler) {
         this.enemy = enemy;
         for (int y = 0; y < SIZE_OF_BOARD; y++) {
@@ -46,6 +60,15 @@ public class Board extends Parent {
     	}
     }
     
+    public void placeShipByMouseClickOnBoard(MouseEvent event) {
+    	Cell cell = (Cell) event.getSource();
+        if (placeShip(new Ship(this.currentLengthOfShip, event.getButton() == MouseButton.PRIMARY), cell.getXCoord(), cell.getYCoord())) {		            	
+        	if (shipsToPlace == 9 || shipsToPlace == 7 || shipsToPlace == 4 || shipsToPlace == 0) {
+        		this.currentLengthOfShip--;
+        	}
+        }	
+    }
+    
     public void placeShipsRandomly() {
     	clearBoard();
     	Random random = new Random();
@@ -60,10 +83,6 @@ public class Board extends Parent {
             		shipLength--;
             		timesToPlaceShipOfSuchLength = MAX_LENGTH_OF_SHIP - shipLength + 1;
             	}
-            	/*
-            	if (shipsToPlace == 9 || shipsToPlace == 7 || shipsToPlace == 4 || shipsToPlace == 0) {
-            		shipLength--;
-            	}*/
             }
     	}
     }
@@ -77,6 +96,7 @@ public class Board extends Parent {
     		}
     	}
     	shipsToPlace = MAX_NUMBER_OF_SHIPS;
+    	currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     }
     
     public boolean placeShip(Ship ship, int x, int y) {
@@ -128,19 +148,6 @@ public class Board extends Parent {
             	if (!pointIsAppropriateToPlaceShip(x, i)) {
             		return false;
             	}
-            	/*
-                if (!isValidPoint(x, i)) {
-                	return false;
-                }                   
-                Cell cell = getCell(x, i);
-                if (cell.getShip() != null) {
-                    return false;
-                }
-                for (Cell neighbor : getNeighbors(x, i)) {                
-                    if (neighbor.getShip() != null) {
-                        return false;
-                    }
-                }*/
             } 
         }
         else {
@@ -148,19 +155,6 @@ public class Board extends Parent {
             	if (!pointIsAppropriateToPlaceShip(i, y)) {
             		return false;
             	}
-            	/*
-                if (!isValidPoint(i, y)) {
-                	return false;
-                }
-                Cell cell = getCell(i, y);
-                if (cell.getShip() != null) {
-                	return false;
-                }
-                for (Cell neighbor : getNeighbors(i, y)) {                   
-                    if (neighbor.getShip() != null) {
-                    	return false;
-                    }                        
-                }*/
             }
         }
         return true;
@@ -189,53 +183,7 @@ public class Board extends Parent {
     private boolean isValidPoint(double x, double y) {
         return x >= 0 && x < SIZE_OF_BOARD && y >= 0 && y < SIZE_OF_BOARD;
     }
-/*
-    public class Cell extends Rectangle {
-        public int x, y;
-        public Ship ship = null;
-        public boolean wasShot = false;
-        private Board board;
 
-        public Cell(int x, int y, Board board) {
-            super(30, 30);
-            this.x = x;
-            this.y = y;
-            this.board = board;
-            setFill(Color.LIGHTGRAY);
-            setStroke(Color.CYAN);
-        }
-        
-        public int getXCoord() {
-        	return x;
-        }
-        
-        public int getYCoord() {
-        	return y;
-        }
-
-        public boolean shoot() {
-            wasShot = true;
-            setFill(Color.ORCHID);
-
-            if (ship != null) {
-                ship.hit();
-                setFill(Color.RED);
-                if (!ship.isAlive()) {
-                	destroyShip(ship);
-                    board.shipsSurvived--;
-                }
-                return true;
-            }
-
-            return false;
-        }
-        
-        public boolean hasThisShip(Ship ship) {
-        	return this.ship == ship ? true : false;
-        }
-        
-    }
-*/  
     public boolean shoot(Cell cell) {
     	cell.setWasShotState(true);
     	cell.paintToOrchid();
@@ -261,7 +209,6 @@ public class Board extends Parent {
     	}   	
     	while (true) {
     		for (Cell cell : getHealthyCellsOfShip(ship)) {
-    			//cell.shoot();
     			shoot(cell);
     			if (ship.getHealth() == 1) {
     				return;
@@ -280,7 +227,6 @@ public class Board extends Parent {
 	    	int y = random.nextInt(SIZE_OF_BOARD);
 	    	Cell cell = getCell(x, y);
 	    	if (cell.getShip() == null && !cell.getWasShotState()) {
-	    		//cell.shoot();
 	    		shoot(cell);
 	    		end = true;
 	    	}
@@ -289,8 +235,7 @@ public class Board extends Parent {
 	    		if (cell == null) {
 	    			return;
 	    		}
-	    		//chooseCellForShot().shoot(); почему здесь просто не использовать cell.shoot();?
-	    		shoot(cell);  //а если передадут null?
+	    		shoot(cell);  
 	    	}
     	}
     }
@@ -317,7 +262,6 @@ public class Board extends Parent {
         
     public void killSpecifiedShip(Ship ship) {
     	for (Cell cell : getHealthyCellsOfShip(ship)) {
-    		//cell.shoot();
     		shoot(cell);
     	}
     }
@@ -329,7 +273,7 @@ public class Board extends Parent {
     	}
     }
     
-    public Ship detectDamagedShip() {    //что делать если вернули null?
+    public Ship detectDamagedShip() {    
     	for (int y = 0; y < SIZE_OF_BOARD; y++) {
     		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Ship ship = getCell(x, y).getShip();
@@ -341,7 +285,7 @@ public class Board extends Parent {
     	return null;
     }
     
-    public Ship detectRandomShip() {  //что делать если вернули null?
+    public Ship detectRandomShip() {  
     	Random random = new Random();
     	int attempts = 0;
     	while (true) {
@@ -349,7 +293,7 @@ public class Board extends Parent {
 	    	int x = random.nextInt(SIZE_OF_BOARD);
 	        int y = random.nextInt(SIZE_OF_BOARD);
 	        Ship ship = getCell(x, y).getShip();
-	        if (ship != null && ship.isAlive()) { //if (getCell(x, y).getShip() != null && !getCell(x, y).getWasShotState())
+	        if (ship != null && ship.isAlive()) { 
 	        	return ship;
 	        }	        
 	        if (attempts > MAX_ATTEMPS_NUMBER) {

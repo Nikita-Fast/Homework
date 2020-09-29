@@ -10,6 +10,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class Decorations {
+	
+	public static void initializeLabel(Label info) {
+		info.setText("Use left click to place ship vertically "
+                     + "and right click to place horizontally.\n"
+                     + "Place where you click will be the top left corner of your ship.");
+	}
+	
+	public static void createDecorationsForChoosingGameMode(BorderPane root, Button gameWithBot, Button gameWithAnotherPlayer) {
+		root.setPrefSize(600, 800);
+	    VBox btns = new VBox(30, gameWithBot, gameWithAnotherPlayer);
+	    btns.setAlignment(Pos.CENTER);
+	    root.setCenter(btns);
+	}
+	
 	public static void createDecorationForChoosingGameDifficulty(BorderPane root, Button easyLevelBtn, Button hardLevelBtn, Label messageLbl) {
 		root.getChildren().removeAll(root.getChildren()); //  должно чистить от предыдущих элементов
 		HBox hbox = new HBox(50);
