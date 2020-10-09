@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -13,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class Board extends Parent {
 	public static final int SIZE_OF_BOARD = 10;
@@ -52,8 +55,8 @@ public class Board extends Parent {
     }
     
     public void hideShipsFromEnemy() {
-    	for (int y = 0; y < 10; y++) {
-    		for (int x = 0; x < 10; x++) {
+    	for (int y = 0; y < SIZE_OF_BOARD; y++) {
+    		for (int x = 0; x < SIZE_OF_BOARD; x++) {
     			Cell cell = getCell(x, y);
     			cell.paintToLightgray();
     		}
@@ -190,8 +193,9 @@ public class Board extends Parent {
     }
 
     public boolean shoot(Cell cell) {
+    	
     	cell.setWasShotState(true);
-    	cell.paintToOrchid();
+    	cell.paintToOrchid(); 
     	Ship ship = cell.getShip();
     	if (ship != null) {
     		ship.hit();
@@ -202,6 +206,7 @@ public class Board extends Parent {
     		return true;
     	}
     	return false;
+    	
     }
     
     public void almostKillSpecifiedShip(Ship ship) {
