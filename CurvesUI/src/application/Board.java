@@ -19,72 +19,89 @@ public class Board extends Canvas {
 	
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = WIDTH;
-	public static double PIXEL_NUMBER_IN_UNIT_SEGMENT = WIDTH / 10;
+	private static double pixelNumberInUnitSegment = WIDTH / 10;
 	private double scale = 1;
 	private Pane paneForCurve;
 	private ArrayList<Polyline> polylines = new ArrayList<Polyline>();
-	private double step = PIXEL_NUMBER_IN_UNIT_SEGMENT;
+	private double step = pixelNumberInUnitSegment;
 	public static final int NUMBER_OF_CURVE = 2;
+	private Curve curveFromComboBox;
 	
 	public Board(Pane paneForCurve) {
 		super(WIDTH, HEIGHT);
 		init(paneForCurve);
 	}
 	
+	public static double getPixelNumberInUnitSegment() {
+		return pixelNumberInUnitSegment;
+	}
+	
+	public void setCurveFromComboBox(Curve curve) {
+		curveFromComboBox = curve;
+	}
+	
 	public void decreaseScale() {
+		if (curveFromComboBox == null) {
+			System.out.println("secelt curve from comboBox!");
+			return;
+		}
 		getGraphicsContext2D().clearRect(0, 0, WIDTH, HEIGHT);
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 1 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 10) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 1;
+		if (pixelNumberInUnitSegment > 1 && pixelNumberInUnitSegment <= 10) {
+			pixelNumberInUnitSegment -= 1;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 10 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 20) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 2;
+		if (pixelNumberInUnitSegment > 10 && pixelNumberInUnitSegment <= 20) {
+			pixelNumberInUnitSegment -= 2;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 20 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 30) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 3;
+		if (pixelNumberInUnitSegment > 20 && pixelNumberInUnitSegment <= 30) {
+			pixelNumberInUnitSegment -= 3;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 30 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 60) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 5;
+		if (pixelNumberInUnitSegment > 30 && pixelNumberInUnitSegment <= 60) {
+			pixelNumberInUnitSegment -= 5;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 60 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 100) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 8;
+		if (pixelNumberInUnitSegment > 60 && pixelNumberInUnitSegment <= 100) {
+			pixelNumberInUnitSegment -= 8;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 100) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT -= 10;
+		if (pixelNumberInUnitSegment > 100) {
+			pixelNumberInUnitSegment -= 10;
 		}
-		
+		if (pixelNumberInUnitSegment > 200 && pixelNumberInUnitSegment < 750) {
+			pixelNumberInUnitSegment -= 25;
+		}
 		reloadBoard();
 		clearBoard();
-		drawUserCurve(NUMBER_OF_CURVE);
-		//drawEllipse();
+		drawSpecifiedCurve(curveFromComboBox);
 	}
 	
 	public void increaseScale() {
+		if (curveFromComboBox == null) {
+			System.out.println("secelt curve from comboBox!");
+			return;
+		}
 		getGraphicsContext2D().clearRect(0, 0, WIDTH, HEIGHT);
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 0 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 10) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 1;
+		if (pixelNumberInUnitSegment > 0 && pixelNumberInUnitSegment <= 10) {
+			pixelNumberInUnitSegment += 1;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 10 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 20) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 2;
+		if (pixelNumberInUnitSegment > 10 && pixelNumberInUnitSegment <= 20) {
+			pixelNumberInUnitSegment += 2;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 20 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 30) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 3;
+		if (pixelNumberInUnitSegment > 20 && pixelNumberInUnitSegment <= 30) {
+			pixelNumberInUnitSegment += 3;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 30 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 60) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 5;
+		if (pixelNumberInUnitSegment > 30 && pixelNumberInUnitSegment <= 60) {
+			pixelNumberInUnitSegment += 5;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 60 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 100) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 8;
+		if (pixelNumberInUnitSegment > 60 && pixelNumberInUnitSegment <= 100) {
+			pixelNumberInUnitSegment += 8;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 100 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 200) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 10;
+		if (pixelNumberInUnitSegment > 100 && pixelNumberInUnitSegment <= 200) {
+			pixelNumberInUnitSegment += 10;
 		}
-		if (PIXEL_NUMBER_IN_UNIT_SEGMENT > 200 && PIXEL_NUMBER_IN_UNIT_SEGMENT <= 500) {
-			PIXEL_NUMBER_IN_UNIT_SEGMENT += 25;
+		if (pixelNumberInUnitSegment > 200 && pixelNumberInUnitSegment < 750) {
+			pixelNumberInUnitSegment += 25;
 		}
 		reloadBoard();
 		clearBoard();
-		drawUserCurve(NUMBER_OF_CURVE);
-		//drawEllipse();
+		drawSpecifiedCurve(curveFromComboBox);
 	}
 	
 	public void setPaneForCurve(Pane paneForCurve) {
@@ -96,7 +113,7 @@ public class Board extends Canvas {
 			paneForCurve.getChildren().remove(polyline);
 		}
 	}
-	
+	/*
 	public void drawUserCurve(int number) {
 		if (number == 0) {
 			drawEllipse();
@@ -110,9 +127,9 @@ public class Board extends Canvas {
 	}
 	
 	public void drawHyperbola() {
-		Hyperbola hyperbola = new Hyperbola(1.7, -3.1);
+		Hyperbola hyperbola = new Hyperbola(0.3, 2.7);
 		
-		hyperbola.setXMinMax(-Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT, Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT);
+		hyperbola.setXMinMax(-Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT / 2, Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT / 2);
 		
 		for (Polyline polyline : createPolylines(hyperbola.createPointsForCurve())) {
 			drawSpecifiedPolyline(polyline);
@@ -123,7 +140,7 @@ public class Board extends Canvas {
 	}
 	
 	public void drawParabola() {
-		Parabola parabola = new Parabola(0.07);
+		Parabola parabola = new Parabola(18);
 		
 		
 		for (Polyline polyline : createPolylines(parabola.createPointsForCurve())) {
@@ -134,7 +151,7 @@ public class Board extends Canvas {
 	}
 	
 	public void drawEllipse() {
-		Ellipse ellipse = new Ellipse(345, 1);
+		Ellipse ellipse = new Ellipse(0.01, 1);
 		
 		for (Polyline polyline : createPolylines(ellipse.createPointsForCurve())) {
 			drawSpecifiedPolyline(polyline);
@@ -143,7 +160,20 @@ public class Board extends Canvas {
 		System.out.println("successfull drawing of ellipse!");
 		//drawSpecifiedPolyline(createPolyline(ellipse.createPointsForCurve().get(3)));
 	}
-	
+	*/
+	public void drawSpecifiedCurve(Curve curve) {
+		clearBoard();
+		if (curve instanceof Hyperbola) {
+			((Hyperbola)curve).setXMinMax(-Board.WIDTH / pixelNumberInUnitSegment / 2, Board.WIDTH / pixelNumberInUnitSegment / 2);
+		}
+		if (curve instanceof Parabola) {
+			((Parabola)curve).setXMinMax(-Board.WIDTH / pixelNumberInUnitSegment / 2, Board.WIDTH / pixelNumberInUnitSegment / 2);
+		}
+		for (Polyline polyline : createPolylines(curve.createPointsForCurve())) {
+			drawSpecifiedPolyline(polyline);
+		}
+	}
+	/*
 	public Polyline createPolyline(ArrayList<Point2D> points) {
 		Polyline polyline = new Polyline();
 		for (Point2D point : points) {
@@ -151,7 +181,7 @@ public class Board extends Canvas {
 			polyline.getPoints().add(point.getY());
 		}
 		return polyline;
-	}
+	}*/
 	
 	public ArrayList<Polyline> createPolylines(ArrayList<ArrayList<Point2D>> allPoints) {
 		ArrayList<Polyline> polylines = new ArrayList<Polyline>(); 
@@ -176,25 +206,6 @@ public class Board extends Canvas {
 	    paneForCurve.getChildren().add(polyline);
 	    polylines.add(polyline);
 	}
-	/*
-	public void drawCurve() {
-		
-		Polyline polyline = new Polyline();  
-	    polyline.getPoints().addAll(new Double[]{        
-	         200.0, 50.0, 
-	         400.0, 50.0, 
-	         450.0, 150.0,          
-	         400.0, 250.0, 
-	         200.0, 250.0,                   
-	         150.0, 150.0, 
-	    }); 
-	    polyline.setStroke(Color.PURPLE);
-	    polyline.setStrokeWidth(3);
-	    paneForCurve.getChildren().add(polyline);
-	    polylines.add(polyline);
-		
-		
-	}*/
 	
 	private void reloadBoard() {
 		GraphicsContext gc = this.getGraphicsContext2D();
@@ -304,25 +315,25 @@ public class Board extends Canvas {
 	private void drawStrokesScalable() {
 		GraphicsContext gc = this.getGraphicsContext2D();
 		
-		step = PIXEL_NUMBER_IN_UNIT_SEGMENT / scale;
+		step = pixelNumberInUnitSegment / scale;
 		
 		if (step >= 80) {
 			scale *= 2;
-			step = PIXEL_NUMBER_IN_UNIT_SEGMENT / scale;
+			step = pixelNumberInUnitSegment / scale;
 			
 		}
 		
 		if (step < 40) {
 			scale /= 2;
-			step = PIXEL_NUMBER_IN_UNIT_SEGMENT / scale;
+			step = pixelNumberInUnitSegment / scale;
 		}
 		
 		double coefficient = scale;
 		
-		
+		/*
 		System.out.println("pixel number = " + PIXEL_NUMBER_IN_UNIT_SEGMENT);
 		System.out.println("scale = " + scale);
-		System.out.println("step = " + step);
+		System.out.println("step = " + step); */
 		
 		
 		int number = 1;
@@ -362,55 +373,4 @@ public class Board extends Canvas {
 			number--;
 		}
 	}
-	/*
-	private void drawStrokes(double offset) {
-		GraphicsContext gc = this.getGraphicsContext2D();
-		double x = getWidth() / 2;
-		double y = getHeight() / 2;
-		int h = 0;
-		int w = 0;
-		
-		while (x - offset > 5) { //5 чтобы не рисовать штрихи близко к границе доски
-			x -= offset;
-			w++;
-		}
-		while (y - offset > 5) {
-			y -= offset;
-			h++;
-		}
-		
-		gc.setStroke(Color.BLACK);
-		for (int xCoord = w; xCoord >= -w; xCoord--) {
-			gc.setLineWidth(2);
-			gc.strokeLine(getWidth() / 2 + xCoord * offset, getHeight() / 2 + 5, 
-					getWidth() / 2 + xCoord * offset, getHeight() / 2 - 5);
-			if (xCoord != 0) {
-				String str = Integer.toString(xCoord);
-				if (xCoord > 0) {
-					gc.setLineWidth(1);
-					gc.strokeText(str, getWidth() / 2 + xCoord * offset - 3, getHeight() / 2 + 25);
-				}
-				else {
-					gc.setLineWidth(1);
-					gc.strokeText(str, getWidth() / 2 + xCoord * offset - 10, getHeight() / 2 + 25);
-				}
-			}
-		}
-		for (int yCoord = h; yCoord >= -h; yCoord--) {
-			gc.setLineWidth(2);
-			gc.strokeLine(getWidth() / 2 - 5, getHeight() / 2 + yCoord * offset, 
-					getWidth() / 2 + 5, getHeight() / 2 + yCoord * offset);
-			if (yCoord != 0) {
-				String str = Integer.toString(-yCoord);
-				if (yCoord > 0) {
-					gc.setLineWidth(1);
-					gc.strokeText(str, getWidth() / 2 + 10, getHeight() / 2 + yCoord * offset + 5);
-				}
-				else {
-					gc.setLineWidth(1);
-					gc.strokeText(str, getWidth() / 2 + 15, getHeight() / 2 + yCoord * offset + 5);
-				}
-			}
-		}
-	} */
 }

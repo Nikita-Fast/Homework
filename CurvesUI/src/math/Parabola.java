@@ -10,9 +10,10 @@ public class Parabola extends Curve {
     // y^2 = 2*p*x
     public Parabola(double p) {
     	
-        super(p == 0 ? -Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT : p > 0 ? 0 : -Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT,
-        		p == 0 ? Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT : p > 0 ? Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT : 0); 
+        super(p == 0 ? -Board.WIDTH / Board.getPixelNumberInUnitSegment() : p > 0 ? 0 : -Board.WIDTH / Board.getPixelNumberInUnitSegment(),
+        		p == 0 ? Board.WIDTH / Board.getPixelNumberInUnitSegment() : p > 0 ? Board.WIDTH / Board.getPixelNumberInUnitSegment() : 0); 
         this.p = p;
+        generateEquation();
     }
 
     public ArrayList<Double> getYValuesInSpecifiedXCoordinate(double x) {
@@ -24,5 +25,14 @@ public class Parabola extends Curve {
     	}
     	yValues.add(-y);
     	return yValues;
+    }
+    
+    public void setXMinMax(double xMin, double xMax) {
+ 	   this.xMin = xMin;
+ 	   this.xMax = xMax;
+    }
+    
+    public void generateEquation() {
+ 	    equation = new String("y^2 = " + 2*p + " * x");
     }
 }

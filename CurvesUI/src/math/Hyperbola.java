@@ -8,9 +8,10 @@ public class Hyperbola extends Curve {
     private double a, b; //x^2 / a^2  -  y^2 / b^2 = 1
 
     public Hyperbola(double a, double b) {
-        super(-Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT, Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT);
+        super(-Board.WIDTH / Board.getPixelNumberInUnitSegment(), Board.WIDTH / Board.getPixelNumberInUnitSegment());
         this.a = a;
         this.b = b;
+        generateEquation();
     }
     
     public ArrayList<Double> getYValuesInSpecifiedXCoordinate(double x) {
@@ -27,6 +28,10 @@ public class Hyperbola extends Curve {
    public void setXMinMax(double xMin, double xMax) {
 	   this.xMin = xMin;
 	   this.xMax = xMax;
+   }
+   
+   public void generateEquation() {
+	   equation = new String("x^2 / " + a + "^2 - y^2 / " + b + "^2 = 1");
    }
 }
 
