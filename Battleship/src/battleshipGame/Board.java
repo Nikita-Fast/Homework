@@ -29,7 +29,15 @@ public class Board extends Parent {
     private int shipsSurvived = MAX_NUMBER_OF_SHIPS;
     private int currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     private VBox rows = new VBox();
-    public boolean botFinishedHisMove = true;
+    private boolean botFinishedHisMove = true;
+    
+    public void setBotFinishedMove(Boolean isFinenished) {
+    	botFinishedHisMove = isFinenished;
+    }
+    
+    public boolean getBotFinishedMove() {
+    	return botFinishedHisMove;
+    }
     
     public static boolean itIsTimeToKill(double key) {
     	return Math.random() < key ? true : false;

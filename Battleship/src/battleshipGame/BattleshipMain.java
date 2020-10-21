@@ -144,7 +144,7 @@ public class BattleshipMain extends Application {
 				}				
 				return;
 			}	
-			if (!playerBoard.botFinishedHisMove) {
+			if (!playerBoard.getBotFinishedMove()) {
 				return;
 			}
 			

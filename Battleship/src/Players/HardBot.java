@@ -45,14 +45,14 @@ public class HardBot extends BasicPlayer{
 	}
 	
 	public void animateMove(ArrayList<DataForShot> dataForShots, Board board) {
-		board.botFinishedHisMove = false;
+		board.setBotFinishedMove(false);
 		int j = 0;
 		ArrayList<KeyFrame> keyFrames = new ArrayList<KeyFrame>();
 		for (DataForShot data : dataForShots) { //create a keyFrame for every shot
 			ArrayList<KeyValue> keyValues = new ArrayList<KeyValue>();
 			Color color;
 			if (data.getIsHitShip()) {
-				color = Color.RED;
+				color = Color.ORANGE;
 			}
 			else {
 				color = Color.ORCHID;
@@ -63,12 +63,15 @@ public class HardBot extends BasicPlayer{
 				for (Cell cell : data.getCellsAroundShip()) {
 					keyValues.add(new KeyValue(cell.fillProperty(), Color.ORCHID));
 				}
+				for (Cell cell : board.getCellsOfShip(data.getShootedCell().getShip())) {
+					keyValues.add(new KeyValue(cell.fillProperty(), Color.RED));
+				}
 			}
 			KeyValue[] values = new KeyValue[keyValues.size()];
 		    values = keyValues.toArray(values);
 		    if (j == dataForShots.size() - 1) {
 		    	KeyFrame keyFrame = new KeyFrame(Duration.millis(DURATION), event -> {
-		    		board.botFinishedHisMove = true;
+		    		board.setBotFinishedMove(true);
 		    	}, 
 		    	values);
 		    	keyFrames.add(keyFrame);

@@ -31,7 +31,7 @@ public class Human extends BasicPlayer {
 		DataForShot data = dataForShots.get(0); 
 		Color color;
 		if (data.getIsHitShip()) {
-			color = Color.RED;
+			color = Color.ORANGE;
 		}
 		else {
 			color = Color.ORCHID;
@@ -41,6 +41,9 @@ public class Human extends BasicPlayer {
 		if (data.getCellsAroundShip() != null) {  
 			for (Cell cell : data.getCellsAroundShip()) {
 				keyValues.add(new KeyValue(cell.fillProperty(), Color.ORCHID));
+			}
+			for (Cell cell : board.getCellsOfShip(data.getShootedCell().getShip())) {
+				keyValues.add(new KeyValue(cell.fillProperty(), Color.RED));
 			}
 		}
 		KeyValue[] values = new KeyValue[keyValues.size()];
