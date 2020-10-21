@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -28,6 +29,7 @@ public class Board extends Parent {
     private int shipsSurvived = MAX_NUMBER_OF_SHIPS;
     private int currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     private VBox rows = new VBox();
+    public boolean botFinishedHisMove = true;
     
     public static boolean itIsTimeToKill(double key) {
     	return Math.random() < key ? true : false;
@@ -191,9 +193,27 @@ public class Board extends Parent {
     private boolean isValidPoint(double x, double y) {
         return x >= 0 && x < SIZE_OF_BOARD && y >= 0 && y < SIZE_OF_BOARD;
     }
-
-    public boolean shoot(Cell cell) {
-    	
+    
+    public DataForShot shoot(Cell cell) {
+    	DataForShot data = new DataForShot();
+    	data.setShootedCell(cell);
+		cell.setWasShotState(true);
+		Ship ship = cell.getShip();
+		if (ship != null) {
+			data.setIsHitShip(true);
+			ship.hit();
+			if (!ship.isAlive()) {
+				data.setCellsAroundShip(destroyShip(ship));
+			}
+		}
+		else {
+			data.setIsHitShip(false);
+			data.setCellsAroundShip(null);
+		}
+		return data; 
+    }
+    
+    public void shootForHuman(Cell cell) {
     	cell.setWasShotState(true);
     	cell.paintToOrchid(); 
     	Ship ship = cell.getShip();
@@ -203,49 +223,48 @@ public class Board extends Parent {
     		if (!ship.isAlive()) {
     			destroyShip(ship);
     		}
-    		return true;
     	}
-    	return false;
+    }
+    
+    public ArrayList<DataForShot> almostKillSpecifiedShip(Ship ship) {
+    	ArrayList<DataForShot> dataForShots = new ArrayList<DataForShot>();
+    	if (ship == null) {
+    		return null;
+    	}    	
+    	if (ship.getLength() == 1) {
+    		dataForShots = killSpecifiedShip(ship);
+    		return dataForShots;
+    	}   
+		for (Cell cell : getHealthyCellsOfShip(ship)) { 
+			dataForShots.add(shoot(cell));
+			if (ship.getHealth() == 1) {
+				break;
+			}
+		}
+		return dataForShots;
     	
     }
     
-    public void almostKillSpecifiedShip(Ship ship) {
-    	if (ship == null) {
-    		return;
-    	}    	
-    	if (ship.getLength() == 1) {
-    		killSpecifiedShip(ship);
-    		return;
-    	}   	
-    	while (true) {
-    		for (Cell cell : getHealthyCellsOfShip(ship)) {
-    			shoot(cell);
-    			if (ship.getHealth() == 1) {
-    				return;
-    			}
-    		}
-    	}
-    }
-    
-    public void makeShotToVoidIfPossible() {
-    	boolean end = false;
+    public DataForShot makeShotToVoidIfPossible() {
+    	DataForShot data = new DataForShot();
     	int attempts = 0;
-    	while (!end) {
+    	while (true) {
     		attempts++;
 	    	Random random = new Random();
 	    	int x = random.nextInt(SIZE_OF_BOARD);
 	    	int y = random.nextInt(SIZE_OF_BOARD);
 	    	Cell cell = getCell(x, y);
 	    	if (cell.getShip() == null && !cell.getWasShotState()) {
-	    		shoot(cell);
-	    		end = true;
+	    		data = shoot(cell);
+	    		return data;
 	    	}
 	    	if (attempts > MAX_ATTEMPS_NUMBER) {
 	    		cell = chooseCellForShot();
 	    		if (cell == null) {
-	    			return;
+	    			return null;
 	    		}
-	    		shoot(cell);  
+	    		data = shoot(cell);
+	    		return data;
 	    	}
     	}
     }
@@ -270,17 +289,24 @@ public class Board extends Parent {
     	return false;
     }
         
-    public void killSpecifiedShip(Ship ship) {
+    public ArrayList<DataForShot> killSpecifiedShip(Ship ship) {
+    	ArrayList<DataForShot> dataForShots = new ArrayList<DataForShot>();
     	for (Cell cell : getHealthyCellsOfShip(ship)) {
-    		shoot(cell);
+    		dataForShots.add(shoot(cell));
     	}
+    	return dataForShots;
     }
     
-    public void killDamagedShip() {
+    public ArrayList<DataForShot> killDamagedShip() {
     	Ship ship = detectDamagedShip();
+    	ArrayList<DataForShot> dataForShots = new ArrayList<DataForShot>();
     	if (ship != null) {
-    		killSpecifiedShip(ship);
+    		dataForShots = killSpecifiedShip(ship);
     	}
+    	else {
+    		return null;
+    	}
+    	return dataForShots;
     }
     
     public Ship detectDamagedShip() {    
@@ -351,18 +377,20 @@ public class Board extends Parent {
     			}
     		}
     	}
+    	for (Cell cellOfShip : getCellsOfShip(ship)) {
+    		cellsAroundShip.remove(cellOfShip);
+    	}
     	return cellsAroundShip;
     }
     
-    public void destroyShip(Ship ship) {
+    public ArrayList<Cell> destroyShip(Ship ship) {
+    	ArrayList<Cell> openedCells = new ArrayList<Cell>();
     	this.shipsSurvived--;
     	for (Cell cell : getCellsAroundShip(ship)) {
     		cell.setWasShotState(true);
-    		cell.paintToOrchid();
+    		openedCells.add(cell);
     	}
-    	for (Cell cell : getCellsOfShip(ship)) {
-    		cell.paintToRed();
-    	}
+    	return openedCells;
     }
     
     public ArrayList<Cell> getCellsOfShip(Ship ship) {

@@ -6,6 +6,7 @@ import Players.BasicPlayer;
 import Players.EasyBot;
 import Players.HardBot;
 import Players.Human;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,9 +21,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class BattleshipMain extends Application {
 	//private Random random = new Random();
+	
+	private int idk = 0;
+	
 	private Difficulty gameDifficulty;	
 	private Button gameWithBot = new Button();
 	private Button gameWithAnotherPlayer = new Button();
@@ -42,7 +47,6 @@ public class BattleshipMain extends Application {
     private Label showInfo2 = new Label();
     private Label showInfo = new Label();
     private Label info = new Label();
-    //private static final double difficulty = 0.99; //set value from 0 to 1; the closer to 1, the harder game is
     
     private BasicPlayer enemy;
     private BasicPlayer player;
@@ -54,30 +58,23 @@ public class BattleshipMain extends Application {
 	   
 	   player = new Human();
 	   
-	   
 	   easyLevel.setText("Easy");
 	   easyLevel.setOnAction(event -> {
-		   
 		   enemy = new EasyBot();
-		   
 		   gameDifficulty = Difficulty.easy;
 		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 	   
 	   hardLevel.setText("Hard");
 	   hardLevel.setOnAction(event -> {
-		   
 		   enemy = new HardBot();
-		   
 		   gameDifficulty = Difficulty.hard;
 		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 
 	   gameWithAnotherPlayer.setText("Game With Another Player");
 	   gameWithAnotherPlayer.setOnAction(event -> {
-		   
 		   enemy = new Human();
-		   
 		   twoPlayersMode = true;
 		   Decorations.createDecorationForGameWithAnotherPlayer(root, randomLayout, clearBoard, moveToSecondPlayer, showInfo, playerBoard, info);
 	   });
@@ -104,7 +101,6 @@ public class BattleshipMain extends Application {
     		   }
     		   else {
     			   enemyBoard.placeShipsRandomly();
-    			   System.out.println("player 2 random ships");
     		   }
     	   }
        });
@@ -147,15 +143,21 @@ public class BattleshipMain extends Application {
 					enemyBoard.placeShipByMouseClickOnBoard(event);				
 				}				
 				return;
-			}			
+			}	
+			if (!playerBoard.botFinishedHisMove) {
+				return;
+			}
+			
 			Cell cell = (Cell) event.getSource();
 			if (cell.getWasShotState() || enemyTurn) {   
 				return;
 			} 
 			
 			((Human)player).setCellForShot(cell);
-			enemyTurn = !player.shoot(enemyBoard);
-			//enemyTurn = !enemyBoard.shoot(cell); 
+			
+			player.makeMoveWithAnimation(enemyBoard);
+			enemyTurn = !cell.shotWasSuccessfull();
+			
 			if (enemyTurn) {
 				info.setText("PLAYER'S 2 TURN!");
 			}
@@ -171,20 +173,21 @@ public class BattleshipMain extends Application {
 			
 			if (enemyTurn && !twoPlayersMode) {
 				if (gameDifficulty == Difficulty.easy) {
-					if (enemy.shoot(playerBoard)) {
-						endTheGame(root, info, "SIMPLE BOT");
-					}
-					changePlayerMakingMove();
 					
-					//enemyMoveEasy(root);
-				}
-				if (gameDifficulty == Difficulty.hard) {
-					if (enemy.shoot(playerBoard)) {
+					enemy.makeMoveWithAnimation(playerBoard); 
+					
+					if (playerBoard.getShipsSurvivedNumber() == 0) {
 						endTheGame(root, info, "HARD BOT");
 					}
 					changePlayerMakingMove();
+				}
+				if (gameDifficulty == Difficulty.hard) {
+					enemy.makeMoveWithAnimation(playerBoard);
 					
-					//enemyMoveHard(root);
+					if (playerBoard.getShipsSurvivedNumber() == 0) {
+						endTheGame(root, info, "HARD BOT");
+					}
+					changePlayerMakingMove();
 				}
 		    }            
 		});            
@@ -197,12 +200,9 @@ public class BattleshipMain extends Application {
         				return;
         			}
         			
-        			
         			((Human)enemy).setCellForShot(cell);
-        			enemyTurn = enemy.shoot(playerBoard);
-        			//enemyTurn = playerBoard.shoot(cell);
-        			
-        			
+        			enemy.makeMoveWithAnimation(playerBoard);
+        			enemyTurn = cell.shotWasSuccessfull();
         			
         			if (!enemyTurn) {
         				info.setText("PLAYER'S 1 TURN!");
@@ -230,40 +230,7 @@ public class BattleshipMain extends Application {
     	infoLbl.setText(winnerName + " WIN!");
     	Decorations.createDecorationForGameEnd(root, info);
     }
-    /*
-    private void enemyMoveEasy(BorderPane root) {
-    	while (enemyTurn) {
-            int x = random.nextInt(Board.SIZE_OF_BOARD);
-            int y = random.nextInt(Board.SIZE_OF_BOARD);
-            Cell cell = playerBoard.getCell(x, y);
-            if (cell.getWasShotState()) {
-                continue;
-            }
-            enemyTurn = playerBoard.shoot(cell);
-            if (playerBoard.getShipsSurvivedNumber() == 0) {
-            	info.setText("BOT WIN");
-            	Decorations.createDecorationForGameEnd(root, info);
-                return;
-            }
-        }
-    }
-
-    private void enemyMoveHard(BorderPane root) {    	
-    	while (enemyTurn) {
-    		playerBoard.killDamagedShip();
-    		if (Board.itIsTimeToKill(difficulty)) {  
-    			playerBoard.almostKillSpecifiedShip(playerBoard.detectRandomShip());
-    		}           
-    		playerBoard.makeShotToVoidIfPossible();
-    		enemyTurn = false;
-            if (playerBoard.getShipsSurvivedNumber() == 0) {
-            	info.setText("BOT WIN");
-            	Decorations.createDecorationForGameEnd(root, info);
-                return;
-            }
-        }
-    }
-*/
+    
     private void startGame(BorderPane root) { 
     	Decorations.createDecorationForGameStart(root, twoPlayersMode, playerBoard, enemyBoard, showInfo, showInfo2, info);
     	if (!twoPlayersMode) {

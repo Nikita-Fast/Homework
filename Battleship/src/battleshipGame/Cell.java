@@ -16,6 +16,14 @@ public class Cell extends Rectangle {
         paintToLightgray();
     }
     
+    public void printCoords() {
+    	System.out.println(x + " " + y);
+    }
+    
+    public boolean shotWasSuccessfull() {
+    	return this.ship != null ? true : false;
+    }
+    
     public void paintToLightgray() {
     	this.setFill(Color.LIGHTGRAY);
         this.setStroke(Color.CYAN);
