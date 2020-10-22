@@ -62,34 +62,36 @@
     </display>  
   </class>  
   <association id="8">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="9" name="ship">        
+    <bendpoint x="405" y="818"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="9" name="gameDifficulty">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="10" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="11">    
-    <bendpoint x="405" y="818"/>    
+    <bendpoint x="667" y="560"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="12" name="gameDifficulty">        
+      <attribute id="12" name="enemyBoard">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="13" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="14">    
-    <bendpoint x="667" y="560"/>    
+    <bendpoint x="631" y="377"/>    
+    <bendpoint x="787" y="376"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="15" name="enemyBoard">        
+      <attribute id="15" name="playerBoard">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="16" minimum="0" maximum="1">        
@@ -100,17 +102,15 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="17">    
-    <bendpoint x="631" y="377"/>    
-    <bendpoint x="787" y="376"/>    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="18" name="playerBoard">        
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="18" name="ship">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="19" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
