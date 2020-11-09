@@ -6,35 +6,35 @@ import battleshipGame.Messages;
 public class RussianLanguage implements LanguageService {
     
     public void setLanguage() {
-    	Messages.CHOOSE_GAME_MODE = "Выберете режим игры";
-		Messages.GAME_WITH_BOT = "Игра с ботом";
-		Messages.GAME_WITH_ANOTHER_PLAYER = "Игра с другим игроком";
-		Messages.CHOOSE_LEVEL_OF_DIFFICULTY = "Выберете уровень сложности";
-		Messages.EASY = "Лёгкий";
-		Messages.HARD = "Сложный";
-		Messages.RANDOM_LAYOUT = "Случайная расстановка";
-		Messages.CLEAR_BOARD = "Очистить доску";
-		Messages.START_GAME = "Начать игру";
-		Messages.MOVE_TO_SECOND_PLAYER = "Перейти к игроку 2";
-		Messages.LAYOUT_GUIDE = "Нажмите ЛКМ, чтобы поставить корабль вертикально\n"
-				+ "и ПКМ, чтобы поставить горизонтально.\n"
-				+ "Место, где вы нажмете, будет верхним левым углом корабля.";
-		Messages.PLAYER_PLACE_YOUR_SHIPS = "Игрок, пожалуйста расставьте свои корабли!";
-		Messages.WIN = "ПОБЕДИЛ!";
-		Messages.PLAYER_2_WIN = "ИГРОК 2 ПОБЕДИЛ!";
-		Messages.PLAYER_1_TURN = "ХОДИТ ИГРОК 1!";
-		Messages.PLAYER_2_TURN = "ХОДИТ ИГРОК 2!";
-		Messages.HARD_BOT = "КРУТОЙ БОТ";
-		Messages.EASY_BOT = "ТУПОЙ БОТ";
-		Messages.PLAYER_1 = "ИГРОК 1";
-		Messages.PLAYER_2 = "ИГРОК 2";
-		Messages.PLAYER_1_WIN = "ИГРОК 1 ПОБЕДИЛ!";
-		Messages.YOU_WIN = "ВЫ ПОБЕДИЛИ!";
-		Messages.PLAYER_1_PLACE_YOUR_SHIPS = "Игрок 1, пожалуйста расставьте корабли!";
-		Messages.PLAYER_2_PLACE_YOUR_SHIPS = "Игрок 2, пожалуйста расставьте корабли!";
+		Messages.CHOOSE_GAME_MODE = "Р’С‹Р±РµСЂРµС‚Рµ СЂРµР¶РёРј РёРіСЂС‹";
+		Messages.GAME_WITH_BOT = "РРіСЂР° СЃ Р±РѕС‚РѕРј";
+		Messages.GAME_WITH_ANOTHER_PLAYER = "РРіСЂР° СЃ РґСЂСѓРіРёРј РёРіСЂРѕРєРѕРј";
+		Messages.CHOOSE_LEVEL_OF_DIFFICULTY = "Р’С‹Р±РµСЂРµС‚Рµ СѓСЂРѕРІРµРЅСЊ СЃР»РѕР¶РЅРѕСЃС‚Рё";
+		Messages.EASY = "Р›С‘РіРєРёР№";
+		Messages.HARD = "РЎР»РѕР¶РЅС‹Р№";
+		Messages.RANDOM_LAYOUT = "РЎР»СѓС‡Р°Р№РЅР°СЏ СЂР°СЃСЃС‚Р°РЅРѕРІРєР°";
+		Messages.CLEAR_BOARD = "РћС‡РёСЃС‚РёС‚СЊ РґРѕСЃРєСѓ";
+		Messages.START_GAME = "РќР°С‡Р°С‚СЊ РёРіСЂСѓ";
+		Messages.MOVE_TO_SECOND_PLAYER = "РџРµСЂРµР№С‚Рё Рє РёРіСЂРѕРєСѓ 2";
+		Messages.LAYOUT_GUIDE = "РќР°Р¶РјРёС‚Рµ Р›РљРњ, С‡С‚РѕР±С‹ РїРѕСЃС‚Р°РІРёС‚СЊ РєРѕСЂР°Р±Р»СЊ РІРµСЂС‚РёРєР°Р»СЊРЅРѕ\n"
+				+ "Рё РџРљРњ, С‡С‚РѕР±С‹ РїРѕСЃС‚Р°РІРёС‚СЊ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕ.\n"
+				+ "РњРµСЃС‚Рѕ, РіРґРµ РІС‹ РЅР°Р¶РјРµС‚Рµ, Р±СѓРґРµС‚ РІРµСЂС…РЅРёРј Р»РµРІС‹Рј СѓРіР»РѕРј РєРѕСЂР°Р±Р»СЏ.";
+		Messages.PLAYER_PLACE_YOUR_SHIPS = "РРіСЂРѕРє, РїРѕР¶Р°Р»СѓР№СЃС‚Р° СЂР°СЃСЃС‚Р°РІСЊС‚Рµ СЃРІРѕРё РєРѕСЂР°Р±Р»Рё!";
+		Messages.WIN = "РџРћР‘Р•Р”РР›!";
+		Messages.PLAYER_2_WIN = "РР“Р РћРљ 2 РџРћР‘Р•Р”РР›!";
+		Messages.PLAYER_1_TURN = "РҐРћР”РРў РР“Р РћРљ 1!";
+		Messages.PLAYER_2_TURN = "РҐРћР”РРў РР“Р РћРљ 2!";
+		Messages.HARD_BOT = "РљР РЈРўРћР™ Р‘РћРў";
+		Messages.EASY_BOT = "РўРЈРџРћР™ Р‘РћРў";
+		Messages.PLAYER_1 = "РР“Р РћРљ 1";
+		Messages.PLAYER_2 = "РР“Р РћРљ 2";
+		Messages.PLAYER_1_WIN = "РР“Р РћРљ 1 РџРћР‘Р•Р”РР›!";
+		Messages.YOU_WIN = "Р’Р« РџРћР‘Р•Р”РР›Р!";
+		Messages.PLAYER_1_PLACE_YOUR_SHIPS = "РРіСЂРѕРє 1, РїРѕР¶Р°Р»СѓР№СЃС‚Р° СЂР°СЃСЃС‚Р°РІСЊС‚Рµ РєРѕСЂР°Р±Р»Рё!";
+		Messages.PLAYER_2_PLACE_YOUR_SHIPS = "РРіСЂРѕРє 2, РїРѕР¶Р°Р»СѓР№СЃС‚Р° СЂР°СЃСЃС‚Р°РІСЊС‚Рµ РєРѕСЂР°Р±Р»Рё!";
     }
 
     public String getLanguage() {
-        return "Русский";
+        return "Р СѓСЃСЃРєРёР№";
     }
 }

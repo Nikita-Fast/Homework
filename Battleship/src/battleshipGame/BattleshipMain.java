@@ -27,9 +27,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
 public class BattleshipMain extends Application {
+
+	private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+
 	private Difficulty gameDifficulty;	
 	private Button gameWithBot = new Button();
 	private Button gameWithAnotherPlayer = new Button();
@@ -88,9 +92,9 @@ public class BattleshipMain extends Application {
     
     
     private Parent createContent() {
-	   Pane root = new Pane();
+	   Pane root = context.getBean("pane", Pane.class);//new Pane();
 	   Decorations.setPrefSizeOfGameWindow(root);	   
-	   player = new Human();
+	   player = context.getBean("human", Human.class);//new Human();
 	   
 	   initPlugins();
 	   langBox.setPromptText("Languages");
@@ -106,21 +110,21 @@ public class BattleshipMain extends Application {
 	   
 	   //easyLevel.setText("Easy");
 	   easyLevel.setOnAction(event -> {
-		   enemy = new EasyBot();
+		   enemy = context.getBean("easyBot", EasyBot.class);//new EasyBot();
 		   gameDifficulty = Difficulty.easy;
 		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 	   
 	   //hardLevel.setText("Hard");
 	   hardLevel.setOnAction(event -> {
-		   enemy = new HardBot();
+		   enemy = context.getBean("hardBot", HardBot.class);//new HardBot();
 		   gameDifficulty = Difficulty.hard;
 		   Decorations.createDecorationForGameWithBot(root, randomLayout, clearBoard, startGame, playerBoard, showInfo, info);
 	   });
 
 	   //gameWithAnotherPlayer.setText("Game With Another Player");
 	   gameWithAnotherPlayer.setOnAction(event -> {
-		   enemy = new Human();
+		   enemy = context.getBean("human", Human.class);//new Human();
 		   twoPlayersMode = true;
 		   Decorations.createDecorationForGameWithAnotherPlayer(root, randomLayout, clearBoard, moveToSecondPlayer, showInfo, playerBoard, info);
 	   });
@@ -287,14 +291,17 @@ public class BattleshipMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(createContent());
+        //Scene scene = new Scene(createContent());
+		Scene scene = context.getBean("scene", Scene.class);
+		scene.setRoot(createContent());
+
         primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 
-    public static void main(String[] args) {    	
-        launch(args);
+    public static void main(String[] args) {
+    	launch(args);
     }
 }

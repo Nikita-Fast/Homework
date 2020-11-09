@@ -56,7 +56,15 @@ public class Cell extends Rectangle {
     public Ship getShip() {
     	return this.ship;
     }
-    
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public int getXCoord() {
     	return x;
     }

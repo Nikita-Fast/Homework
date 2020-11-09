@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -14,15 +11,13 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Board extends Parent {
 	public static final int SIZE_OF_BOARD = 10;
 	public static final int MAX_NUMBER_OF_SHIPS = 10;
 	public static final int MAX_LENGTH_OF_SHIP = 4;
-	public static final int MAX_ATTEMPS_NUMBER = 1000;
+	public static final int MAX_ATTEMPTS_NUMBER = 1000;
 	public static final int TIMES_TO_PLACE_BIGGEST_SHIP = 1;
 	public static final double CHANCE_TO_BE_VERTICAL = 0.5;
 	private int shipsToPlace = MAX_NUMBER_OF_SHIPS;
@@ -30,9 +25,11 @@ public class Board extends Parent {
     private int currentLengthOfShip = MAX_LENGTH_OF_SHIP;
     private VBox rows = new VBox();
     private boolean botFinishedHisMove = true;
+
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
     
-    public void setBotFinishedMove(Boolean isFinenished) {
-    	botFinishedHisMove = isFinenished;
+    public void setBotFinishedMove(Boolean isFinished) {
+    	botFinishedHisMove = isFinished;
     }
     
     public boolean getBotFinishedMove() {
@@ -55,7 +52,10 @@ public class Board extends Parent {
         for (int y = 0; y < SIZE_OF_BOARD; y++) {
             HBox row = new HBox();
             for (int x = 0; x < SIZE_OF_BOARD; x++) {
-            	Cell cell = new Cell(x, y);
+            	//Cell cell = new Cell(x, y);
+				Cell cell = context.getBean("cell", Cell.class);
+				cell.setY(y);
+				cell.setX(x);
                 cell.setOnMouseClicked(handler);
                 row.getChildren().add(cell);
             }
@@ -75,7 +75,13 @@ public class Board extends Parent {
     
     public void placeShipByMouseClickOnBoard(MouseEvent event) {
     	Cell cell = (Cell) event.getSource();
-        if (placeShip(new Ship(this.currentLengthOfShip, event.getButton() == MouseButton.PRIMARY), cell.getXCoord(), cell.getYCoord())) {		            	
+
+    	Ship ship = context.getBean("ship", Ship.class);
+    	ship.setLength(currentLengthOfShip);
+    	ship.setHealth(currentLengthOfShip);
+    	ship.setVertical(event.getButton() == MouseButton.PRIMARY);
+        if (placeShip(/*new Ship(this.currentLengthOfShip, event.getButton() == MouseButton.PRIMARY)*/ship,
+				cell.getXCoord(), cell.getYCoord())) {
         	if (shipsToPlace == MAX_NUMBER_OF_SHIPS - 1 || shipsToPlace == MAX_NUMBER_OF_SHIPS - 3 || 
         			shipsToPlace == MAX_NUMBER_OF_SHIPS - 6 || shipsToPlace == 0) {
         		this.currentLengthOfShip--;
@@ -94,8 +100,12 @@ public class Board extends Parent {
     	int timesToPlaceShipOfSuchLength = TIMES_TO_PLACE_BIGGEST_SHIP;
     	while (shipLength > 0) {
     		int x = random.nextInt(SIZE_OF_BOARD);
-            int y = random.nextInt(SIZE_OF_BOARD);            
-            if (placeShip(new Ship(shipLength, isShipVertical()), x, y)) {
+            int y = random.nextInt(SIZE_OF_BOARD);
+			Ship ship = context.getBean("ship", Ship.class);
+			ship.setLength(shipLength);
+			ship.setHealth(shipLength);
+			ship.setVertical(isShipVertical());
+            if (placeShip(/*new Ship(shipLength, isShipVertical())*/ship, x, y)) {
             	timesToPlaceShipOfSuchLength--;
             	if (timesToPlaceShipOfSuchLength == 0) {
             		shipLength--;
@@ -145,11 +155,16 @@ public class Board extends Parent {
     }
 
     private Cell[] getNeighbors(int x, int y) {
-        Point2D[] points = new Point2D[] {
-                new Point2D(x - 1, y + 1), new Point2D(x, y + 1), new Point2D(x + 1, y + 1),
-                new Point2D(x - 1, y), new Point2D(x + 1, y),
-                new Point2D(x - 1, y - 1), new Point2D(x, y - 1), new Point2D(x + 1, y - 1)        
-        };
+		Point2D[] points = new Point2D[8];
+		int i = 0;
+		for (int xCoord = x - 1; xCoord <= x + 1; xCoord++) {
+			for (int yCoord = y -  1; yCoord <= y + 1; yCoord++) {
+				if (yCoord != y || xCoord != x) {
+					points[i++] = context.getBean("point2D", Point2D.class).add(xCoord, yCoord);
+				}
+			}
+		}
+
         List<Cell> neighbors = new ArrayList<Cell>();
         for (Point2D point : points) {
             if (isValidPoint(point)) {
@@ -203,7 +218,8 @@ public class Board extends Parent {
     }
     
     public DataForShot shoot(Cell cell) {
-    	DataForShot data = new DataForShot();
+    	//DataForShot data = new DataForShot();
+		DataForShot data = context.getBean("dataForShot", DataForShot.class);
     	data.setShootedCell(cell);
 		cell.setWasShotState(true);
 		Ship ship = cell.getShip();
@@ -254,7 +270,8 @@ public class Board extends Parent {
     }
     
     public DataForShot makeShotToVoidIfPossible() {
-    	DataForShot data = new DataForShot();
+    	//DataForShot data = new DataForShot();
+		DataForShot data = context.getBean("dataForShot", DataForShot.class);
     	int attempts = 0;
     	while (true) {
     		attempts++;
@@ -266,7 +283,7 @@ public class Board extends Parent {
 	    		data = shoot(cell);
 	    		return data;
 	    	}
-	    	if (attempts > MAX_ATTEMPS_NUMBER) {
+	    	if (attempts > MAX_ATTEMPTS_NUMBER) {
 	    		cell = chooseCellForShot();
 	    		if (cell == null) {
 	    			return null;
@@ -290,7 +307,8 @@ public class Board extends Parent {
     }
    
     public boolean cellIsEmpty(int x, int y) {
-    	Point2D point = new Point2D(x, y);
+    	Point2D point = context.getBean("point2D", Point2D.class);//new Point2D(x, y);
+		point.add(x, y);
     	if (isValidPoint(point)) {
     		return !getCell(x, y).getWasShotState() ? true : false;
     	}
@@ -340,7 +358,7 @@ public class Board extends Parent {
 	        if (ship != null && ship.isAlive()) { 
 	        	return ship;
 	        }	        
-	        if (attempts > MAX_ATTEMPS_NUMBER) {
+	        if (attempts > MAX_ATTEMPTS_NUMBER) {
 	        	if (!boardStillHasAliveShip()) {
 	        		return null;
 	        	}

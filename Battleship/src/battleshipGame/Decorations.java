@@ -22,7 +22,7 @@ public class Decorations {
 	}
 	
 	public static void setPrefSizeOfGameWindow(Pane root) {
-		root.setPrefSize(600, 800);
+		root.setPrefSize(620, 800);
 	}
 	
 	public static void createDecorationsForChoosingLanguage(Pane root, ComboBox<String> langBox, Label info) {

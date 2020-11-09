@@ -12,11 +12,19 @@ public class Ship extends Parent {
         this.vertical = vertical;
         this.health = length;
     }
-    
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     public int getLength() {
     	return this.length;
     }
-    
+
+    public void setVertical(boolean vertical) {
+        this.vertical = vertical;
+    }
+
     public boolean isVertical() {
     	return this.vertical;
     }
@@ -31,5 +39,9 @@ public class Ship extends Parent {
     
     public int getHealth() {
     	return this.health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 }
