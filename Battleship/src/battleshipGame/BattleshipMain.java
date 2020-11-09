@@ -183,8 +183,8 @@ public class BattleshipMain extends Application {
     		   }
        	   }
        });  
-         
-	   enemyBoard = new Board(event -> {	
+       enemyBoard = context.getBean("board", Board.class);//new Board();
+	   enemyBoard.setEventHandler(event -> {
 			if (!running) {
 				if (twoPlayersMode && nowIsSecondPlayer) {
 					if (enemyBoard.getShipsToPlaceNumber() <= 0) {
@@ -242,33 +242,35 @@ public class BattleshipMain extends Application {
 		    }            
 		});            
 	
-        playerBoard = new Board(event -> {
-            if (running) {            	
-            	if (twoPlayersMode && enemyTurn) {
-            		Cell cell = (Cell) event.getSource();
-        			if (cell.getWasShotState()) {   
-        				return;
-        			}
-        			
-        			((Human)enemy).setCellForShot(cell);
-        			enemy.makeMoveWithAnimation(playerBoard);
-        			enemyTurn = cell.shotWasSuccessfull();
-        			
-        			if (!enemyTurn) {
-        				info.setText(Messages.PLAYER_1_TURN);
-        			}
-        			if (playerBoard.getShipsSurvivedNumber() == 0) {
-        				info.setText(Messages.PLAYER_2_WIN);
-        				Decorations.createDecorationForGameEnd(root, info);
-        		    } 
-            	}            	
-            	return;
-            }
-            if (playerBoard.getShipsToPlaceNumber() <= 0) {
-            	return;
-            }
-            playerBoard.placeShipByMouseClickOnBoard(event);
-        });       
+        playerBoard = context.getBean("board", Board.class);//new Board();
+        playerBoard.setEventHandler(event -> {
+			if (running) {
+				if (twoPlayersMode && enemyTurn) {
+					Cell cell = (Cell) event.getSource();
+					if (cell.getWasShotState()) {
+						return;
+					}
+
+					((Human)enemy).setCellForShot(cell);
+					enemy.makeMoveWithAnimation(playerBoard);
+					enemyTurn = cell.shotWasSuccessfull();
+
+					if (!enemyTurn) {
+						info.setText(Messages.PLAYER_1_TURN);
+					}
+					if (playerBoard.getShipsSurvivedNumber() == 0) {
+						info.setText(Messages.PLAYER_2_WIN);
+						Decorations.createDecorationForGameEnd(root, info);
+					}
+				}
+				return;
+			}
+			if (playerBoard.getShipsToPlaceNumber() <= 0) {
+				return;
+			}
+			playerBoard.placeShipByMouseClickOnBoard(event);
+		});
+
         return root;
     }
     

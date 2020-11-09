@@ -48,7 +48,7 @@ public class Board extends Parent {
     	return this.shipsToPlace;
     }
     
-    public Board(EventHandler<MouseEvent> handler) {
+    public Board(/*EventHandler<MouseEvent> handler*/) {
         for (int y = 0; y < SIZE_OF_BOARD; y++) {
             HBox row = new HBox();
             for (int x = 0; x < SIZE_OF_BOARD; x++) {
@@ -56,13 +56,24 @@ public class Board extends Parent {
 				Cell cell = context.getBean("cell", Cell.class);
 				cell.setY(y);
 				cell.setX(x);
-                cell.setOnMouseClicked(handler);
+                //cell.setOnMouseClicked(handler);
                 row.getChildren().add(cell);
             }
             this.rows.getChildren().add(row);
         }
         getChildren().add(this.rows);
     }
+    
+
+    //*********for this commit
+	public void setEventHandler(EventHandler<MouseEvent> handler) {
+		for (int y = 0; y < SIZE_OF_BOARD; y++) {
+			for (int x = 0; x < SIZE_OF_BOARD; x++) {
+				Cell cell = this.getCell(x, y);
+				cell.setOnMouseClicked(handler);
+			}
+		}
+	}
     
     public void hideShipsFromEnemy() {
     	for (int y = 0; y < SIZE_OF_BOARD; y++) {

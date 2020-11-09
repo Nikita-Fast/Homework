@@ -65,4 +65,10 @@ public class Config {
     public Pane pane() {
         return new Pane();
     }
+
+    @Bean
+    @Scope("prototype")
+    public Board board() {
+        return new Board();
+    }
 }
