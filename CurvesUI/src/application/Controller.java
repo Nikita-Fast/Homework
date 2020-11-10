@@ -68,6 +68,8 @@ public class Controller {
 	
 	private void createCurvesForComboBox() {
 		ArrayList<Curve> curvesInBox = new ArrayList<Curve>();
+		curvesInBox.add(new Hyperbola(3, 2));
+		curvesInBox.add(new Ellipse(2, 4));
 		curvesInBox.add(new Ellipse(3, 3));
 		curvesInBox.add(new Ellipse(0.1, 2));
 		curvesInBox.add(new Parabola(7.9));

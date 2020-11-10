@@ -21,7 +21,7 @@ public abstract class Curve {
     }
 
     
-    public void quickSort(ArrayList<Point2D> points, int low, int high) {
+    public static void quickSort(ArrayList<Point2D> points, int low, int high) {
         if (points.size() == 0) {
         	return;
         }
@@ -65,6 +65,8 @@ public abstract class Curve {
     		System.out.println("y = " + point.getY() + "  x = " + point.getX());
     	}
     }
+    
+    public abstract void setXMinMax(double xMin, double xMax);
 
     public abstract ArrayList<Double> getYValuesInSpecifiedXCoordinate(double x);
     
@@ -73,8 +75,6 @@ public abstract class Curve {
     	double coefficient = Board.getPixelNumberInUnitSegment();
     	ArrayList<Point2D> pointsQuarter1 = new ArrayList<Point2D>();
     	ArrayList<Point2D> pointsQuarter2 = new ArrayList<Point2D>();
-    	//ArrayList<Point2D> pointsQuarter3 = new ArrayList<Point2D>();
-    	//ArrayList<Point2D> pointsQuarter4 = new ArrayList<Point2D>();
     	double distanceBetweenTwoXCoordinates = (xMax - xMin) / STEPS_NUMBER;
     	for (double x = xMax; x >= xMin; x -= (distanceBetweenTwoXCoordinates)) {
     		ArrayList<Double> yValues = getYValuesInSpecifiedXCoordinate(x);
@@ -86,7 +86,6 @@ public abstract class Curve {
     				if (x < 0 && y > -(Board.HEIGHT / (Board.getPixelNumberInUnitSegment() * 2))) {
     					pointsQuarter2.add(new Point2D(coefficient * x + Board.WIDTH / 2, Board.HEIGHT / 2 - coefficient * y));
     				}
-        			 //250 is a half of pixels amount of board
         		}
     		}
     	}

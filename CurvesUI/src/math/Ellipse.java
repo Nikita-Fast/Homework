@@ -29,6 +29,9 @@ public class Ellipse extends Curve {
 	   equation = new String("x^2 / " + a + "^2 + y^2 / " + b + "^2 = 1");
    }
 
+   public void setXMinMax(double xMin, double xMax) {
+	   
+   }
 
 }
 

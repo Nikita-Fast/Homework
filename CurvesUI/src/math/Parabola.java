@@ -9,7 +9,6 @@ public class Parabola extends Curve {
     private double p;
     // y^2 = 2*p*x
     public Parabola(double p) {
-    	
         super(p == 0 ? -Board.WIDTH / Board.getPixelNumberInUnitSegment() : p > 0 ? 0 : -Board.WIDTH / Board.getPixelNumberInUnitSegment(),
         		p == 0 ? Board.WIDTH / Board.getPixelNumberInUnitSegment() : p > 0 ? Board.WIDTH / Board.getPixelNumberInUnitSegment() : 0); 
         this.p = p;

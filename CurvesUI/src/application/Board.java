@@ -113,75 +113,14 @@ public class Board extends Canvas {
 			paneForCurve.getChildren().remove(polyline);
 		}
 	}
-	/*
-	public void drawUserCurve(int number) {
-		if (number == 0) {
-			drawEllipse();
-		}
-		if (number == 1) {
-			drawParabola();
-		}
-		if (number == 2) {
-			drawHyperbola();
-		}
-	}
 	
-	public void drawHyperbola() {
-		Hyperbola hyperbola = new Hyperbola(0.3, 2.7);
-		
-		hyperbola.setXMinMax(-Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT / 2, Board.WIDTH / Board.PIXEL_NUMBER_IN_UNIT_SEGMENT / 2);
-		
-		for (Polyline polyline : createPolylines(hyperbola.createPointsForCurve())) {
-			drawSpecifiedPolyline(polyline);
-		}
-		
-		System.out.println("successfull drawing of hyperbola!");
-		
-	}
-	
-	public void drawParabola() {
-		Parabola parabola = new Parabola(18);
-		
-		
-		for (Polyline polyline : createPolylines(parabola.createPointsForCurve())) {
-			drawSpecifiedPolyline(polyline);
-		}
-		
-		System.out.println("successfull drawing of parabola!");
-	}
-	
-	public void drawEllipse() {
-		Ellipse ellipse = new Ellipse(0.01, 1);
-		
-		for (Polyline polyline : createPolylines(ellipse.createPointsForCurve())) {
-			drawSpecifiedPolyline(polyline);
-		}
-		
-		System.out.println("successfull drawing of ellipse!");
-		//drawSpecifiedPolyline(createPolyline(ellipse.createPointsForCurve().get(3)));
-	}
-	*/
 	public void drawSpecifiedCurve(Curve curve) {
 		clearBoard();
-		if (curve instanceof Hyperbola) {
-			((Hyperbola)curve).setXMinMax(-Board.WIDTH / pixelNumberInUnitSegment / 2, Board.WIDTH / pixelNumberInUnitSegment / 2);
-		}
-		if (curve instanceof Parabola) {
-			((Parabola)curve).setXMinMax(-Board.WIDTH / pixelNumberInUnitSegment / 2, Board.WIDTH / pixelNumberInUnitSegment / 2);
-		}
+		curve.setXMinMax(-Board.WIDTH / pixelNumberInUnitSegment / 2, Board.WIDTH / pixelNumberInUnitSegment / 2);
 		for (Polyline polyline : createPolylines(curve.createPointsForCurve())) {
 			drawSpecifiedPolyline(polyline);
 		}
 	}
-	/*
-	public Polyline createPolyline(ArrayList<Point2D> points) {
-		Polyline polyline = new Polyline();
-		for (Point2D point : points) {
-			polyline.getPoints().add(point.getX());
-			polyline.getPoints().add(point.getY());
-		}
-		return polyline;
-	}*/
 	
 	public ArrayList<Polyline> createPolylines(ArrayList<ArrayList<Point2D>> allPoints) {
 		ArrayList<Polyline> polylines = new ArrayList<Polyline>(); 
@@ -214,7 +153,7 @@ public class Board extends Canvas {
 		
 		createEdging();
 		
-		drawCartesianÑoordinatSystem();
+		drawCartesianCoordinatSystem();
 	}
 	
 	private void init(Pane paneForCurve) {
@@ -223,7 +162,7 @@ public class Board extends Canvas {
 		
 		createEdging();
 		
-		drawCartesianÑoordinatSystem();	
+		drawCartesianCoordinatSystem();	
 	}
 	
 	private void fillBoardWithWhite() {
@@ -253,13 +192,13 @@ public class Board extends Canvas {
 		gc.fillOval(getWidth() / 2 - 5, getHeight() / 2 - 5, 10, 10);
 	}
 	
-	private void drawCartesianÑoordinatSystem() {
+	private void drawCartesianCoordinatSystem() {
 		drawCenterPoint();
 		drawXYAxises();
 		drawStrokesScalable();
 	}
 	
-	private boolean isMultipleOf(int num1, int num2) {
+	public static boolean isMultipleOf(int num1, int num2) {
 		int q = num1 / num2;
 		if (num2 * q == num1) {
 			return true;
@@ -267,7 +206,7 @@ public class Board extends Canvas {
 		return false;
 	}
 	
-	private String createString(int number, double coefficient) {
+	public static String createString(int number, double coefficient) {
 		String str;
 		if (coefficient >= 1) {
 			if (isMultipleOf(number, (int)Math.round(coefficient))) {
@@ -329,11 +268,6 @@ public class Board extends Canvas {
 		}
 		
 		double coefficient = scale;
-		
-		/*
-		System.out.println("pixel number = " + PIXEL_NUMBER_IN_UNIT_SEGMENT);
-		System.out.println("scale = " + scale);
-		System.out.println("step = " + step); */
 		
 		
 		int number = 1;
