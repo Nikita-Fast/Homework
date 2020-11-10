@@ -5,8 +5,9 @@ package tests;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 
 import javafx.geometry.Point2D;
 import math.Curve;
@@ -14,9 +15,9 @@ import math.Curve;
 public class CurveTest {
 	
 	public static final double DELTA = 0.001;
-	
+
 	@Test
-	void quickSort() {
+	public void quickSort() {
 		ArrayList<Point2D> points = new ArrayList<Point2D>();
 		points.add(new Point2D(2, 3));
 		points.add(new Point2D(4, -1));
