@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/application/Board.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/application/Controller.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/application/Main.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/math" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/math/Curve.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/math/Ellipse.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/math/Hyperbola.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/math/Parabola.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/tests/BoardTest.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/tests/CurveTest.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/tests/EllipseTest.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/tests/HyperbolaTest.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/tests/ParabolaTest.java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
