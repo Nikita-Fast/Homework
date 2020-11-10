@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Ellipse extends Curve {
     private double a, b;
 
-    public Ellipse(double a, double b) { //у эллипса |x| <= a
+    public Ellipse(double a, double b) { //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ |x| <= a
         super(-Math.abs(a), Math.abs(a));
         this.a = a;
         this.b = b;
