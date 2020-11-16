@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/Players/BasicPlayer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Players/EasyBot.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Players/HardBot.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Players/Human.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/BattleshipMain.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Board.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Cell.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/DataForShot.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Decorations.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Difficulty.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/LanguageService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Messages.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/battleshipGame/Ship.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/plugins/EnglishLanguage.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/plugins/RussianLanguage.java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
