@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Convertings {
     private StringBuilder sb = new StringBuilder("sb != safe");
-    private Lock lock = new ReentrantLock();
+    private Lock lock = /*new Peterson();//*/new ReentrantLock();
 
     public void addProperty(String name, String value) {
         lock.lock();
