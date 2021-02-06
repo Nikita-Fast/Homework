@@ -350,6 +350,9 @@ public final class MyBenchmark_isVertical_jmhTest {
         if (val == null) {
             val = new MyBenchmark_jmhType();
                 Field f;
+                f = test.MyBenchmark.class.getDeclaredField("imageSize");
+                f.setAccessible(true);
+                f.set(val, control.getParam("imageSize"));
                 f = test.MyBenchmark.class.getDeclaredField("threadsNumber");
                 f.setAccessible(true);
                 f.set(val, Integer.valueOf(control.getParam("threadsNumber")));

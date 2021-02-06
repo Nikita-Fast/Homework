@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
-@Warmup(iterations = 3, time = 15)
+@Warmup(iterations = 3, time = 10)
 @Measurement(iterations = 3, time = 10)
 @Fork(3)
 @BenchmarkMode(Mode.AverageTime)
@@ -20,16 +20,19 @@ public class MyBenchmark {
 
     GaussianBlur gaussianBlur;
 
+    @Param({"small", "middle", "big"})
+    public String imageSize;
+
     @Setup(Level.Trial)
     public void prepare() {
         String basePath = new File("").getAbsolutePath();
-        int radius = 25;
+        int radius = 5;
         double variance = 1.5;
         gaussianBlur = new GaussianBlur(radius, variance);
-        gaussianBlur.setSourceImage("kerry.jpg", basePath);
+        gaussianBlur.setSourceImage(imageSize + ".jpg", basePath);
     }
 
-    @Param({"32", "16", "8", "4", "2", "1"})
+    @Param({"16", "8", "4", "2", "1"})
     public int threadsNumber;
 
     @Benchmark
@@ -99,7 +102,7 @@ public class MyBenchmark {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (!imagesAreEqual("resultJMH.png", "sample.png")) {
+        if (!imagesAreEqual("resultJMH.png", imageSize + "Sample.png")) {
             System.exit(1091);
         }
     }

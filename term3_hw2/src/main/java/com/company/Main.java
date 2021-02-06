@@ -53,12 +53,13 @@ public class Main {
 
     public static void main(String[] args) {
         String basePath = new File("").getAbsolutePath();
-        int radius = 25;
+        int radius = 5;
         double variance = 1.5;
+        String size = "big";
         GaussianBlur gaussianBlur = new GaussianBlur(radius, variance);
-        gaussianBlur.setSourceImage("kerry.jpg", basePath);
+        gaussianBlur.setSourceImage(size + ".jpg", basePath);
         ArrayList<Thread> threads = new ArrayList<>();
-        int threadsNumber = 4;
+        int threadsNumber = 1;
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < threadsNumber; i++) {
@@ -88,7 +89,7 @@ public class Main {
         System.out.println("time = " + (System.currentTimeMillis() - start) / 1000.0);
 
         try {
-            ImageIO.write(gaussianBlur.getResultImage(), "PNG", new File("sample.png"));
+            ImageIO.write(gaussianBlur.getResultImage(), "PNG", new File(size + "Sample.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
