@@ -1,0 +1,11 @@
+test\jmh_generated\MyBenchmark_jmhType.class
+test\jmh_generated\MyBenchmark_jmhType_B1.class
+test\MyBenchmark.class
+com\company\Main.class
+META-INF\BenchmarkList
+test\jmh_generated\MyBenchmark_isVertical_jmhTest.class
+test\jmh_generated\MyBenchmark_jmhType_B2.class
+META-INF\CompilerHints
+test\jmh_generated\MyBenchmark_isHorizontal_jmhTest.class
+test\jmh_generated\MyBenchmark_jmhType_B3.class
+com\company\GaussianBlur.class
