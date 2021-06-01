@@ -1,0 +1,1 @@
+package com.company.operations;import javafx.util.Pair;public class CoefficientsMix extends Operation<Pair<Integer, Integer>>{    @Override    public Pair<Integer, Integer> apply(Pair<Integer, Integer> x, Pair<Integer, Integer> y) {        int a = x.getKey() * y.getKey();        int b = y.getKey() * x.getValue() + y.getValue();        return new Pair<>(a, b);    }}

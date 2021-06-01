@@ -1,0 +1,1 @@
+package com.company.operations;public class FindMin extends Operation<Integer> {    @Override    public Integer apply(Integer x, Integer y) {        return x <= y ? x : y;    }}

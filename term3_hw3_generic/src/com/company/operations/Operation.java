@@ -1,0 +1,1 @@
+package com.company.operations;public abstract class Operation<T> {    private T neutralElement;    public abstract T apply(T x, T y);    public void setNeutralElement(T neutralElement) {        this.neutralElement = neutralElement;    }    public T getNeutralElement() {        return neutralElement;    }}
