@@ -31,6 +31,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -68,7 +69,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1622704178219</updated>
-      <workItem from="1622704179529" duration="4725000" />
+      <workItem from="1622704179529" duration="10609000" />
+      <workItem from="1622716335619" duration="2074000" />
+      <workItem from="1623049984880" duration="2615000" />
     </task>
     <servers />
   </component>
@@ -76,25 +79,37 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="542" y="151" key="#com.intellij.ide.util.MemberChooser" timestamp="1622707218979">
+    <state x="542" y="151" key="#com.intellij.ide.util.MemberChooser" timestamp="1622710566619">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state x="542" y="151" key="#com.intellij.ide.util.MemberChooser/0.0.1473.864@0.0.1473.864" timestamp="1622707218979" />
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1622708748962">
+    <state x="542" y="151" key="#com.intellij.ide.util.MemberChooser/0.0.1473.864@0.0.1473.864" timestamp="1622710566619" />
+    <state x="456" y="148" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog" timestamp="1622711512031">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1622708748962" />
-    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1622708748962">
+    <state x="456" y="148" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog/0.0.1473.864@0.0.1473.864" timestamp="1622711512031" />
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1623053113915">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1622708748962" />
-    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1622708748962">
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1623053113915" />
+    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1623053113915">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1622708748962" />
-    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1622708748962">
+    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1623053113915" />
+    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1623053113914">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1622708748962" />
+    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1623053113914" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1623053113915">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1623053113915" />
+    <state x="445" y="260" key="com.intellij.ide.util.TipDialog" timestamp="1622716338629">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="445" y="260" key="com.intellij.ide.util.TipDialog/0.0.1473.864@0.0.1473.864" timestamp="1622716338629" />
+    <state x="177" y="137" key="new project wizard" timestamp="1622744389679">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="177" y="137" key="new project wizard/0.0.1473.864@0.0.1473.864" timestamp="1622744389679" />
   </component>
 </project>

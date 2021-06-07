@@ -1,24 +1,24 @@
 package com.company.auxiliaries;
 
-public class MyPair<T> {
-    private T a;
-    private T b;
+public class MyPair {
+    private int a;
+    private int b;
 
-    public MyPair(T a, T b) {
+    public MyPair(int a, int b) {
         this.a = a;
         this.b = b;
     }
 
-    public T getA() {
+    public int getA() {
         return a;
     }
 
-    public T getB() {
+    public int getB() {
         return b;
     }
 
     @Override
     public String toString() {
-        return "(" + a.toString() + ", " + b.toString() + ")";
+        return "(" + a + ", " + b + ")";
     }
 }

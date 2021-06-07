@@ -31,14 +31,39 @@
 
 package com.company;
 
-import org.openjdk.jmh.annotations.Benchmark;
+import com.company.algorithms.EquationsSolver;
+import com.company.auxiliaries.MyPair;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 
-public class MyBenchmark {
+import java.util.concurrent.TimeUnit;
 
-    @Benchmark
-    public void testMethod() {
-        // This is a demo/sample template for building your JMH benchmarks. Edit as needed.
-        // Put your benchmark code here.
+@State(Scope.Benchmark)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Fork(1)
+public class PerformanceTest {
+    public static final int LENGTH = 10_000_000;
+    public static final int SINGLE = -1;
+    private MyPair[] pairs = new MyPair[LENGTH];
+
+    @Param({"16", "8", "4", "2", "1", "-1"})
+    public int THREADS_NUMBER;
+
+    @Setup
+    public void prepare() {
+        for (int i = 0; i < LENGTH; i++) {
+            pairs[i] = new MyPair(i, i + 1);
+        }
     }
 
+    @Benchmark
+    public void measureEquationsSolution(Blackhole bh) throws InterruptedException {
+        if (THREADS_NUMBER == SINGLE) {
+            bh.consume(EquationsSolver.solveWithSingleThread(pairs));
+        }
+        else {
+            bh.consume(EquationsSolver.solveInParallel(pairs, THREADS_NUMBER));
+        }
+    }
 }

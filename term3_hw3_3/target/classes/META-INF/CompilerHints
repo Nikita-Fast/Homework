@@ -3,4 +3,5 @@ dontinline,*.*_avgt_jmhStub
 dontinline,*.*_sample_jmhStub
 dontinline,*.*_ss_jmhStub
 dontinline,*.*_thrpt_jmhStub
-inline,com/company/MyBenchmark.testMethod
+inline,com/company/PerformanceTest.measureEquationsSolution
+inline,com/company/PerformanceTest.prepare
