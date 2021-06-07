@@ -31,6 +31,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -69,7 +70,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1622619361799</updated>
-      <workItem from="1622619363108" duration="18366000" />
+      <workItem from="1622619363108" duration="18920000" />
+      <workItem from="1623053709384" duration="15386000" />
     </task>
     <servers />
   </component>
@@ -81,25 +83,33 @@
       <screen x="0" y="0" width="1473" height="864" />
     </state>
     <state x="192" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1473.864@0.0.1473.864" timestamp="1622619740189" />
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1622625853052">
+    <state x="542" y="142" key="#com.intellij.ide.util.MemberChooser" timestamp="1623075152137">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1622625853052" />
-    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1622625853052">
+    <state x="542" y="142" key="#com.intellij.ide.util.MemberChooser/0.0.1473.864@0.0.1473.864" timestamp="1623075152137" />
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1623091822697">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1622625853052" />
-    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1622625853051">
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1623091822697" />
+    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1623091822697">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1622625853051" />
-    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1622625853052">
+    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1623091822697" />
+    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1623091822697">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1622625853052" />
-    <state x="248" y="78" key="SettingsEditor" timestamp="1622703866856">
+    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1623091822697" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1623091822697">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state x="248" y="78" key="SettingsEditor/0.0.1473.864@0.0.1473.864" timestamp="1622703866856" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1623091822697" />
+    <state x="248" y="78" key="SettingsEditor" timestamp="1622704123518">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="248" y="78" key="SettingsEditor/0.0.1473.864@0.0.1473.864" timestamp="1622704123518" />
+    <state x="177" y="137" key="new project wizard" timestamp="1622704178122">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="177" y="137" key="new project wizard/0.0.1473.864@0.0.1473.864" timestamp="1622704178122" />
   </component>
 </project>

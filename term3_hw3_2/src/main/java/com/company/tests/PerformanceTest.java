@@ -31,51 +31,58 @@
 
 package com.company.tests;
 
-import com.company.algorithms.BigIntAddition;
-import com.company.algorithms.BigIntAdditionSingleThreaded;
+import com.company.algorithms.BigIntegersAddition;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Fork(2)
+@Fork(1)
 public class PerformanceTest {
-    public static final int LENGTH = 16_000_000;
-    private Random random = new Random();
-    private String a;
-    private String b;
-    private BigIntAddition bigIntAddition;
+    public static final int LENGTH = 10_000_000;
+    private String s1;
+    private String s2;
+
+    private int[] num1;
+    private int[] num2;
 
     public static final int SINGLE = -1;
 
-    @Param({"-1", "1", "2", "4", "8", "16"})
+    @Param({/*"-1",*/ "8", "4", "2", "1"})
     public int THREADS_NUMBER;
 
     @Setup
     public void prepare() {
-        bigIntAddition = new BigIntAddition();
-        StringBuilder sb1 = new StringBuilder();
+        /*StringBuilder sb1 = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
-        for (int i = 0; i < LENGTH; i++) {
-            sb1.append(random.nextInt(10));
-            sb2.append(random.nextInt(10));
+        for (int i = 0; i < LENGTH - 1; i++) {
+            sb1.append(9);
         }
-        a = sb1.toString();
-        b = sb2.toString();
+        for (int i = 0; i < LENGTH; i++) {
+            sb2.append(1);
+        }
+        s1 = sb1.toString();
+        s2 = sb2.toString();*/
+
+        num1 = new int[LENGTH];
+        num2 = new int[LENGTH];
+        for (int i = 0; i < LENGTH; i++) {
+            num1[i] = 9;
+            num2[i] = 1;
+        }
     }
 
     @Benchmark
-    public void measureBigIntAddition(Blackhole bh) {
+    public void measureBigIntAddition(Blackhole bh) throws InterruptedException {
         if (THREADS_NUMBER == SINGLE) {
-            bh.consume(BigIntAdditionSingleThreaded.calculate(a, b));
+            bh.consume(BigIntegersAddition.addWithSingleThread(s1, s2));
         }
         else {
-            bigIntAddition.calculate(THREADS_NUMBER, a, b);
+            //bh.consume(BigIntegersAddition.addInParallel(THREADS_NUMBER, s1, s2));
+            bh.consume(BigIntegersAddition.addInParallelFromIntArrays(THREADS_NUMBER, num1, num2));
         }
     }
 }
