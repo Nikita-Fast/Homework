@@ -7,6 +7,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -37,7 +45,7 @@
       <module name="term3_hw3_4" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.company.*" />
+          <option name="PATTERN" value="com.company.runnables.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -62,7 +70,7 @@
       <option name="presentableId" value="Default" />
       <updated>1622744390211</updated>
       <workItem from="1622744391910" duration="11169000" />
-      <workItem from="1622982110916" duration="175000" />
+      <workItem from="1622982110916" duration="21704000" />
     </task>
     <servers />
   </component>
@@ -70,30 +78,34 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="542" y="139" key="#com.intellij.ide.util.MemberChooser" timestamp="1622747032999">
+    <state x="542" y="139" key="#com.intellij.ide.util.MemberChooser" timestamp="1623046651379">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state x="542" y="139" key="#com.intellij.ide.util.MemberChooser/0.0.1473.864@0.0.1473.864" timestamp="1622747032999" />
+    <state x="542" y="139" key="#com.intellij.ide.util.MemberChooser/0.0.1473.864@0.0.1473.864" timestamp="1623046651379" />
     <state x="289" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1622745834782">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
     <state x="289" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1473.864@0.0.1473.864" timestamp="1622745834782" />
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1622982285334">
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1623047566455">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1622982285334" />
-    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1622982285334">
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom/0.0.1473.864@0.0.1473.864" timestamp="1623047566455" />
+    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1623047566455">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1622982285334" />
-    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1622982285333">
+    <state width="1430" height="224" key="GridCell.Tab.0.center/0.0.1473.864@0.0.1473.864" timestamp="1623047566455" />
+    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1623047566455">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1622982285333" />
-    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1622982285334">
+    <state width="1430" height="224" key="GridCell.Tab.0.left/0.0.1473.864@0.0.1473.864" timestamp="1623047566455" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1623047566455">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
-    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1622982285334" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right/0.0.1473.864@0.0.1473.864" timestamp="1623047566455" />
+    <state x="267" y="90" key="Maven.ArtifactSearchDialog" timestamp="1623048084947">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="267" y="90" key="Maven.ArtifactSearchDialog/0.0.1473.864@0.0.1473.864" timestamp="1623048084947" />
     <state x="445" y="260" key="com.intellij.ide.util.TipDialog" timestamp="1622982131267">
       <screen x="0" y="0" width="1473" height="864" />
     </state>

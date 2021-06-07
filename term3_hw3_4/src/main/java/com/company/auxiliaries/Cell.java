@@ -4,19 +4,7 @@ public class Cell<T> {
     private T value;
     private boolean hasValue;
 
-    /*public synchronized void send(T value) {
-        while (hasValue) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        this.value = value;
-        hasValue = true;
-        notify();
-    }*/
-
+    //подразумеваеется что экземпляр класса Cell будет использоваться только один раз
     public synchronized void send(T value) {
         this.value = value;
         hasValue = true;
@@ -31,10 +19,6 @@ public class Cell<T> {
                 e.printStackTrace();
             }
         }
-        //T receivedValue = value;
-        //hasValue = false;
-        //notify();
         return value;
     }
-
 }
