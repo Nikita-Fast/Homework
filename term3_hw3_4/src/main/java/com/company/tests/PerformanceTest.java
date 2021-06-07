@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Fork(1)
-
 /*@Warmup(iterations = 2)
 @Measurement(iterations = 2)*/
 public class PerformanceTest {
@@ -61,7 +60,6 @@ public class PerformanceTest {
             array[i] = '(';
             array[i + 1] = ')';
         }
-        /*System.out.println(Arrays.toString(array));*/
     }
 
     @Benchmark
