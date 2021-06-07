@@ -32,6 +32,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../term3_hw3_3" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -70,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1622744390211</updated>
       <workItem from="1622744391910" duration="11169000" />
-      <workItem from="1622982110916" duration="21762000" />
+      <workItem from="1622982110916" duration="23030000" />
     </task>
     <servers />
   </component>
@@ -86,6 +87,10 @@
       <screen x="0" y="0" width="1473" height="864" />
     </state>
     <state x="289" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1473.864@0.0.1473.864" timestamp="1622745834782" />
+    <state x="517" y="190" key="FileChooserDialogImpl" timestamp="1623049983312">
+      <screen x="0" y="0" width="1473" height="864" />
+    </state>
+    <state x="517" y="190" key="FileChooserDialogImpl/0.0.1473.864@0.0.1473.864" timestamp="1623049983312" />
     <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1623047566455">
       <screen x="0" y="0" width="1473" height="864" />
     </state>
