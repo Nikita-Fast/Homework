@@ -1,18 +1,21 @@
 package com.company;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
 public class PolynomialRecComputation extends RecursiveTask<Double> {
     private final Polynomial polynomial;
-    private final ArrayList<Polynomial> computedPolynomials;
+    private final CopyOnWriteArrayList<Polynomial> computedPolynomials;
 
-    public PolynomialRecComputation(Polynomial polynomial, ArrayList<Polynomial> computedPolynomials) {
+    public PolynomialRecComputation(Polynomial polynomial, CopyOnWriteArrayList<Polynomial> computedPolynomials) {
         this.polynomial = polynomial;
         this.computedPolynomials = computedPolynomials;
     }
 
+    //надо ли здесь параллельную коллекцию?
     private ArrayList<Polynomial> find(Polynomial polynomial) {
         ArrayList<Polynomial> appropriatePolynomials = new ArrayList<>();
         computedPolynomials.forEach(p -> {
@@ -42,18 +45,31 @@ public class PolynomialRecComputation extends RecursiveTask<Double> {
             Polynomial randomComputedPolynomial =
                     appropriatePolynomials.get(random.nextInt(appropriatePolynomials.size()));
             System.out.println("cached value = " + randomComputedPolynomial.getCachedValue());
-            return randomComputedPolynomial.getCachedValue() +
+
+            List<PolynomialRecComputation> subTasks = createSubtasks(randomComputedPolynomial);
+            for (PolynomialRecComputation subTask : subTasks) {
+                subTask.fork();
+            }
+
+            double result = randomComputedPolynomial.getCachedValue();
+
+            for (PolynomialRecComputation subTask : subTasks) {
+                result += subTask.join();
+            }
+            return result;
+
+            /*return randomComputedPolynomial.getCachedValue() +
                     ForkJoinTask.invokeAll(createSubtasks(randomComputedPolynomial))
                     .stream()
                     .mapToDouble(ForkJoinTask::join)
-                    .sum();
+                    .sum();*/
         }
     }
 
     //начнём со случая, что у нас есть один внутренний полином
     //передадим в этот метод одно рандомное значение из списка innerParts
-    private Collection<PolynomialRecComputation> createSubtasks(Polynomial computedPolyomial) {
-        List<PolynomialRecComputation> dividedTasks = new ArrayList<>();
+    private List<PolynomialRecComputation> createSubtasks(Polynomial computedPolyomial) {
+        List<PolynomialRecComputation> subTasks = new ArrayList<>();
         double[] bounds = Arrays.stream(
                 new double[]{polynomial.getA(), polynomial.getB(), computedPolyomial.getA(), computedPolyomial.getB()}
         ).distinct().toArray();
@@ -71,10 +87,10 @@ public class PolynomialRecComputation extends RecursiveTask<Double> {
                 Polynomial p = new Polynomial(polynomial.getCoefficients(),
                         bounds[i], bounds[i + 1]);
                 PolynomialRecComputation task = new PolynomialRecComputation(p, computedPolynomials);
-                dividedTasks.add(task);
+                subTasks.add(task);
             }
         }
-        return dividedTasks;
+        return subTasks;
     }
 
     private double processing(Polynomial polynomial) {
