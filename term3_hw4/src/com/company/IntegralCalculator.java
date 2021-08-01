@@ -5,9 +5,6 @@ public class IntegralCalculator {
     public static final int N = 10_000;
 
     public static double calc(Polynomial polynomial, double a, double b) { //coefficients[i] is the coeff of x^i
-        if (a == b) {
-            throw new IllegalArgumentException("Integrations bounds must be different!");
-        }
         double lowerBound = a;
         double upperBound = b;
         int negation = 1;
@@ -18,6 +15,9 @@ public class IntegralCalculator {
         }
         double sum = 0;
         double segLength = (upperBound - lowerBound) / N;
+        if (segLength == 0) {
+            return 0;
+        }
         for (int i = 0; i <= N; i++) {
             sum += 2 * polynomial.getValueIn(lowerBound + segLength * i);
         }
