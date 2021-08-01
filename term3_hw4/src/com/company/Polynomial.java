@@ -1,47 +1,46 @@
 package com.company;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class Polynomial {
-    private double[] coefficients; //coeff[i] == a  ==> ... + a * x^i + ...
-    private double a;
-    private double b;
-    private double cachedValue;
+    private final List<Integer> coefficients;
 
-    public Polynomial(double[] coefficients, double a, double b) {
-        this.coefficients = coefficients;
-        this.a = a;
-        this.b = b;
+    //за это время лист мог измениться, но так лучше чем никак
+    public Polynomial(List<Integer> coefficients) {
+        if (coefficients.size() == 0) {
+            throw new IllegalArgumentException("Polynomial must have at least one coefficient!");
+        }
+        this.coefficients = Collections.unmodifiableList(coefficients);
     }
 
-    public boolean boundsLieInside(double x, double y) {
-        return x <= a && b <= y;
+    public double getValueIn(double x) {
+        double res = coefficients.get(0);
+        double factor = x;
+        final int length = coefficients.size();
+        for (int i = 1; i < length; i++) {
+            res += coefficients.get(i) * factor;
+            factor *= x;
+        }
+        return res;
     }
 
-    public Polynomial(double[] coefficients, double a, double b, double cachedValue) {
-        this.coefficients = coefficients;
-        this.a = a;
-        this.b = b;
-        this.cachedValue = cachedValue;
-    }
-
-    public boolean isNotBound(double x) {
-        return x != a && x != b;
-    }
-
-    public double[] getCoefficients() {
+    public List<Integer> getCoefficients() {
         return coefficients;
     }
 
-    public double getA() {
-        return a;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Polynomial that = (Polynomial) o;
+        return Objects.equals(coefficients, that.coefficients);
     }
 
-    public double getB() {
-        return b;
-    }
-
-    public double getCachedValue() {
-        return cachedValue;
+    @Override
+    public int hashCode() {
+        return Objects.hash(coefficients);
     }
 }

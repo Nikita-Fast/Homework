@@ -2,35 +2,28 @@ package com.company;
 
 public class IntegralCalculator {
 
-    public static final int N = 100;
+    public static final int N = 10_000;
 
-    public static double calc(double a, double b, double ... coefficients) { //coefficients[i] is the coeff of x^i
-        if (coefficients.length == 0) {
-            throw new IllegalArgumentException("Polynomial is not specified!");
+    public static double calc(Polynomial polynomial, double a, double b) { //coefficients[i] is the coeff of x^i
+        if (a == b) {
+            throw new IllegalArgumentException("Integrations bounds must be different!");
         }
-        double res = 0;
+        double lowerBound = a;
+        double upperBound = b;
+        int negation = 1;
+        if (Double.compare(a, b) > 0) { //b < a
+            lowerBound = b;
+            upperBound = a;
+            negation = -1;
+        }
         double sum = 0;
-        double segLength = (b - a) / N;
+        double segLength = (upperBound - lowerBound) / N;
         for (int i = 0; i <= N; i++) {
-            sum += 2 * getValueOfFunction(a + segLength * i, coefficients);
+            sum += 2 * polynomial.getValueIn(lowerBound + segLength * i);
         }
-        sum -= getValueOfFunction(a, coefficients);
-        sum -= getValueOfFunction(b, coefficients);
+        sum -= polynomial.getValueIn(lowerBound);
+        sum-= polynomial.getValueIn(upperBound);
 
-        res = sum * (segLength / 2);
-        return res;
-    }
-
-    public static double getValueOfFunction(double x, double ... coefficients) { //calc f(x)
-        if (coefficients.length == 0) {
-            throw new IllegalArgumentException("Polynomial is not specified!");
-        }
-        double res = coefficients[0];
-        double valX = x;
-        for (int i = 1; i < coefficients.length; i++) {
-            res += coefficients[i] * valX;
-            valX *= x;
-        }
-        return res;
+        return negation * sum * (segLength / 2);
     }
 }
