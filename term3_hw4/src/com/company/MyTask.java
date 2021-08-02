@@ -1,5 +1,8 @@
 package com.company;
 
+import com.company.concurrent.LazyList;
+import com.company.concurrent.OptimisticList;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -7,11 +10,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class MyTask implements Runnable {
 
     private final String line;
-    private final ConcurrentSkipListSet<PolynomialWithData> CalculatedPolynomials;
+    private final /*ConcurrentSkipListSet<PolynomialWithData>*/ /*LazyList*/ OptimisticList<PolynomialWithData> CalculatedPolynomials;
 
-    public MyTask(String line, ConcurrentSkipListSet<PolynomialWithData> CalculatedPolynomials) {
+    public MyTask(String line,
+            /*ConcurrentSkipListSet<PolynomialWithData>*//*LazyList*/OptimisticList<PolynomialWithData> CalculatedPolynomials) {
         this.line = line;
         this.CalculatedPolynomials = CalculatedPolynomials;
+
     }
 
     @Override
@@ -20,7 +25,12 @@ public class MyTask implements Runnable {
         PolynomialWithData calculatedInPast = null;
 
         for (PolynomialWithData polynomialWithData : CalculatedPolynomials) {
-            if (polynomialWithData.getPolynomial().equals(current.getPolynomial())) {
+            if (polynomialWithData == null) {
+                continue;
+            }
+            if (polynomialWithData.getPolynomial().equals(current.getPolynomial()) &&
+                    current.getA() <= polynomialWithData.getA() &&
+                    polynomialWithData.getB() <= current.getB()) {
                 calculatedInPast = polynomialWithData;
                 break;
             }
