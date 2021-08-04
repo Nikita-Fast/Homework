@@ -3,7 +3,7 @@ package com.company.concurrent;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class OptimisticList<T> implements Set<T>, Iterable<T>{
+public class OptimisticList<T> implements Iterable<T>{
 
     private Node<T> head; //has max int hash
     private AtomicInteger size = new AtomicInteger(0);
@@ -17,7 +17,6 @@ public class OptimisticList<T> implements Set<T>, Iterable<T>{
         return size.get();
     }
 
-    @Override
     public boolean add(T item) {
         int key = item.hashCode();
         while (true) {
@@ -47,7 +46,6 @@ public class OptimisticList<T> implements Set<T>, Iterable<T>{
         }
     }
 
-    @Override
     public boolean remove(T item) {
         int key = item.hashCode();
         while (true) {
@@ -73,7 +71,6 @@ public class OptimisticList<T> implements Set<T>, Iterable<T>{
         }
     }
 
-    @Override
     public boolean contains(T item) {
         int key = item.hashCode();
         while (true) {

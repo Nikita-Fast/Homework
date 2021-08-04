@@ -1,14 +1,19 @@
 package com.company.concurrent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyThreadPool {
 
     private final ConcurrentLinkedQueue<Runnable> runnables;
     private final AtomicBoolean execute;
+    private final int threadsNumber;
+    private final AtomicInteger threadsDone = new AtomicInteger(0);
 
     public MyThreadPool(int threadCount) {
+        threadsNumber = threadCount;
         this.runnables = new ConcurrentLinkedQueue<>();
         this.execute = new AtomicBoolean(true);
 
@@ -36,6 +41,10 @@ public class MyThreadPool {
 
     public void stop() {
         execute.set(false);
+    }
+
+    public AtomicInteger getThreadsDone() {
+        return threadsDone;
     }
 
     private class WorkerThread extends Thread{
@@ -69,6 +78,15 @@ public class MyThreadPool {
             }
             catch (RuntimeException e) {
                 e.printStackTrace();
+            }
+            //wakes thread in Solution class when all tasks are finished
+            /*if (threadsDone.incrementAndGet() == threadsNumber) {
+                synchronized (threadsDone) {
+                    threadsDone.notify();
+                }
+            }*/
+            synchronized (threadsDone) {
+                threadsDone.notify();
             }
         }
     }

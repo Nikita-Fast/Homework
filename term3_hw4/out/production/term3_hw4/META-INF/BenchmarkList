@@ -1,1 +1,2 @@
 JMH S 16 com.company.Main S 50 com.company.jmh_generated.Main_measureName_jmhTest S 11 measureName S 10 Throughput E A 1 1 1 E E E E E E E E E E E E E E E E E 
+JMH S 33 com.company.tests.PerformanceTest S 90 com.company.tests.jmh_generated.PerformanceTest_concurrentSkipListSetOwnThreadPool_jmhTest S 34 concurrentSkipListSetOwnThreadPool S 11 AverageTime E A 1 1 1 E E E E E E E I 1 1 E E E E E M 1 11 parallelism 5 8 xAgNAA== 8 4AA===== 8 0AA===== 8 yAA===== 8 xAA===== U 12 MICROSECONDS E E 
