@@ -1,1 +1,0 @@
-package com.company;import com.company.Location;import com.company.operations.Operation;public class Movement extends Operation<Location> {    @Override    public Location apply(Location l1, Location l2) {        double radius = Math.sqrt(Math.pow(l2.getPoint().getX(), 2) + Math.pow(l2.getPoint().getY(), 2));        return l1.shift(l2.getAngle(), radius);    }}

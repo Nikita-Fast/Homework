@@ -1,0 +1,1 @@
+JMH S 33 com.company.tests.PerformanceTest S 75 com.company.tests.jmh_generated.PerformanceTest_bigIntegersAddition_jmhTest S 19 bigIntegersAddition S 11 AverageTime E A 1 1 1 E E E E E E E I 1 1 E E E E E M 1 14 THREADS_NUMBER 6 8 xAgNAA== 8 4AA===== 8 0AA===== 8 yAA===== 8 xAA===== 8 tAQMAA== U 12 MILLISECONDS E E 

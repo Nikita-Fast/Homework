@@ -1,1 +1,0 @@
-package com.company;import com.company.operations.Operation;public class VectorAddition extends Operation<MyVector> {    @Override    public MyVector apply(MyVector v1, MyVector v2) {        MyVector v = v2.rotate(v1.getAngle());        return new MyVector(v1.getX() + v.getX(), v1.getY() + v.getY(),                v1.getAngle() + v2.getAngle());    }}
