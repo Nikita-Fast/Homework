@@ -2,12 +2,12 @@ package com.company.algorithms;
 
 import com.company.auxiliaries.Cell;
 import com.company.auxiliaries.Result;
+import com.company.auxiliaries.Scanner;
 import com.company.operations.AssociativeOperation;
 import com.company.threads.ParallelScanThread;
-
 import java.util.ArrayList;
 
-public class ParallelScanner<T> {
+public class ParallelScanner<T> extends Scanner<T> {
 
     public T doScan(int threadsNum, T[] array, AssociativeOperation<T> operation) throws InterruptedException {
         //this small code snippet helps to avoid incorrect work when
@@ -47,18 +47,5 @@ public class ParallelScanner<T> {
             thread.join();
         }
         return saveResultHere.getResult();
-    }
-
-    private ArrayList<ArrayList<Cell<T>>> createTable(int size) {
-        ArrayList<ArrayList<Cell<T>>> table = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            ArrayList<Cell<T>> line = new ArrayList<>();
-            for (int j = 0; j < size; j++) {
-                Cell<T> cell = new Cell<>();
-                line.add(cell);
-            }
-            table.add(line);
-        }
-        return table;
     }
 }

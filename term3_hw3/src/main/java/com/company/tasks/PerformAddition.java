@@ -5,12 +5,12 @@ import com.company.auxiliaries.MyPair;
 
 public class PerformAddition implements Runnable {
 
-    private int[] result;
-    private int[] num1;
-    private int[] num2;
-    private CarryState[] carries;
-    private int threadID;
-    private int threadsNumber;
+    private final int[] result;
+    private final int[] num1;
+    private final int[] num2;
+    private final CarryState[] carries;
+    private final int threadID;
+    private final int threadsNumber;
 
     public PerformAddition(int[] result, int[] num1, int[] num2, CarryState[] carries, int threadID, int threadsNumber) {
         this.result = result;

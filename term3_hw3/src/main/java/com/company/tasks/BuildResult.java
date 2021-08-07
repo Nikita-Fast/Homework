@@ -5,10 +5,10 @@ import static com.company.tasks.PerformAddition.getPairWithBounds;
 
 public class BuildResult implements Runnable {
 
-    private int[] array;
-    private int threadID;
-    private int threadsNumber;
-    private StringBuilder stringBuilder;
+    private final int[] array;
+    private final int threadID;
+    private final int threadsNumber;
+    private final StringBuilder stringBuilder;
 
     public BuildResult(int[] array, int threadID, int threadsNumber, StringBuilder stringBuilder) {
         this.array = array;

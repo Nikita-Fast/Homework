@@ -52,14 +52,7 @@ public class PerformanceTest {
     private char[] brackets;
     private MyPair[] turtlePairs;
 
-    private StringBuilder[] stringBuilders;
-    //private int[] result;
-    CarryState[] carryStates = new CarryState[LENGTH];
-
-    int[] n1;
-    int[] n2;
-
-    @Param({"16", "8", "4", "2", "1", "-1"})
+    @Param({"-1", "1", "2", "4", "8", "16"})
     public int THREADS_NUMBER;
 
     @Setup
@@ -72,7 +65,8 @@ public class PerformanceTest {
         }
         s1 = sb1.toString();
         s2 = sb2.toString();
-        /*coefficients = new MyPair[LENGTH];
+
+        coefficients = new MyPair[LENGTH];
         for (int i = 0; i < LENGTH; i ++) {
             coefficients[i] = new MyPair(i, i + 1);
         }
@@ -88,30 +82,10 @@ public class PerformanceTest {
             int angle = i % 360;
             int distance = i % 100;
             turtlePairs[i] = new MyPair(angle, distance);
-        }*/
-
-        /*result = new int[LENGTH + 1];
-        Arrays.fill(result, 7);*/
-
-        /*n1 = new int[LENGTH];
-        n2 = new int[LENGTH];
-        Arrays.fill(n1, 9);
-        Arrays.fill(n2, 7);*/
+        }
     }
-
-
-    /*//@Benchmark
-    public int[] testQwrer3() {
-        return BigIntegersAddition.convertStringToIntArrAndReverse(s1);
-    }
-
-    //@Benchmark
-    public String testConversion() throws InterruptedException {
-        return BigIntegersAddition.reverseAndConvertToString(n1, THREADS_NUMBER);
-    }*/
 
     @Benchmark
-    //@Warmup(iterations = 7)
     public void bigIntegersAddition(Blackhole bh) throws InterruptedException {
         if (THREADS_NUMBER == SINGLE) {
             bh.consume(BigIntegersAddition.addWithSingleThread(s1, s2));
@@ -121,7 +95,7 @@ public class PerformanceTest {
         }
     }
 
-    //@Benchmark
+    @Benchmark
     public void measureEquationSolver(Blackhole bh) throws InterruptedException {
         if (THREADS_NUMBER == SINGLE) {
             bh.consume(EquationsSolver.solveWithSingleThread(coefficients));
@@ -131,7 +105,7 @@ public class PerformanceTest {
         }
     }
 
-    //@Benchmark
+    @Benchmark
     public void measureBracketsMatching(Blackhole bh) throws Exception {
         if (THREADS_NUMBER == SINGLE) {
             bh.consume(BracketsMatching.areBalancedInSingleThread(brackets));
@@ -141,7 +115,7 @@ public class PerformanceTest {
         }
     }
 
-    //@Benchmark
+    @Benchmark
     public void measureTurtleWalk(Blackhole bh) throws InterruptedException {
         if (THREADS_NUMBER == SINGLE) {
             bh.consume(TurtleWalk.calculateFinalPositionWithSingleThread(turtlePairs));
@@ -150,12 +124,4 @@ public class PerformanceTest {
             bh.consume(TurtleWalk.calculateFinalPositionInParallel(turtlePairs, THREADS_NUMBER));
         }
     }
-
-    /*public static boolean compare(PositionOfTurtle p1, PositionOfTurtle p2) {
-        double delta = 0.0001;
-        boolean b1 = Math.abs(p1.getX() - p2.getX()) <= delta;
-        boolean b2 = Math.abs(p1.getY() - p2.getY()) <= delta;
-        boolean b3 = Math.abs(p1.getAngle() - p2.getAngle()) <= delta;
-        return b1 & b2 & b3;
-    }*/
 }

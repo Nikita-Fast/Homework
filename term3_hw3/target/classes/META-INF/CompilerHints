@@ -3,5 +3,5 @@ dontinline,*.*_avgt_jmhStub
 dontinline,*.*_sample_jmhStub
 dontinline,*.*_ss_jmhStub
 dontinline,*.*_thrpt_jmhStub
-inline,com/company/tests/jmh/PerformanceTest.bigIntegersAddition
+inline,com/company/tests/jmh/PerformanceTest.measureBracketsMatching
 inline,com/company/tests/jmh/PerformanceTest.prepare

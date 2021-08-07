@@ -1,8 +1,8 @@
 package com.company.auxiliaries;
 
 public class MyPair {
-    private int a;
-    private int b;
+    private final int a;
+    private final int b;
 
     public MyPair(int a, int b) {
         this.a = a;

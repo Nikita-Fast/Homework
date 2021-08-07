@@ -1,7 +1,7 @@
 package com.company.algorithms;
 
 
-import com.company.auxiliaries.MyPair;;
+import com.company.auxiliaries.MyPair;
 import com.company.operations.CoefficientsMix;
 
 public class EquationsSolver {

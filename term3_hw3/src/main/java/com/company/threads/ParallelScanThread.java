@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 public class ParallelScanThread<T> extends Thread{
 
-    private T[] array;
-    private int pid;
-    private int threadsNumber;
-    private int minIndex;
-    private int maxIndex;
-    private ArrayList<ArrayList<Cell<T>>> table;
-    private AssociativeOperation<T> operation;
-    private Result<T> result;
+    private final T[] array;
+    private final int pid;
+    private final int threadsNumber;
+    private final int minIndex;
+    private final int maxIndex;
+    private final ArrayList<ArrayList<Cell<T>>> table;
+    private final AssociativeOperation<T> operation;
+    private final Result<T> result;
 
     @Override
     public void run() {

@@ -4,7 +4,6 @@ import com.company.tasks.ConvertBracketToInt;
 import com.company.operations.Addition;
 import com.company.operations.FindMin;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BracketsMatching {
 

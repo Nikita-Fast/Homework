@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class ParallelPrefixScanThread<T> extends Thread {
 
-    private T[] array;
-    private T[] resultArray;
-    private int pid;
-    private int threadsNumber;
-    private int minIndex;
-    private int maxIndex;
-    private ArrayList<ArrayList<Cell<T>>> table1;
-    private ArrayList<ArrayList<Cell<T>>> table2;
-    private AssociativeOperationWithNeutralElement<T> operation;
+    private final T[] array;
+    private final T[] resultArray;
+    private final int pid;
+    private final int threadsNumber;
+    private final int minIndex;
+    private final int maxIndex;
+    private final ArrayList<ArrayList<Cell<T>>> table1;
+    private final ArrayList<ArrayList<Cell<T>>> table2;
+    private final AssociativeOperationWithNeutralElement<T> operation;
 
     @Override
     public void run() {

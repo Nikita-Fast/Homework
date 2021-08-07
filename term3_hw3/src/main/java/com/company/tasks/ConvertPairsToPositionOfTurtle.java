@@ -9,10 +9,10 @@ import static java.lang.Math.sin;
 
 public class ConvertPairsToPositionOfTurtle implements Runnable {
 
-    private MyPair[] pairs;
-    private PositionOfTurtle[] positions;
-    private int threadID;
-    private int threadsNumber;
+    private final MyPair[] pairs;
+    private final PositionOfTurtle[] positions;
+    private final int threadID;
+    private final int threadsNumber;
 
     public ConvertPairsToPositionOfTurtle(MyPair[] pairs, PositionOfTurtle[] positions, int threadID, int threadsNumber) {
         this.pairs = pairs;

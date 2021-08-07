@@ -10,18 +10,12 @@ public class CarryAddition extends AssociativeOperationWithNeutralElement<CarryS
 
     @Override
     public CarryState apply(CarryState x, CarryState y) {
-        //CarryState result;
         if (y == CarryState.C || y == CarryState.N) {
-            //result = y;
             return y;
         }
         if (y == CarryState.M) {
             return x;
         }
         throw new RuntimeException("Carry addition function works incorrectly!");
-        /*else {
-            result = x;
-        }
-        return result;*/
     }
 }

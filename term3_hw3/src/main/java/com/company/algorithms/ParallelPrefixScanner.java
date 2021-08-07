@@ -1,12 +1,13 @@
 package com.company.algorithms;
 
 import com.company.auxiliaries.Cell;
+import com.company.auxiliaries.Scanner;
 import com.company.operations.AssociativeOperationWithNeutralElement;
 import com.company.threads.ParallelPrefixScanThread;
 
 import java.util.ArrayList;
 
-public class ParallelPrefixScanner<T> {
+public class ParallelPrefixScanner<T> extends Scanner<T> {
 
     public void doScan(int threadsNumber, T[] array, T[] resultArray, AssociativeOperationWithNeutralElement<T> operation)
             throws InterruptedException {
@@ -36,18 +37,5 @@ public class ParallelPrefixScanner<T> {
         for (ParallelPrefixScanThread<T> thread : threads) {
             thread.join();
         }
-    }
-
-    private ArrayList<ArrayList<Cell<T>>> createTable(int size) {
-        ArrayList<ArrayList<Cell<T>>> table = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            ArrayList<Cell<T>> line = new ArrayList<>();
-            for (int j = 0; j < size; j++) {
-                Cell<T> cell = new Cell<>();
-                line.add(cell);
-            }
-            table.add(line);
-        }
-        return table;
     }
 }

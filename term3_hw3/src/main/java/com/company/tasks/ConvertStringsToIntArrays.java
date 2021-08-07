@@ -2,8 +2,6 @@ package com.company.tasks;
 
 import com.company.auxiliaries.MyPair;
 
-import java.util.Arrays;
-
 public class ConvertStringsToIntArrays implements Runnable {
 
     private final String s1;
@@ -40,19 +38,6 @@ public class ConvertStringsToIntArrays implements Runnable {
         for (int i = 0; i < part2.length(); i++) {
             array2[pos2 - i] = Character.digit(part2.charAt(i), 10);
         }
-
-
-
-
-        /*char[] a = s1.toCharArray();
-        for (int i = bounds1.getA(); i < bounds1.getB(); i++) {
-            array1[a.length - i - 1] = Integer.parseInt(String.valueOf(a[i]));
-        }
-
-        char[] b = s2.toCharArray();
-        for (int i = bounds2.getA(); i < bounds2.getB(); i++) {
-            array2[b.length - i - 1] = Integer.parseInt(String.valueOf(b[i]));
-        }*/
     }
 
     private MyPair getBounds(String str, int threadID, int threadsNumber) {

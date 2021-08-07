@@ -7,9 +7,7 @@ import com.company.tasks.FillCarryStateArray;
 import com.company.tasks.PerformAddition;
 import com.company.auxiliaries.CarryState;
 import com.company.operations.CarryAddition;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BigIntegersAddition {
 
@@ -51,14 +49,6 @@ public class BigIntegersAddition {
         return reverseAndConvertToStringParallel(result, threadsNumber);
     }
 
-    public static int[] convertStringToIntArrAndReverse(String s1) {
-        int[] arr1 = new int[s1.length()];
-        for (int i = 0; i < s1.length(); i++) {
-            arr1[arr1.length - 1 - i] = Character.digit(s1.charAt(i), 10);
-        }
-        return arr1;
-    }
-
     public static String reverseAndConvertToStringParallel(int[] res, int threadsNumber) throws InterruptedException {
         ArrayList<Thread> threads = new ArrayList<>();
         StringBuilder[] stringBuilders = new StringBuilder[threadsNumber];
@@ -75,6 +65,14 @@ public class BigIntegersAddition {
         StringBuilder sb = scanner.doScan(threadsNumber, stringBuilders, new StringBuilderAddition());
         return sb.toString();
     }
+
+    /*public static int[] convertStringToIntArrAndReverse(String s1) {
+        int[] arr1 = new int[s1.length()];
+        for (int i = 0; i < s1.length(); i++) {
+            arr1[arr1.length - 1 - i] = Character.digit(s1.charAt(i), 10);
+        }
+        return arr1;
+    }*/
 
    /* public static String reverseAndConvertToString(int[] res, int threadsNumber) throws InterruptedException {
         ArrayList<Thread> threads = new ArrayList<>();
