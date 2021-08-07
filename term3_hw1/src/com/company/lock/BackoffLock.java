@@ -1,20 +1,33 @@
 package com.company.lock;
 
+import com.company.app.Backoff;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public class TASLock implements Lock {
-    private final AtomicBoolean isBusy;
-
-    public TASLock() {
-        this.isBusy = new AtomicBoolean(false);
-    }
+public class BackoffLock implements Lock {
+    private final AtomicBoolean isBusy = new AtomicBoolean(false);
+    private static final int MIN_DELAY = 10_000; //10 micro sec
+    private static final int MAX_DELAY = 320_000;
 
     @Override
     public void lock() {
-        while (isBusy.getAndSet(true)) { }
+        Backoff backoff = new Backoff(MIN_DELAY, MAX_DELAY);
+        while (true) {
+            while (isBusy.get()) { }
+            if (!isBusy.getAndSet(true)) {
+                return;
+            }
+            else {
+                try {
+                    backoff.backoff();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override

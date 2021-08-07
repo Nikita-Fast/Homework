@@ -4,6 +4,7 @@ import com.company.app.IncrementCounter;
 import com.company.app.Solution;
 import com.company.counters.ThreadSafeCounter;
 import com.company.counters.ThreadUnsafeCounter;
+import com.company.lock.BackoffLock;
 import com.company.lock.PetersonLock;
 import com.company.lock.TASLock;
 import com.company.lock.TTASLock;
@@ -46,8 +47,8 @@ class CounterTest {
     @Order(3)
     @ValueSource(ints = {1,2,4,8,16})
     void testTAS(int threadsNumber) throws InterruptedException {
-        ThreadSafeCounter petersonCounter = new ThreadSafeCounter(new TASLock());
-        int actual = Solution.incCounter(threadsNumber, petersonCounter);
+        ThreadSafeCounter tasCounter = new ThreadSafeCounter(new TASLock());
+        int actual = Solution.incCounter(threadsNumber, tasCounter);
         int expected = threadsNumber * IncrementCounter.ITERATIONS;
     }
 
@@ -55,15 +56,24 @@ class CounterTest {
     @Order(4)
     @ValueSource(ints = {1,2,4,8,16})
     void testTTAS(int threadsNumber) throws InterruptedException {
-        ThreadSafeCounter petersonCounter = new ThreadSafeCounter(new TTASLock());
-        int actual = Solution.incCounter(threadsNumber, petersonCounter);
+        ThreadSafeCounter ttasCounter = new ThreadSafeCounter(new TTASLock());
+        int actual = Solution.incCounter(threadsNumber, ttasCounter);
+        int expected = threadsNumber * IncrementCounter.ITERATIONS;
+    }
+
+    @ParameterizedTest
+    @Order(5)
+    @ValueSource(ints = {1,2,4,8,16})
+    void testBackoffLock(int threadsNumber) throws InterruptedException {
+        ThreadSafeCounter backoffCounter = new ThreadSafeCounter(new BackoffLock());
+        int actual = Solution.incCounter(threadsNumber, backoffCounter);
         int expected = threadsNumber * IncrementCounter.ITERATIONS;
     }
 
     /* with 2 threads usually gets stuck at the middle of execution. Very rare the test successfully passed
        with 2 threads. If victim field in PetersonLock becomes volatile, then everything works fine */
     @ParameterizedTest
-    @Order(5)
+    @Order(6)
     @ValueSource(ints = {1,2})
     void petersonTest(int threadsNumber) throws InterruptedException {
         PetersonLock petersonLock = new PetersonLock();

@@ -16,7 +16,9 @@ public class PetersonLock implements Lock {
 
     @Override
     public void lock() {
-        int i = (int)(Thread.currentThread().getId() % 2);
+        String name = Thread.currentThread().getName();
+        /*int i = (int)(Thread.currentThread().getId() % 2);*/
+        int i = Integer.parseInt(name);
         int j = 1 - i;
         flag[i] = true;
         victim = i;

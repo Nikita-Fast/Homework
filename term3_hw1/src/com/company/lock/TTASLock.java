@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 
 public class TTASLock implements Lock {
 
-    AtomicBoolean isBusy;
+    private final AtomicBoolean isBusy;
 
     public TTASLock() {
         this.isBusy = new AtomicBoolean(false);

@@ -10,6 +10,7 @@ public class Solution {
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < threadsNumber; i++) {
             Thread thread = new Thread(new IncrementCounter(counter));
+            thread.setName("" + i);
             threads.add(thread);
         }
         for (Thread thread : threads) {
