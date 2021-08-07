@@ -1,16 +1,26 @@
-package com.company.tests.jmh_generated;
+package com.company.tests.jmh.jmh_generated;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import com.company.tests.jmh.PerformanceTest;
+import org.openjdk.jmh.annotations.CompilerControl;
 import org.openjdk.jmh.runner.InfraControl;
 import org.openjdk.jmh.infra.ThreadParams;
 import org.openjdk.jmh.results.BenchmarkTaskResult;
+import org.openjdk.jmh.results.Result;
 import org.openjdk.jmh.results.ThroughputResult;
 import org.openjdk.jmh.results.AverageTimeResult;
 import org.openjdk.jmh.results.SampleTimeResult;
 import org.openjdk.jmh.results.SingleShotResult;
 import org.openjdk.jmh.util.SampleBuffer;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.results.RawResults;
 import org.openjdk.jmh.results.ResultRole;
 import java.lang.reflect.Field;
@@ -18,9 +28,12 @@ import org.openjdk.jmh.infra.BenchmarkParams;
 import org.openjdk.jmh.infra.IterationParams;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.infra.Control;
+import org.openjdk.jmh.results.ScalarResult;
+import org.openjdk.jmh.results.AggregationPolicy;
 import org.openjdk.jmh.runner.FailureAssistException;
 
-public final class PerformanceTest_testConversion_jmhTest {
+import com.company.tests.jmh.jmh_generated.PerformanceTest_jmhType;
+public final class PerformanceTest_bigIntegersAddition_jmhTest {
 
     byte p000, p001, p002, p003, p004, p005, p006, p007, p008, p009, p010, p011, p012, p013, p014, p015;
     byte p016, p017, p018, p019, p020, p021, p022, p023, p024, p025, p026, p027, p028, p029, p030, p031;
@@ -45,7 +58,7 @@ public final class PerformanceTest_testConversion_jmhTest {
     Blackhole blackhole;
     Control notifyControl;
 
-    public BenchmarkTaskResult testConversion_Throughput(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult bigIntegersAddition_Throughput(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -62,17 +75,17 @@ public final class PerformanceTest_testConversion_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_performancetest0_G.testConversion());
+                l_performancetest0_G.bigIntegersAddition(blackhole);
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            testConversion_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_performancetest0_G);
+            bigIntegersAddition_thrpt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_performancetest0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_performancetest0_G.testConversion());
+                    l_performancetest0_G.bigIntegersAddition(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -114,19 +127,19 @@ public final class PerformanceTest_testConversion_jmhTest {
             res.measuredOps *= opsPerInv;
             res.measuredOps /= batchSize;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new ThroughputResult(ResultRole.PRIMARY, "testConversion", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
+            results.add(new ThroughputResult(ResultRole.PRIMARY, "bigIntegersAddition", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void testConversion_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
+    public static void bigIntegersAddition_thrpt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_performancetest0_G.testConversion());
+            l_performancetest0_G.bigIntegersAddition(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -135,7 +148,7 @@ public final class PerformanceTest_testConversion_jmhTest {
     }
 
 
-    public BenchmarkTaskResult testConversion_AverageTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult bigIntegersAddition_AverageTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -152,17 +165,17 @@ public final class PerformanceTest_testConversion_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_performancetest0_G.testConversion());
+                l_performancetest0_G.bigIntegersAddition(blackhole);
                 res.allOps++;
             }
 
             notifyControl.startMeasurement = true;
-            testConversion_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_performancetest0_G);
+            bigIntegersAddition_avgt_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, l_performancetest0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_performancetest0_G.testConversion());
+                    l_performancetest0_G.bigIntegersAddition(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -204,19 +217,19 @@ public final class PerformanceTest_testConversion_jmhTest {
             res.measuredOps *= opsPerInv;
             res.measuredOps /= batchSize;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new AverageTimeResult(ResultRole.PRIMARY, "testConversion", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
+            results.add(new AverageTimeResult(ResultRole.PRIMARY, "bigIntegersAddition", res.measuredOps, res.getTime(), benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void testConversion_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
+    public static void bigIntegersAddition_avgt_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
         long operations = 0;
         long realTime = 0;
         result.startTime = System.nanoTime();
         do {
-            blackhole.consume(l_performancetest0_G.testConversion());
+            l_performancetest0_G.bigIntegersAddition(blackhole);
             operations++;
         } while(!control.isDone);
         result.stopTime = System.nanoTime();
@@ -225,7 +238,7 @@ public final class PerformanceTest_testConversion_jmhTest {
     }
 
 
-    public BenchmarkTaskResult testConversion_SampleTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult bigIntegersAddition_SampleTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -242,7 +255,7 @@ public final class PerformanceTest_testConversion_jmhTest {
 
             control.announceWarmupReady();
             while (control.warmupShouldWait) {
-                blackhole.consume(l_performancetest0_G.testConversion());
+                l_performancetest0_G.bigIntegersAddition(blackhole);
                 res.allOps++;
             }
 
@@ -251,12 +264,12 @@ public final class PerformanceTest_testConversion_jmhTest {
             int batchSize = iterationParams.getBatchSize();
             int opsPerInv = benchmarkParams.getOpsPerInvocation();
             SampleBuffer buffer = new SampleBuffer();
-            testConversion_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_performancetest0_G);
+            bigIntegersAddition_sample_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, buffer, targetSamples, opsPerInv, batchSize, l_performancetest0_G);
             notifyControl.stopMeasurement = true;
             control.announceWarmdownReady();
             try {
                 while (control.warmdownShouldWait) {
-                    blackhole.consume(l_performancetest0_G.testConversion());
+                    l_performancetest0_G.bigIntegersAddition(blackhole);
                     res.allOps++;
                 }
                 control.preTearDown();
@@ -295,14 +308,14 @@ public final class PerformanceTest_testConversion_jmhTest {
             res.allOps /= batchSize;
             res.measuredOps *= opsPerInv;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)res.allOps, (long)res.measuredOps);
-            results.add(new SampleTimeResult(ResultRole.PRIMARY, "testConversion", buffer, benchmarkParams.getTimeUnit()));
+            results.add(new SampleTimeResult(ResultRole.PRIMARY, "bigIntegersAddition", buffer, benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void testConversion_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
+    public static void bigIntegersAddition_sample_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, SampleBuffer buffer, int targetSamples, long opsPerInv, int batchSize, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
         long realTime = 0;
         long operations = 0;
         int rnd = (int)System.nanoTime();
@@ -317,7 +330,7 @@ public final class PerformanceTest_testConversion_jmhTest {
             }
             for (int b = 0; b < batchSize; b++) {
                 if (control.volatileSpoiler) return;
-                blackhole.consume(l_performancetest0_G.testConversion());
+                l_performancetest0_G.bigIntegersAddition(blackhole);
             }
             if (sample) {
                 buffer.add((System.nanoTime() - time) / opsPerInv);
@@ -335,7 +348,7 @@ public final class PerformanceTest_testConversion_jmhTest {
     }
 
 
-    public BenchmarkTaskResult testConversion_SingleShotTime(InfraControl control, ThreadParams threadParams) throws Throwable {
+    public BenchmarkTaskResult bigIntegersAddition_SingleShotTime(InfraControl control, ThreadParams threadParams) throws Throwable {
         this.benchmarkParams = control.benchmarkParams;
         this.iterationParams = control.iterationParams;
         this.threadParams    = threadParams;
@@ -352,7 +365,7 @@ public final class PerformanceTest_testConversion_jmhTest {
             notifyControl.startMeasurement = true;
             RawResults res = new RawResults();
             int batchSize = iterationParams.getBatchSize();
-            testConversion_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_performancetest0_G);
+            bigIntegersAddition_ss_jmhStub(control, res, benchmarkParams, iterationParams, threadParams, blackhole, notifyControl, startRndMask, batchSize, l_performancetest0_G);
             control.preTearDown();
 
             if (control.isLastIteration()) {
@@ -384,19 +397,19 @@ public final class PerformanceTest_testConversion_jmhTest {
             int opsPerInv = control.benchmarkParams.getOpsPerInvocation();
             long totalOps = opsPerInv;
             BenchmarkTaskResult results = new BenchmarkTaskResult((long)totalOps, (long)totalOps);
-            results.add(new SingleShotResult(ResultRole.PRIMARY, "testConversion", res.getTime(), benchmarkParams.getTimeUnit()));
+            results.add(new SingleShotResult(ResultRole.PRIMARY, "bigIntegersAddition", res.getTime(), benchmarkParams.getTimeUnit()));
             this.blackhole.evaporate("Yes, I am Stephen Hawking, and know a thing or two about black holes.");
             return results;
         } else
             throw new IllegalStateException("Harness failed to distribute threads among groups properly");
     }
 
-    public static void testConversion_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
+    public static void bigIntegersAddition_ss_jmhStub(InfraControl control, RawResults result, BenchmarkParams benchmarkParams, IterationParams iterationParams, ThreadParams threadParams, Blackhole blackhole, Control notifyControl, int startRndMask, int batchSize, PerformanceTest_jmhType l_performancetest0_G) throws Throwable {
         long realTime = 0;
         result.startTime = System.nanoTime();
         for (int b = 0; b < batchSize; b++) {
             if (control.volatileSpoiler) return;
-            blackhole.consume(l_performancetest0_G.testConversion());
+            l_performancetest0_G.bigIntegersAddition(blackhole);
         }
         result.stopTime = System.nanoTime();
         result.realTime = realTime;
@@ -419,7 +432,7 @@ public final class PerformanceTest_testConversion_jmhTest {
             }
             val = new PerformanceTest_jmhType();
             Field f;
-            f = PerformanceTest.class.getDeclaredField("THREADS_NUMBER");
+            f = com.company.tests.jmh.PerformanceTest.class.getDeclaredField("THREADS_NUMBER");
             f.setAccessible(true);
             f.set(val, Integer.valueOf(control.getParam("THREADS_NUMBER")));
             val.prepare();

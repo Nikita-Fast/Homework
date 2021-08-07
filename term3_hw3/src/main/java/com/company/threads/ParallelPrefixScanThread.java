@@ -39,8 +39,9 @@ public class ParallelPrefixScanThread<T> extends Thread {
 
     private void doParallelPrefixScan() {
         //System.out.println("pid = " + pid + ", [" + minIndex + ", " + maxIndex + "]");
-        T total = array[minIndex];
-        for (int i = minIndex + 1; i <= maxIndex; i++) {
+
+        T total = operation.getNeutralElement();
+        for (int i = minIndex; i <= maxIndex; i++) {
             total = operation.apply(total, array[i]);
         }
 
@@ -52,10 +53,7 @@ public class ParallelPrefixScanThread<T> extends Thread {
             }
             else {
                 T received = receive(pid - k, Stage.COLLECT);
-                //слушай аудио коментарий 1
                 total = operation.apply(received, total);
-                //total = operation.apply(total, received); //не надо ли поменять местами аргументы?
-                //total = operation.apply(total, receive(pid - k, Stage.COLLECT));
             }
         }
 
@@ -73,9 +71,7 @@ public class ParallelPrefixScanThread<T> extends Thread {
             else {
                 T receivedValue = receive(pid - k,  Stage.DISTRIBUTE);
                 send(pid - k, total, Stage.DISTRIBUTE);
-                total = operation.apply(total, receivedValue);//а надо ли менять порядок тут?
-                //если построю конт-пример, то поменяю порядок
-                //total = operation.apply(receivedValue, total);
+                total = operation.apply(total, receivedValue);
             }
             k /= 2;
         }
