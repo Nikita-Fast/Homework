@@ -47,6 +47,10 @@ int main() {
 	struct HashTable* table = createHashTable(TABLE_SIZE, polynomialHash);
 	char name[] = "C:\\Users\\Nick Fast\\Desktop\\garbage\\forWhomTheBellTolls.txt";
 	FILE* fp = fopen(name, "r");
+	if (fp == NULL) {
+		printf("failed to open file\n");
+		return 1;
+	}
 	char buffer[50];
 	while (fscanf(fp, "%s", buffer) != EOF) {
 		if (buffer[0] != '\0') {

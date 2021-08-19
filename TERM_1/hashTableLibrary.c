@@ -44,6 +44,10 @@ size_t symbolSumHash(char* key, size_t size) {
 
 struct HashTable* createHashTable(size_t size, size_t(*hashFunction)(char* key)) {
 	struct HashTable* table = (struct HashTable*)malloc(sizeof(struct HashTable));
+	if (table == NULL) {
+		printf("failed to create hash table\n");
+		exit(1);
+	}
 	table->strings = (struct List*)malloc(size * sizeof(struct List*));
 	for (size_t i = 0; i < size; i++)
 	{
@@ -101,7 +105,7 @@ void set(struct HashTable* table, char* key, int value) {//передать value которы
 	}
 }
 
-int numberOfChains(struct HashTable* table) {
+size_t numberOfChains(struct HashTable* table) {
 	size_t size = table->size;
 	size_t count = 0;
 	for (size_t i = 0; i < size; i++) {
@@ -112,7 +116,7 @@ int numberOfChains(struct HashTable* table) {
 	return count;
 }
 
-int numberOfElemnts(struct HashTable* table) {
+size_t numberOfElemnts(struct HashTable* table) {
 	size_t size = table->size;
 	size_t number = 0;
 	for (size_t i = 0; i < size; i++) {
@@ -121,7 +125,7 @@ int numberOfElemnts(struct HashTable* table) {
 	return number;
 }
 
-int minChainLength(struct HashTable* table) {
+size_t minChainLength(struct HashTable* table) {
 	size_t size = table->size;
 	size_t min = _UI32_MAX;
 	for (size_t i = 0; i < size; i++) {
@@ -132,7 +136,7 @@ int minChainLength(struct HashTable* table) {
 	return min;
 }
 
-int maxChainLength(struct HashTable* table) {
+size_t maxChainLength(struct HashTable* table) {
 	size_t size = table->size;
 	size_t max = table->strings[0]->length;
 	for (size_t i = 0; i < size; i++) {
@@ -143,7 +147,7 @@ int maxChainLength(struct HashTable* table) {
 	return max;
 }
 
-int averageChainLength(struct HashTable* table) {
+size_t averageChainLength(struct HashTable* table) {
 	size_t size = table->size;
 	size_t sumLength = 0;
 	size_t numberOfChains = 0;

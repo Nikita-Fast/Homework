@@ -78,7 +78,6 @@ void insertToEnd(struct List* list, int value, char* key) {
 	}
 }
 
-
 int getNodeNumber(struct List* list, char* key) {
 	if (findNode(list, key) != NULL) {
 		size_t number = 0;
