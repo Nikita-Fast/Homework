@@ -1,17 +1,26 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "listLibrary.h"
 
-struct Node* createNode(int value, char* key) {
+struct Node {
+	int val;
+	struct Node* next;
+};
+
+struct List {
+	struct Node* head;
+	struct Node* end;
+	size_t length;
+};
+
+struct Node* createNode(int value) {
 	struct Node* node = (struct Node*)malloc(sizeof(struct Node));
 	if (node == NULL) {
 		return NULL;
 	}
-	node->value = value;
+	node->val = value;
 	node->next = NULL;
-	strcpy(node->key, key);
 	return node;
 }
 
@@ -21,39 +30,17 @@ struct List* createList() {
 		return NULL;
 	}
 	list->head = NULL;
+	list->end = NULL;
 	list->length = 0;
 	return list;
 }
 
-void insertToBegin(struct List* list, int value, char* key) {
-	struct Node* node = createNode(value, key);
-	node->next = list->head;
-	list->head = node;
-	list->length++;
-}
-
-struct Node* findNode(struct List* list, char* key) {
-	if (list->length == 0) {
-		return NULL;
-	}
-	else {
-		struct Node* node = list->head;
-		while (node != NULL) {
-			if (strcmp(key, node->key) == 0) {
-				return node;
-			}
-			node = node->next;
-		}
-		return NULL;
-	}
-}
-
-struct Node* getNode(size_t number, struct List* list) {
-	if (list->length <= number) {
+struct Node* getNode(size_t number, struct List* listPtr) {
+	if (listPtr->length <= number) { // нумерация с нуля
 		return NULL;
 	}
 	size_t counter = 0;
-	struct Node* currentNode = list->head;
+	struct Node* currentNode = listPtr->head;
 	while (counter != number) {
 		currentNode = currentNode->next;
 		counter++;
@@ -61,89 +48,97 @@ struct Node* getNode(size_t number, struct List* list) {
 	return currentNode;
 }
 
-void insertToEnd(struct List* list, int value, char* key) {
-	if (list->length == 0) {
-		list->head = createNode(value, key);
-		list->length++;
+void insertToBegin(struct List* listPtr, struct Node* nodePtr) {
+	if (listPtr->length == 0) {
+		listPtr->head = nodePtr;
+		listPtr->end = nodePtr;
+		listPtr->length++;
 	}
 	else {
-		struct Node* node = findNode(list, key);
-		if (node == NULL) {
-			getNode(list->length - 1, list)->next = createNode(value, key);
-			list->length++;
+		nodePtr->next = listPtr->head;
+		listPtr->head = nodePtr;
+		listPtr->length++;
+	}
+}
+
+void insertToEnd(struct List* listPtr, struct Node* nodePtr) {
+	if (listPtr->length == 0) {
+		listPtr->head = nodePtr;
+		listPtr->end = nodePtr;
+		listPtr->length++;
+	}
+	else {
+		listPtr->end->next = nodePtr;
+		listPtr->end = nodePtr;
+		listPtr->length++;
+	}
+}
+
+void insertAfterElement(struct List* listPtr, struct Node* newNodePtr, size_t position) {
+	if (position == 0) {
+		newNodePtr->next = listPtr->head;
+		listPtr->head = newNodePtr;
+		listPtr->length++;
+	}
+	else {
+		if (listPtr->length > position) {
+			struct Node* prevNode = getNode(position - 1, listPtr);
+			newNodePtr->next = prevNode->next;
+			prevNode->next = newNodePtr;
+			listPtr->length++;
 		}
 		else {
-			node->value++;
+			insertToEnd(listPtr, newNodePtr);
+			listPtr->length++;
 		}
 	}
 }
 
-int getNodeNumber(struct List* list, char* key) {
-	if (findNode(list, key) != NULL) {
-		size_t number = 0;
-		struct Node* node = list->head;
-		while (strcmp(node->key, key) != 0) {
-			number++;
-			node = node->next;
+void deleteNode(struct List* listPtr, size_t number) {
+	if (listPtr->length > number) {
+		struct Node* node = listPtr->head;
+		struct Node* delNode = NULL;
+		if (number == 0) {
+			listPtr->head = listPtr->head->next;
+			free(node);
+			listPtr->length--;
 		}
-		return number;
-	}
-	return -1;
-}
-
-struct Node* getNodeByNumber(size_t number, struct List* list) {
-	if (list->length <= number) {
-		return NULL;
-	}
-	size_t counter = 0;
-	struct Node* currentNode = list->head;
-	while (counter != number) {
-		currentNode = currentNode->next;
-		counter++;
-	}
-	return currentNode;
-}
-
-void deleteNode(struct List* list, char* key) {
-	if (list->length != 0) {
-		struct Node* delNode = findNode(list, key);
-		if (delNode != NULL) {
-			if (getNode(0, list) == delNode) {
-				free(delNode);
-				list->length--;
-				return;
+		else {
+			size_t counter = 0;
+			while (counter != number - 1) {
+				node = node->next;
+				counter++;
 			}
-			if (getNode(list->length - 1, list) == delNode) {
-				getNode(list->length - 2, list)->next = NULL;
-				free(delNode);
-				list->length--;
-				return;
-			}
-			struct Node* prevNode = getNodeByNumber(getNodeNumber(list, key) - 1, list);
-			prevNode->next = delNode->next;
+			delNode = node->next;
+			node->next = node->next->next;
 			free(delNode);
-			list->length--;
+			listPtr->length--;
 		}
 	}
+}
+
+void printList(struct List* listPtr) {
+	struct Node* currNodePtr = listPtr->head;
+	while (currNodePtr) {
+		printf("%i ", currNodePtr->val);
+		currNodePtr = currNodePtr->next;
+	}
+	printf("\n");
+}
+
+void clearList(struct List* listPtr) {
+	struct Node* cur = listPtr->head;
+	while (cur != NULL) {
+		cur = listPtr->head->next;
+		free(listPtr->head);
+		listPtr->head = cur;
+	}
+	listPtr->length = 0;
 }
 
 void freeList(struct List* list) {
-	struct Node* node = list->head;
-	while (node != NULL) {
-		struct Node* delNode = node;
-		node = node->next;
-		free(delNode);
-	}
+	clearList(list);
 	free(list);
-}
-
-printList(struct List* list) {
-	struct Node* node = list->head;
-	while (node) {
-		printf("[%s %i] ", node->key, node->value);
-		node = node->next;
-	}
-	printf("\n");
 }
 
 bool isCycled(struct List* listPtr) {
