@@ -78,6 +78,7 @@ void insertToEnd(struct List* list, int value, char* key) {
 	}
 }
 
+
 int getNodeNumber(struct List* list, char* key) {
 	if (findNode(list, key) != NULL) {
 		size_t number = 0;
@@ -137,7 +138,7 @@ void freeList(struct List* list) {
 	free(list);
 }
 
-void printList(struct List* list) {
+printList(struct List* list) {
 	struct Node* node = list->head;
 	while (node) {
 		printf("[%s %i] ", node->key, node->value);

@@ -23,7 +23,8 @@ int getNodeNumber(struct List* list, char* key);
 struct Node* getNodeByNumber(size_t number, struct List* list);
 void deleteNode(struct List* list, char* key);
 void freeList(struct List* list);
-void printList(struct List* list);
+printList(struct List* list);
 bool isCycled(struct List* listPtr);
 
-#endif //LIST_LIBRARY_INCLUDED
+#endif LIST_LIBRARY_INCLUDED
+
